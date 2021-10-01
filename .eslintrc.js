@@ -9,7 +9,6 @@ module.exports = {
     'plugin:react/recommended',
     'airbnb',
     'react-app',
-    'react-app/jest',
   ],
   parserOptions: {
     ecmaFeatures: {
