@@ -27,7 +27,8 @@
     "eject": "react-scripts eject",
     "clean": "prettier --write ./src/**/*.{js,jsx}",
     "lint:fix": "prettier-eslint --write ./src/**/*.{js,jsx}",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy:prod": "rm -rf build/ && npm run build && aws s3 sync build/ s3://paulworks.online --acl public-read --profile personal"
   },
   "browserslist": {
     "production": [

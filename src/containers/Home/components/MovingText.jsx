@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const MovingText = styled.div`
   margin-top: 20px;
+  padding-bottom: 20px;
   font-weight: 700;
   text-align: center;
   font-size: min(max(16px, 4vw), 32px);
