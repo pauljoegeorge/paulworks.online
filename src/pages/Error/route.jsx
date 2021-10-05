@@ -1,8 +1,8 @@
-import Home from './index';
+import Error from './index';
 
 const ErrorRoutes = [
   {
-    component: Home,
+    component: Error,
     path: '*',
     exact: true,
     type: 'public',
