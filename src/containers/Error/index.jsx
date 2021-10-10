@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { BiArrowBack } from 'react-icons/bi';
@@ -24,9 +23,3 @@ const ErrorContainer = () => {
 };
 
 export default ErrorContainer;
-
-ErrorContainer.propTypes = {
-  match: PropTypes.shape({
-    path: PropTypes.string,
-  }).isRequired,
-};

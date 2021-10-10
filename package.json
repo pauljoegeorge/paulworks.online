@@ -7,6 +7,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "bootstrap": "^5.1.1",
+    "env-cmd": "^10.1.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-prettier": "^3.4.1",
     "prop-types": "^15.7.2",
@@ -21,12 +22,14 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "ESLINT_NO_DEV_ERRORS=true react-scripts start",
+    "start": "ESLINT_NO_DEV_ERRORS=true env-cmd -f .env.development react-scripts start",
+    "start:prod": "ESLINT_NO_DEV_ERRORS=true env-cmd -f .env react-scripts start",
     "build": "react-scripts build",
+    "build:prod": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "clean": "prettier --write ./src/**/*.{js,jsx}",
-    "lint:fix": "prettier-eslint --write ./src/**/*.{js,jsx}",
+    "clean": "prettier --write src --ext .js --ext .jsx",
+    "lint:fix": "prettier-eslint --write '**/*.jsx'",
     "prepare": "husky install",
     "deploy:prod": "rm -rf build/ && npm run build && aws s3 sync build/ s3://www.paulworks.online --acl public-read --profile personal"
   },

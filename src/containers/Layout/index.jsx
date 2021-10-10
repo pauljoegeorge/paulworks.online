@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from '../../components/Link';
+import { pushEvent, events } from '../../utils/gtm';
 
 const Footer = styled.div`
   position: absolute;
@@ -15,11 +16,18 @@ const Footer = styled.div`
 
 const LayoutContainer = (props) => {
   const { children } = props;
+  const handlePrivacy = () => {
+    pushEvent({
+      ...events.onClickPrivacy(),
+    });
+    return window.open(`${process.env.PUBLIC_URL}/privacy.html`, '_blank');
+  };
+
   return (
     <>
       {children}
       <Footer>
-        <Link onClick={() => window.open(`${process.env.PUBLIC_URL}/privacy.html`, '_blank')}>| Privacy Policy |</Link>
+        <Link onClick={() => handlePrivacy()}>| Privacy Policy |</Link>
       </Footer>
     </>
   );
