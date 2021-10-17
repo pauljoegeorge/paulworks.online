@@ -2,16 +2,20 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import ErrorRoutes from './pages/Error/route';
 import HomeRoutes from './pages/Home/route';
-import SettingRoutes from './pages/Setting/route';
+import LayoutContainer from './containers/Layout';
 
-const routes = [...HomeRoutes, ...SettingRoutes, ...ErrorRoutes];
+const routes = [...HomeRoutes, ...ErrorRoutes];
 
 const renderRoute = (route, props) => (
   <Route
     key={route.path}
     path={route.path}
     exact={route.exact}
-    render={(restProps) => <route.component {...restProps} {...props} />}
+    render={(restProps) => (
+      <LayoutContainer {...props}>
+        <route.component {...restProps} {...props} />
+      </LayoutContainer>
+    )}
   />
 );
 

@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const tagManagerArgs = {
-  gtmId: 'GTM-000000',
+  gtmId: `${process.env.REACT_APP_GTM_CONTAINER_ID}`,
 };
 TagManager.initialize(tagManagerArgs);
 

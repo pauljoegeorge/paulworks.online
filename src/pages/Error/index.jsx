@@ -1,9 +1,9 @@
 import React from 'react';
 import ErrorContainer from '../../containers/Error';
 
-const Error = (props) => (
+const Error = () => (
   <>
-    <ErrorContainer {...props} />
+    <ErrorContainer />
   </>
 );
 
