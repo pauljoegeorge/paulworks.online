@@ -2,9 +2,10 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import ErrorRoutes from './pages/Error/route';
 import HomeRoutes from './pages/Home/route';
+import BlogRoutes from './pages/Blogs/route';
 import LayoutContainer from './containers/Layout';
 
-const routes = [...HomeRoutes, ...ErrorRoutes];
+const routes = [...HomeRoutes, ...BlogRoutes, ...ErrorRoutes];
 
 const renderRoute = (route, props) => (
   <Route

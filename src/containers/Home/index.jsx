@@ -13,7 +13,6 @@ import { findSocialLink } from './utils/helper';
 
 const Wrapper = styled.div`
   text-align: center;
-  margin-top: 80px;
 `;
 
 const HomeContainer = () => {

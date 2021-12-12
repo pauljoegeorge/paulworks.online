@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Navbar from './Navbar';
 import { Link } from '../../components/Link';
 import { pushEvent, events } from '../../utils/gtm';
 
 const Footer = styled.div`
-  position: absolute;
-  bottom: 0;
-  padding-top: 15px;
   width: 100%;
-  height: 60px;
   text-align: center;
   font-size: 15px;
+  clear: both;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: -60px;
 `;
 
 const LayoutContainer = (props) => {
@@ -25,6 +26,7 @@ const LayoutContainer = (props) => {
 
   return (
     <>
+      <Navbar {...children?.props} />
       {children}
       <Footer>
         <Link onClick={() => handlePrivacy()}>| Privacy Policy |</Link>
