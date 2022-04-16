@@ -10,9 +10,8 @@ const Footer = styled.div`
   text-align: center;
   font-size: 15px;
   clear: both;
-  position: absolute;
   bottom: 0;
-  margin-bottom: -60px;
+  margin-top: 30px;
 `;
 
 const LayoutContainer = (props) => {
