@@ -1,11 +1,11 @@
-import Home from './index';
+import Home from "./index";
 
 const HomeRoutes = [
   {
     component: Home,
-    path: '/',
+    path: "/",
     exact: true,
-    type: 'public',
+    type: "public",
   },
 ];
 

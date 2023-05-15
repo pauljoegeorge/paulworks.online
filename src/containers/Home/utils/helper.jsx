@@ -1,16 +1,14 @@
-import { LinkedinUrl, TwitterUrl, GithubUrl } from '../constants/constants';
+import { LinkedinUrl, TwitterUrl, GithubUrl } from "../constants/constants";
 
+// eslint-disable-next-line indent
 export const findSocialLink = (app) => {
   let appUrl = null;
-  switch (app) {
-    case 'Github':
-      appUrl = GithubUrl;
-      break;
-    case 'Twitter':
-      appUrl = TwitterUrl;
-      break;
-    default:
-      appUrl = LinkedinUrl;
+  if (app === "Github") {
+    appUrl = GithubUrl;
+  } else if (app === "Twitter") {
+    appUrl = TwitterUrl;
+  } else {
+    appUrl = LinkedinUrl;
   }
   return appUrl;
 };

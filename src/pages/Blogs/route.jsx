@@ -1,11 +1,11 @@
-import Blogs from './index';
+import Blogs from "./index";
 
 const BlogRoutes = [
   {
     component: Blogs,
-    path: '/blogs',
+    path: "/blogs",
     exact: true,
-    type: 'public',
+    type: "public",
   },
 ];
 

@@ -1,41 +1,28 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
+import { Navbar, Nav, Container } from "react-bootstrap";
 
 const Wrapper = styled.nav`
   overflow: hidden;
 `;
 
-const NavBarLi = styled.a`
-  float: ${(props) => (props?.left ? 'left' : 'right')};
-  text-align: right;
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 24px;
-
-  &:hover {
-    background-color: #04aa6d;
-    color: black;
-  }
-
-  &:active {
-    background-color: #04aa6d;
-    color: white;
-  }
-`;
-
-const Navbar = (props) => {
-  const { location } = props;
+function NavigationBar() {
   return (
     <Wrapper>
-      {location?.pathname !== '/blogs' && (
-        <NavBarLi href="/blogs">| Blogs</NavBarLi>
-      )}
-      {location?.pathname !== '/' && <NavBarLi href="/">Home</NavBarLi>}
+      <Navbar expand="lg" bg="dark" variant="dark" fixed="top">
+        <Container>
+          <Navbar.Brand href="/">Home</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse className="justify-content-end">
+            <Nav className="ml-auto">
+              <Nav.Link href="/blogs">Blogs</Nav.Link>
+              <Nav.Link href="#deets">More deets</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </Wrapper>
   );
-};
+}
 
-export default Navbar;
+export default NavigationBar;

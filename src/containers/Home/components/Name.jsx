@@ -1,52 +1,30 @@
-import styled from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
-export const MovingNameWrapper = styled.div`
-  margin: 0;
-  font-size: 4em;
-  padding: 0;
-  color: white;
-  text-shadow: 0 0.1em 20px rgba(0, 0, 0, 1), 0.05em -0.03em 0 rgba(0, 0, 0, 1),
-    0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
-    0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
-    -0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1), -0.03em 0 0 rgba(0, 0, 0, 1);
-  span {
-    transform: scale(0.9);
-    display: inline-block;
-  }
-  span:first-child {
-    animation: bop 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite
-      alternate;
-  }
-  span:nth-child(2) {
-    animation: bop 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite
-      alternate;
-  }
-  span:last-child {
-    animation: bop 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards infinite
-      alternate;
-  }
+const flicker = keyframes`
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    transform: none;
   }
 
-  @keyframes bop {
-  0% {
-    transform: scale(0.9);
-  }
-  50%,
-  100% {
-    transform: scale(1);
-  }
-  }
-
-  @keyframes bopB {
-  0% {
-    transform: scale(0.9);
-  }
-  80%,
-  100% {
-    transform: scale(1) rotateZ(-3deg);
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0;
+    transform: translate3d(0, -1px, 0);
   }
 `;
 
-export const MovingName = styled.span`
-  padding-right: 10px;
+export const MovingNameWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: top;
+`;
+
+export const MovingName = styled.h1`
+  display: inline-block;
+  position: relative;
+  padding: 20px 0;
+  font-size: 5rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  animation: ${flicker} 3s ease-in-out infinite;
 `;

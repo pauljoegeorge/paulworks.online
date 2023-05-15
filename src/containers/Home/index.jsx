@@ -1,34 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'react-bootstrap';
-import styled from 'styled-components';
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import avatar from '../../assets/pj-avatar.svg';
-import { Avatar } from './components/Avatar';
-import { MovingNameWrapper, MovingName } from './components/Name';
-import { MovingText } from './components/MovingText';
-import { SocialMediaWrapper } from './components/SocialMediaWrapper';
-import { events, pushEvent } from '../../utils/gtm';
-import { findSocialLink } from './utils/helper';
+import React from "react";
+import PropTypes from "prop-types";
+import { Container, Row, Col } from "react-bootstrap";
+import styled from "styled-components";
+import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa";
+import avatar from "../../assets/pj-avatar.svg";
+import { Avatar } from "./components/Avatar";
+import { MovingNameWrapper, MovingName } from "./components/Name";
+import { MovingText } from "./components/MovingText";
+import { SocialMediaWrapper } from "./components/SocialMediaWrapper";
+import { events, pushEvent } from "../../utils/gtm";
+import { findSocialLink } from "./utils/helper";
 
 const Wrapper = styled.div`
   text-align: center;
 `;
 
-const HomeContainer = () => {
+function HomeContainer() {
   const handleSocialClick = (app) => {
     const socialUrl = findSocialLink(app);
     pushEvent({
       ...events.onClickSocial(app),
     });
-    window.open(socialUrl, '_blank');
+    window.open(socialUrl, "_blank");
   };
 
   return (
     <Wrapper>
       <Container>
         <Row>
-          <Col xs={6} md={4}>
+          <Col xs={6} md={12}>
             <Avatar src={avatar} roundedCircle />
           </Col>
         </Row>
@@ -40,8 +40,8 @@ const HomeContainer = () => {
             }}
           >
             <MovingNameWrapper>
-              <MovingName>Paul</MovingName>
-              <MovingName>Joe</MovingName>
+              <MovingName>Paul&nbsp;</MovingName>
+              <MovingName>Joe&nbsp;</MovingName>
               <MovingName>George</MovingName>
             </MovingNameWrapper>
           </Col>
@@ -64,13 +64,13 @@ const HomeContainer = () => {
               offset: 3,
             }}
           >
-            <SocialMediaWrapper onClick={() => handleSocialClick('Github')}>
+            <SocialMediaWrapper onClick={() => handleSocialClick("Github")}>
               <FaGithub size={30} />
             </SocialMediaWrapper>
-            <SocialMediaWrapper onClick={() => handleSocialClick('Twitter')}>
+            <SocialMediaWrapper onClick={() => handleSocialClick("Twitter")}>
               <FaTwitter size={30} />
             </SocialMediaWrapper>
-            <SocialMediaWrapper onClick={() => handleSocialClick('Linkedin')}>
+            <SocialMediaWrapper onClick={() => handleSocialClick("Linkedin")}>
               <FaLinkedin size={30} />
             </SocialMediaWrapper>
           </Col>
@@ -78,7 +78,7 @@ const HomeContainer = () => {
       </Container>
     </Wrapper>
   );
-};
+}
 
 export default HomeContainer;
 

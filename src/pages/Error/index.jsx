@@ -1,10 +1,8 @@
-import React from 'react';
-import ErrorContainer from '../../containers/Error';
+import React from "react";
+import ErrorContainer from "../../containers/Error";
 
-const Error = () => (
-  <>
-    <ErrorContainer />
-  </>
-);
+function Error() {
+  return <ErrorContainer />;
+}
 
 export default Error;

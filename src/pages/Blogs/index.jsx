@@ -1,10 +1,8 @@
-import React from 'react';
-import BlogContainer from '../../containers/Blog';
+import React from "react";
+import BlogContainer from "../../containers/Blog";
 
-const Blogs = () => (
-  <>
-    <BlogContainer />
-  </>
-);
+function Blogs() {
+  return <BlogContainer />;
+}
 
 export default Blogs;

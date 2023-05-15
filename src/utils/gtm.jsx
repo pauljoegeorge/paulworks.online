@@ -7,10 +7,10 @@ export function pushEvent(event) {
 
 export const events = {
   onClickSocial: (app) => ({
-    event: 'onclick_Social',
+    event: "onclick_Social",
     app,
   }),
   onClickPrivacy: () => ({
-    event: 'onclick_Privacy',
+    event: "onclick_Privacy",
   }),
 };
