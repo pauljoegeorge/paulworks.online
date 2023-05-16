@@ -2,16 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Container, Row, Col } from "react-bootstrap";
-import NavigationBar from "./Navbar";
 import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 
 const Wrapper = styled.div`
-  background-color: #fff;
-`;
-const ChildWrapper = styled.div`
-  // border: 3px solid red;
-  // min-height: 80vh;
+  padding-top: 10px;
+  background-color: ${(props) => (props.landingPage ? "black" : "#fff")};
 `;
 
 function LayoutContainer(props) {
@@ -24,17 +20,10 @@ function LayoutContainer(props) {
   };
 
   return (
-    <Wrapper>
-      <NavigationBar {...children?.props} />
-      <Container fluid style={{ marginTop: "70px", height: "100vh" }}>
+    <Wrapper landingPage={window.location.pathname === "/"}>
+      <Container fluid>
         <Row>
-          <Col>
-            <ChildWrapper>{children}</ChildWrapper>
-          </Col>
-          {/* <Col xs={2}><ChildWrapper /></Col>
-          <Col xs={8} style={{width: '100vh'}}>
-            {children}
-          </Col> */}
+          <Col>{children}</Col>
         </Row>
       </Container>
       <footer className="mt-5 py-3">

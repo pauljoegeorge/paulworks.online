@@ -37,7 +37,7 @@ const OpenButton = styled.button`
   height: 50px;
 `;
 
-function MoneyProphetContainer(props) {
+function AppLayout(props) {
   const { children } = props;
   const mobile = isMobile();
   const [showNavbar, setShowNavbar] = useState(!mobile);
@@ -90,7 +90,7 @@ function MoneyProphetContainer(props) {
   );
 }
 
-MoneyProphetContainer.propTypes = {
+AppLayout.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       userId: PropTypes.string.isRequired,
@@ -99,4 +99,4 @@ MoneyProphetContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default MoneyProphetContainer;
+export default AppLayout;

@@ -29,7 +29,7 @@
   },
   "scripts": {
     "lint": "eslint 'src/**/*.{js,jsx}'",
-    "lint:fix": "eslint --fix src/containers/**/*.{js,jsx} src/pages/**/*.{js,jsx}",
+    "lint:fix": "eslint --fix src/containers/**/*.{js,jsx} src/pages/**/*.{js,jsx} src/utils/**/*.{js,jsx}",
     "start": "env-cmd -f .env.development react-scripts start",
     "start:prod": "env-cmd -f .env react-scripts start",
     "build": "react-scripts build",

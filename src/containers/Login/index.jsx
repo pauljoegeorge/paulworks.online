@@ -7,6 +7,8 @@ import { InsertEmoticonSharp } from "@mui/icons-material";
 import GoogleAuth from "./GoogleAuth";
 import { CentralDiv } from "../../components/Div";
 import { H2Purple } from "../../components/Text";
+import { get } from "../../utils/api";
+import { saveAuthToken } from "../../utils/auth";
 
 const wave = keyframes`
   0% {
@@ -49,17 +51,15 @@ function LoginContainer(props) {
   };
 
   const handleLogin = (token) => {
-    localStorage.setItem("token", token);
+    saveAuthToken(token);
     setIsLoggedIn(true);
     setToken(token);
-    resetUrl();
   };
 
   const startOAuth = async (code) => {
-    const response = await axios.get(
-      `http://localhost:3000/api/v1/auth/google/callback?code=${code}`
-    );
-    const { token } = response.data;
+    const response = await get(`auth/google/callback?code=${code}`);
+    const { token } = response;
+    resetUrl();
     handleLogin(token);
   };
 
@@ -85,8 +85,8 @@ function LoginContainer(props) {
   return (
     <CentralDiv className="justify-content-center text-center">
       <Container>
-        <Row className="p-5">
-          <LoginWrapper className="p-5" md={{ span: 7, offset: 2 }}>
+        <Row>
+          <LoginWrapper className="py-5" xs={12} md={{ span: 6, offset: 3 }}>
             <AnimatedWavingHand />
             <H2Purple>Hola!</H2Purple>
             <GoogleAuth />

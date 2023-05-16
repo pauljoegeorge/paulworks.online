@@ -5,7 +5,7 @@ const DashboardRoutes = [
     component: Dashboard,
     path: "/dashboard",
     exact: true,
-    type: "public",
+    type: "private",
   },
 ];
 

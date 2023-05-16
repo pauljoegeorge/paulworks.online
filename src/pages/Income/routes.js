@@ -5,7 +5,7 @@ const IncomeRoutes = [
     component: Income,
     path: "/income",
     exact: true,
-    type: "public",
+    type: "private",
   },
 ];
 

@@ -5,7 +5,7 @@ const FixedExpensesRoutes = [
     component: FixedExpenses,
     path: "/fixed_expenses",
     exact: true,
-    type: "public",
+    type: "private",
   },
 ];
 

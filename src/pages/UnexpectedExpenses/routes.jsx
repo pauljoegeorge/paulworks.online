@@ -5,7 +5,7 @@ const UnexpectedExpensesRoutes = [
     component: UnexpectedExpenses,
     path: "/unexpected_expenses",
     exact: true,
-    type: "public",
+    type: "private",
   },
 ];
 
