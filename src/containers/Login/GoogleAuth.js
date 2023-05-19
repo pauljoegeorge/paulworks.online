@@ -1,8 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
 import GoogleLogo from "../../assets/google.png";
-import { get } from "../../utils/api";
 
 const Image = styled.img`
   max-width: 25px;
@@ -10,11 +10,11 @@ const Image = styled.img`
   margin-bottom: 3px;
 `;
 
-function GoogleAuth() {
-  const handleOAuth = async () => {
-    const response = await get("auth/google");
-    const { url } = response;
-    window.open(url, "_self");
+function GoogleAuth(props) {
+  const { oauthUrl } = props;
+
+  const handleOAuth = () => {
+    window.open(oauthUrl, "_self");
   };
 
   return (
@@ -35,5 +35,9 @@ function GoogleAuth() {
     </Button>
   );
 }
+
+GoogleAuth.propTypes = {
+  oauthUrl: PropTypes.string.isRequired,
+};
 
 export default GoogleAuth;

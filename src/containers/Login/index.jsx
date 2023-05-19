@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Spinner } from "react-bootstrap";
 import styled, { keyframes } from "styled-components";
 import { InsertEmoticonSharp } from "@mui/icons-material";
 import GoogleAuth from "./GoogleAuth";
 import { CentralDiv } from "../../components/Div";
 import { H2Purple } from "../../components/Text";
-import { get } from "../../utils/api";
-import { saveAuthToken } from "../../utils/auth";
+import { useOAuth } from "./hooks/useOAuth";
 
 const wave = keyframes`
   0% {
@@ -42,42 +40,27 @@ const AnimatedWavingHand = styled(InsertEmoticonSharp)`
 
 function LoginContainer(props) {
   const { history } = props;
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-  const [userToken, setToken] = useState(null);
+  const { isLoading, oauthUrl, userToken, actions } = useOAuth();
 
   const resetUrl = () => {
     history.replace({ search: new URLSearchParams().toString() });
   };
 
-  const handleLogin = (token) => {
-    saveAuthToken(token);
-    setIsLoggedIn(true);
-    setToken(token);
-  };
-
-  const startOAuth = async (code) => {
-    const response = await get(`auth/google/callback?code=${code}`);
-    const { token } = response;
-    resetUrl();
-    handleLogin(token);
-  };
-
   useEffect(() => {
-    // Check if the user is already authenticated
-    const tokenData = localStorage.getItem("token");
-    if (tokenData) {
-      setIsLoggedIn(true);
-      setToken(tokenData);
+    if (userToken) {
+      history.replace("/dashboard");
+    } else {
+      actions.getOAuthUrl();
     }
-  }, []);
+  }, [userToken]);
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     if (query.get("state") === "google") {
       const code = decodeURIComponent(query.get("code"));
       if (code) {
-        startOAuth(code);
+        actions.startOAuth(code);
+        resetUrl();
       }
     }
   }, [window.location]);
@@ -87,9 +70,15 @@ function LoginContainer(props) {
       <Container>
         <Row>
           <LoginWrapper className="py-5" xs={12} md={{ span: 6, offset: 3 }}>
-            <AnimatedWavingHand />
-            <H2Purple>Hola!</H2Purple>
-            <GoogleAuth />
+            {isLoading ? (
+              <Spinner animation="border" />
+            ) : (
+              <>
+                <AnimatedWavingHand />
+                <H2Purple>Hola!</H2Purple>
+                <GoogleAuth oauthUrl={oauthUrl} />
+              </>
+            )}
           </LoginWrapper>
         </Row>
       </Container>

@@ -28,6 +28,17 @@ api.interceptors.request.use(
   }
 );
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("authToken");
+      window.location.href = "/sign_in";
+    }
+    return Promise.reject(error);
+  }
+);
+
 const get = async (url) => {
   try {
     const response = await api.get(url);
