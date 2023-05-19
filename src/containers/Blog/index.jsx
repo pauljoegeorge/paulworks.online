@@ -1,9 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import { imageUrls,
+import React from "react";
+import styled from "styled-components";
+import {
+  imageUrls,
   titles,
   hashTags,
-  redirectUrls } from './constants/constants';
+  redirectUrls,
+} from "./constants/constants";
 
 const Container = styled.div`
   margin-top: 30px;
@@ -40,18 +42,20 @@ const HashTags = styled.h4`
   text-align: center;
 `;
 
-const BlogContainer = () => (
-  <Container>
-    {imageUrls.map((url, index) => (
-      <BlogItem>
-        <BlogImage src={url} />
-        <Title onClick={() => window.open(redirectUrls[index], '_blank')}>
-          {titles[index]}
-        </Title>
-        <HashTags>{hashTags[index]}</HashTags>
-      </BlogItem>
-    ))}
-  </Container>
-);
+function BlogContainer() {
+  return (
+    <Container>
+      {imageUrls.map((url, index) => (
+        <BlogItem>
+          <BlogImage src={url} />
+          <Title onClick={() => window.open(redirectUrls[index], "_blank")}>
+            {titles[index]}
+          </Title>
+          <HashTags>{hashTags[index]}</HashTags>
+        </BlogItem>
+      ))}
+    </Container>
+  );
+}
 
 export default BlogContainer;
