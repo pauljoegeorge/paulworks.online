@@ -23,6 +23,7 @@
     "semi": ["warn", "always"],
     "react/jsx-filename-extension": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/jsx-no-useless-fragment": "off",
     "react/prop-types": "warn",
     "react/destructuring-assignment": "warn",
     "no-shadow": "warn",
@@ -31,6 +32,7 @@
     "no-debugger": "off",
     "no-console": "off",
     "jsx-a11y/anchor-is-valid": 0,
+    "camelcase": "off",
     "prettier/prettier": [
       "warn",
       {

@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Row, Table } from "react-bootstrap";
 import styled from "styled-components";
-import { P, H3Bold } from "../../components/Text";
-import { THead } from "../../components/Table";
+import { P, H3Bold } from "../../../components/Text";
+import { THead } from "../../../components/Table";
 
 const Paper = styled(Row)`
   background-color: #fff;
@@ -14,7 +15,9 @@ const Paper = styled(Row)`
   padding: 16px;
 `;
 
-function PlannedExpenses() {
+function PlannedExpenses(props) {
+  const { fixedExpenses } = props;
+
   return (
     <Paper className="mt-5">
       <Row>
@@ -29,19 +32,27 @@ function PlannedExpenses() {
             </tr>
           </THead>
           <tbody>
-            <tr>
-              <td>
-                <P>Overall</P>
-              </td>
-              <td>
-                <P>100円</P>
-              </td>
-            </tr>
+            {(fixedExpenses || []).map((fixedExpense) => {
+              return (
+                <tr>
+                  <td>
+                    <P>{fixedExpense.name}</P>
+                  </td>
+                  <td>
+                    <P>{fixedExpense.amount}</P>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </Row>
     </Paper>
   );
 }
+
+PlannedExpenses.propTypes = {
+  fixedExpenses: PropTypes.arrayOf(PropTypes.number).isRequired,
+};
 
 export default PlannedExpenses;
