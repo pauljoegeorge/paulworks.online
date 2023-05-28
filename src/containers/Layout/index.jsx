@@ -11,6 +11,10 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
+const ChildWrapper = styled.div`
+  min-height: 100vh;
+`;
+
 function LayoutContainer(props) {
   const { children } = props;
   const handlePrivacy = () => {
@@ -24,7 +28,9 @@ function LayoutContainer(props) {
     <Wrapper landingPage={window.location.pathname === "/"}>
       <Container fluid>
         <Row>
-          <Col>{children}</Col>
+          <Col>
+            <ChildWrapper>{children}</ChildWrapper>
+          </Col>
         </Row>
       </Container>
       <footer className="mt-5 py-3">

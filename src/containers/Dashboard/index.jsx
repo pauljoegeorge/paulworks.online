@@ -1,66 +1,39 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Toolbar from "@mui/material/Toolbar";
-import { Container, Row, Col } from "react-bootstrap";
-import styled from "styled-components";
-import PlannedExpenses from "./PlannedExpenses";
-import { PBold, H1 } from "../../components/Text";
-import UnPlannedExpenses from "./UnplannedExpenses";
-import Forecast from "./Forecast";
-
-const InfoBox = styled(Col)`
-  background: #f6f5f5;
-  border-radius: 10px;
-`;
+import { Container, Row, Col, Spinner } from "react-bootstrap";
+import PlannedExpenses from "./components/PlannedExpenses";
+import UnPlannedExpenses from "./components/UnplannedExpenses";
+import Forecast from "./components/Forecast";
+import { useInsights } from "./hooks/useInsights";
 
 function DashboardContent() {
+  const { isLoading, insights, actions } = useInsights();
+  const { fixed_expenses, unexpected_expenses, forecast } = insights;
+
+  useEffect(() => {
+    actions.getInsights();
+  }, []);
+
   return (
     <>
-      <Toolbar />
-      <Container fluid>
-        <Row className="justify-content-between">
-          <InfoBox sm={3} className="mt-3 py-5">
-            <Row className="justify-content-center text-center">
-              <Col>
-                <PBold>Savings</PBold>
-              </Col>
+      {isLoading ? (
+        <Container fluid>
+          <Row className="justify-content-center">
+            <Spinner animation="border" />
+          </Row>
+        </Container>
+      ) : (
+        <>
+          <Toolbar />
+          <Container fluid>
+            <Row className="mt-5">
+              <Forecast forecast={forecast} />
             </Row>
-            <Row className="justify-content-center text-center">
-              <Col>
-                <H1>$100</H1>
-              </Col>
-            </Row>
-          </InfoBox>
-          <InfoBox sm={3} className="mt-3 py-5">
-            <Row className="justify-content-center text-center">
-              <Col>
-                <PBold>Savings</PBold>
-              </Col>
-            </Row>
-            <Row className="justify-content-center text-center">
-              <Col>
-                <H1>$100</H1>
-              </Col>
-            </Row>
-          </InfoBox>
-          <InfoBox sm={3} className="mt-3 py-5">
-            <Row className="justify-content-center text-center">
-              <Col>
-                <PBold>Savings</PBold>
-              </Col>
-            </Row>
-            <Row className="justify-content-center text-center">
-              <Col>
-                <H1>$100</H1>
-              </Col>
-            </Row>
-          </InfoBox>
-        </Row>
-        <Row className="mt-5">
-          <Forecast />
-        </Row>
-        <PlannedExpenses />
-        <UnPlannedExpenses />
-      </Container>
+            <PlannedExpenses fixedExpenses={fixed_expenses} />
+            <UnPlannedExpenses unexpectedExpenses={unexpected_expenses} />
+          </Container>
+        </>
+      )}
     </>
   );
 }
