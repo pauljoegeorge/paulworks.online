@@ -37,6 +37,10 @@ const OpenButton = styled.button`
   height: 50px;
 `;
 
+const ChildWrapper = styled.div`
+  min-height: 100vh;
+`;
+
 function AppLayout(props) {
   const { children } = props;
   const mobile = isMobile();
@@ -75,7 +79,7 @@ function AppLayout(props) {
           )}
         </FixedCol>
         <MovableCol sm={10} xl={9} xxl={10} isMobile={mobile}>
-          {children}
+          <ChildWrapper>{children}</ChildWrapper>
           <footer className="mt-5 py-3">
             <Container>
               <div className="text-center">

@@ -1,66 +1,74 @@
-import React, { useState } from "react";
-import { Row, Col, Form, InputGroup } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Form, Field } from "react-final-form";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 import { PrimaryButton } from "../../components/Button";
 import { H1, H2Purple } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
-import Notify from "../../components/Notify";
-import { isMobile } from "../../utils/utils";
+import { useIncome } from "./hooks/useIncome";
+import Input from "../../components/Input";
+import { useValidations } from "../../utils/validation";
 
 function IncomeContainer() {
-  const [showAlert, setShowAlert] = useState(false);
-  const mobile = isMobile();
+  const { number } = useValidations();
+  const { actions, incomes } = useIncome();
   const date = moment().format("MMMM YYYY");
 
-  const handleUpdate = () => {
-    setShowAlert(true);
-    // perform other update actions here
+  useEffect(() => {
+    actions.getIncomes();
+  }, []);
+
+  const handleSubmit = (values) => {
+    actions.updateIncomes(values);
   };
 
-  const handleClose = () => {
-    setShowAlert(false);
+  const initialValues = {
+    incomes,
   };
 
   return (
-    <CentralDiv className="justify-content-center text-center">
-      {showAlert && (
-        <Notify
-          variant="success"
-          message="Updated fixed expense"
-          onClose={handleClose}
-        />
-      )}
-      <Row className="w-100 mb-5">
-        <Col sm={12}>
-          <H1>Income</H1>
-        </Col>
-      </Row>
-      <Row className="w-100">
-        <Col sm={12}>
-          <H2Purple>{date}</H2Purple>
-        </Col>
-      </Row>
-      <Row className="mt-3 w-100 justify-content-center text-center">
-        <InputGroup className={mobile ? "mb-3 w-75" : "mb-3 w-75"}>
-          <InputGroup.Text id="basic-addon1">Income</InputGroup.Text>
-          <Form.Control
-            placeholder="$$$"
-            aria-label="Expense"
-            aria-describedby="basic-addon1"
-          />
-        </InputGroup>
-      </Row>
-      <Row className="mt-3 w-100 justify-content-center text-center">
-        <PrimaryButton
-          variant="primary"
-          size="lg"
-          className="w-50"
-          onClick={handleUpdate}
-        >
-          Update Income
-        </PrimaryButton>
-      </Row>
-    </CentralDiv>
+    <Form
+      onSubmit={handleSubmit}
+      initialValues={initialValues}
+      render={({ handleSubmit: formHandleSubmit, form: { getState } }) => {
+        const { pristine, valid } = getState();
+        return (
+          <form onSubmit={formHandleSubmit}>
+            <CentralDiv className="justify-content-center text-center">
+              <Row className="w-100 mb-5">
+                <Col sm={12}>
+                  <H1>Income</H1>
+                </Col>
+              </Row>
+              <Row className="w-100">
+                <Col sm={12}>
+                  <H2Purple>{date}</H2Purple>
+                </Col>
+              </Row>
+              <Row className="mt-3 w-100 justify-content-center text-center">
+                {(initialValues.incomes || []).map((_, index) => (
+                  <Field
+                    name={`incomes[${index}].amount`}
+                    component={Input}
+                    validate={number}
+                  />
+                ))}
+              </Row>
+              <Row className="mt-3 w-100 justify-content-center text-center">
+                <PrimaryButton
+                  size="lg"
+                  className="w-50"
+                  type="submit"
+                  disabled={pristine || !valid}
+                >
+                  Update Income
+                </PrimaryButton>
+              </Row>
+            </CentralDiv>
+          </form>
+        );
+      }}
+    />
   );
 }
 
