@@ -5,7 +5,6 @@ import moment from "moment";
 import { PrimaryButton } from "../../components/Button";
 import { H1, H2Purple } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
-import { isMobile } from "../../utils/utils";
 import { useUnexpectedExpense } from "./hooks/useUnexpectedExpenseHook";
 import { useValidations } from "../../utils/validation";
 import Input from "../../components/Input";
@@ -14,7 +13,6 @@ function UnexpectedExpensesContainer() {
   const { number } = useValidations();
   const { actions, unexpectedExpenses } = useUnexpectedExpense();
   const date = moment().format("MMMM YYYY");
-  const mobile = isMobile();
   const initialValues = { unexpectedExpenses };
 
   useEffect(() => {

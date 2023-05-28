@@ -5,7 +5,6 @@ import moment from "moment";
 import { PrimaryButton } from "../../components/Button";
 import { H1, H2Purple } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
-import { isMobile } from "../../utils/utils";
 import { useFixedExpense } from "./hooks/useFixedExpense";
 import Input from "../../components/Input";
 import { useValidations } from "../../utils/validation";
@@ -13,7 +12,6 @@ import { useValidations } from "../../utils/validation";
 function FixedExpensesContainer() {
   const { number } = useValidations();
   const { actions, fixedExpenses } = useFixedExpense();
-  const mobile = isMobile();
   const date = moment().format("MMMM YYYY");
   const initialValues = { fixedExpenses };
 
