@@ -3,12 +3,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Prerequisite
-  - Install husky
-    - husky will run lint command on git commit operation
-    - this helps to block pushing unformatted code to Github
-  ```
-    npx husky-init && npm install
-  ```
+
+- Install husky
+  - husky will run lint command on git commit operation
+  - this helps to block pushing unformatted code to Github
+
+```
+  npx husky-init && npm install
+```
 
 ## Available Scripts
 
@@ -36,13 +38,12 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-
-
-
 # TODO:
+
 - Router [DONE]
-- Locale
+- Locale [TODO]
 - Google Analytics [DONE]
-- Axios - HTTP client
-- styled
-- bootstrap
+- Axios - HTTP client [DONE]
+- styled [DONE]
+- bootstrap [DONE]
+- react-final-form [DONE]
