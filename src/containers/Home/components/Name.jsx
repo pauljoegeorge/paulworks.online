@@ -22,7 +22,7 @@ export const MovingName = styled.h1`
   display: inline-block;
   position: relative;
   padding: 20px 0;
-  font-size: 5rem;
+  font-size: min(max(22px, 4vw), 42px);
   text-align: center;
   color: #fff;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);

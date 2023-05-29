@@ -12,6 +12,7 @@ import { isMobile } from "../../utils/utils";
 
 const FixedCol = styled(Col)`
   position: fixed;
+  width: ${(props) => (props.isMobile ? "60%" : "unset")};
   top: 0;
   left: 0;
   bottom: 0;
@@ -61,7 +62,7 @@ function AppLayout(props) {
   return (
     <Container fluid>
       <Row className="justify-content-center">
-        <FixedCol sm={2} xl={3} xxl={2}>
+        <FixedCol sm={2} xl={3} xxl={2} isMobile={mobile}>
           {showNavbar ? (
             <NavWrapper>
               <OpenButton onClick={handleToggleNavbar}>

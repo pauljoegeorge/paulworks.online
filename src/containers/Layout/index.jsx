@@ -8,11 +8,13 @@ import { pushEvent, events } from "../../utils/gtm";
 const Wrapper = styled.div`
   padding-top: 10px;
   background-color: ${(props) => (props.landingPage ? "black" : "#fff")};
-  height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
 `;
 
 const ChildWrapper = styled.div`
   min-height: 100vh;
+  max-width: 100%;
 `;
 
 function LayoutContainer(props) {

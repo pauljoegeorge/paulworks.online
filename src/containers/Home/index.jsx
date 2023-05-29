@@ -27,18 +27,13 @@ function HomeContainer() {
   return (
     <Wrapper>
       <Container>
-        <Row>
-          <Col xs={6} md={12}>
+        <Row className="justify-content-center">
+          <Col>
             <Avatar src={avatar} roundedCircle />
           </Col>
         </Row>
-        <Row>
-          <Col
-            md={{
-              span: 6,
-              offset: 3,
-            }}
-          >
+        <Row className="justify-content-center">
+          <Col>
             <MovingNameWrapper>
               <MovingName>Paul&nbsp;</MovingName>
               <MovingName>Joe&nbsp;</MovingName>
@@ -46,24 +41,14 @@ function HomeContainer() {
             </MovingNameWrapper>
           </Col>
         </Row>
-        <Row>
-          <Col
-            md={{
-              span: 6,
-              offset: 3,
-            }}
-          >
+        <Row className="justify-content-center">
+          <Col>
             <MovingText>Hi there</MovingText>
             <MovingText>I use Ruby on Rails | ReactJS</MovingText>
           </Col>
         </Row>
-        <Row>
-          <Col
-            md={{
-              span: 6,
-              offset: 3,
-            }}
-          >
+        <Row className="justify-content-center">
+          <Col>
             <SocialMediaWrapper onClick={() => handleSocialClick("Github")}>
               <FaGithub size={30} />
             </SocialMediaWrapper>
