@@ -1,21 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Alert } from "react-bootstrap";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Notify(props) {
-  const { status, message, onClose } = props;
-
-  return (
-    <Alert key={status} variant={status} onClose={onClose} dismissible>
-      {message}
-    </Alert>
-  );
-}
-
-Notify.propTypes = {
-  status: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+const options = {
+  autoClose: 2000,
+  position: toast.POSITION.TOP_CENTER,
 };
 
-export default Notify;
+export const Notify = {
+  success: () => {
+    toast.success("Saved successfully", options);
+  },
+  error: () => {
+    toast.error("Failed. Please try again", options);
+  },
+};

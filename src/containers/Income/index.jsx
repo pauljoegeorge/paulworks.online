@@ -10,8 +10,8 @@ import Input from "../../components/Input";
 import { useValidations } from "../../utils/validation";
 
 function IncomeContainer() {
-  const { number } = useValidations();
   const { actions, incomes } = useIncome();
+  const { number } = useValidations();
   const date = moment().format("MMMM YYYY");
 
   useEffect(() => {

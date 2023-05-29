@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Navbar, Nav, Container, Row, Col } from "react-bootstrap";
 import { List } from "@mui/material";
 import { Menu, ChevronLeft } from "@mui/icons-material";
+import { ToastContainer } from "react-toastify";
 import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 import { mainListItems } from "./listItems";
@@ -78,6 +79,7 @@ function AppLayout(props) {
             </OpenButton>
           )}
         </FixedCol>
+        <ToastContainer />
         <MovableCol sm={10} xl={9} xxl={10} isMobile={mobile}>
           <ChildWrapper>{children}</ChildWrapper>
           <footer className="mt-5 py-3">
