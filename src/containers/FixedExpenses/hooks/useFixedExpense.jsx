@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { get, put } from "../../../utils/api";
 import { getBeginningOfMonth } from "../../../utils/date";
+import { Notify } from "../../../components/Notify";
 
 function useFixedExpense() {
   const beginningOfMonth = getBeginningOfMonth();
@@ -13,11 +14,17 @@ function useFixedExpense() {
   };
 
   const updateFixedExpenses = async (values) => {
-    setLoading(true);
-    const data = { from: beginningOfMonth, expenses: values.fixedExpenses };
-    const response = await put("fixed_expenses", data);
-    setFixedExpenses(response);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = { from: beginningOfMonth, expenses: values.fixedExpenses };
+      const response = await put("fixed_expenses", data);
+      setFixedExpenses(response);
+      setLoading(false);
+      Notify.success();
+    } catch {
+      setLoading(false);
+      Notify.error();
+    }
   };
 
   return {

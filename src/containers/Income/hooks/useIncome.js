@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { get, put } from "../../../utils/api";
 import { getBeginningOfMonth } from "../../../utils/date";
+import { Notify } from "../../../components/Notify";
 
 function useIncome() {
   const beginningOfMonth = getBeginningOfMonth();
@@ -13,11 +14,17 @@ function useIncome() {
   };
 
   const updateIncomes = async (values) => {
-    setLoading(true);
-    const data = { from: beginningOfMonth, incomes: values.incomes };
-    const response = await put("incomes", data);
-    setIncomes(response);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = { from: beginningOfMonth, incomes: values.incomes };
+      const response = await put("incomes", data);
+      setIncomes(response);
+      setLoading(false);
+      Notify.success();
+    } catch {
+      setLoading(false);
+      Notify.error();
+    }
   };
 
   return {
