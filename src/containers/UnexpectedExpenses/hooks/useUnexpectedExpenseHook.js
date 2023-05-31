@@ -6,11 +6,15 @@ import { Notify } from "../../../components/Notify";
 function useUnexpectedExpense() {
   const beginningOfMonth = getBeginningOfMonth();
   const [isLoading, setLoading] = useState(false);
-  const [unexpectedExpenses, setUnexpectedExpenses] = useState([]);
+  const [unexpectedExpenses, setUnexpectedExpenses] = useState([
+    { name: "overall", amount: 0 },
+  ]);
 
   const getUnexpectedExpense = async () => {
     const response = await get(`unexpected_expenses?from=${beginningOfMonth}`);
-    setUnexpectedExpenses(response);
+    if (response.length !== 0) {
+      setUnexpectedExpenses();
+    }
   };
 
   const updateUnexpectedExpense = async (values) => {
