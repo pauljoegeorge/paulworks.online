@@ -1,22 +1,20 @@
 import { useState } from "react";
 import { get, put } from "../../../utils/api";
-import { getBeginningOfMonth } from "../../../utils/date";
 import { Notify } from "../../../components/Notify";
 
 function useIncome() {
-  const beginningOfMonth = getBeginningOfMonth();
   const [isLoading, setLoading] = useState(false);
   const [incomes, setIncomes] = useState([]);
 
-  const getIncomes = async () => {
-    const response = await get(`incomes?from=${beginningOfMonth}`);
+  const getIncomes = async (month) => {
+    const response = await get(`incomes?from=${month}`);
     setIncomes(response);
   };
 
-  const updateIncomes = async (values) => {
+  const updateIncomes = async (values, month) => {
     try {
       setLoading(true);
-      const data = { from: beginningOfMonth, incomes: values.incomes };
+      const data = { from: month, incomes: values.incomes };
       const response = await put("incomes", data);
       setIncomes(response);
       setLoading(false);

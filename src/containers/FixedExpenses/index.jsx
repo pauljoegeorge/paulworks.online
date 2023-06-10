@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "react-bootstrap";
 import moment from "moment";
@@ -8,19 +8,48 @@ import { CentralDiv } from "../../components/Div";
 import { useFixedExpense } from "./hooks/useFixedExpense";
 import Input from "../../components/Input";
 import { useValidations } from "../../utils/validation";
+import {
+  appendUrlToDate,
+  addDateToUrl,
+  formattedDate,
+} from "../../utils/utils";
+import { FlexContainer } from "../../components/Container";
+import { LeftArrow, RightArrow } from "../../components/Icon";
+import { getBeginningOfMonth } from "../../utils/date";
 
 function FixedExpensesContainer() {
+  const [selectedMonth, setSelectedMonth] = useState();
   const { number } = useValidations();
+  const currentMonth = getBeginningOfMonth();
   const { actions, fixedExpenses } = useFixedExpense();
-  const date = moment().format("MMMM YYYY");
+  const date = moment(selectedMonth).format("MMMM YYYY");
   const initialValues = { fixedExpenses };
+  const prevWeekDisabled = currentMonth === selectedMonth;
 
   useEffect(() => {
-    actions.getFixedExpenses();
+    const month = addDateToUrl();
+    setSelectedMonth(month);
   }, []);
 
+  useEffect(() => {
+    if (selectedMonth) {
+      actions.getFixedExpenses(selectedMonth);
+    }
+  }, [selectedMonth]);
+
+  const handleMonthChange = (direction) => {
+    if (prevWeekDisabled && direction === "previous") return 0;
+
+    const nextMonth =
+      direction === "next"
+        ? formattedDate(moment(selectedMonth).add(1, "months"))
+        : formattedDate(moment(selectedMonth).subtract(1, "months"));
+    appendUrlToDate(nextMonth);
+    return setSelectedMonth(nextMonth);
+  };
+
   const handleSubmit = (values) => {
-    actions.updateFixedExpenses(values);
+    actions.updateFixedExpenses(values, selectedMonth);
   };
 
   return (
@@ -37,11 +66,14 @@ function FixedExpensesContainer() {
                   <H1>Planned Expense</H1>
                 </Col>
               </Row>
-              <Row className="w-100">
-                <Col sm={12}>
-                  <H2Purple>{date}</H2Purple>
-                </Col>
-              </Row>
+              <FlexContainer alignItems="baseline">
+                <LeftArrow
+                  disabled={prevWeekDisabled}
+                  onClick={() => handleMonthChange("previous")}
+                />
+                <H2Purple>{date}</H2Purple>
+                <RightArrow onClick={() => handleMonthChange("next")} />
+              </FlexContainer>
               <Row className="mt-3 w-100 justify-content-center text-center">
                 {(initialValues.fixedExpenses || []).map((_, index) => (
                   <Field

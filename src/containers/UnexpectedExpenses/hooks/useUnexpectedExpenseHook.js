@@ -1,27 +1,22 @@
 import { useState } from "react";
 import { get, put } from "../../../utils/api";
-import { getBeginningOfMonth } from "../../../utils/date";
 import { Notify } from "../../../components/Notify";
 
 function useUnexpectedExpense() {
-  const beginningOfMonth = getBeginningOfMonth();
   const [isLoading, setLoading] = useState(false);
-  const [unexpectedExpenses, setUnexpectedExpenses] = useState([
-    { name: "overall", amount: 0 },
-  ]);
+  const defaultValue = [{ name: "overall", amount: 0 }];
+  const [unexpectedExpenses, setUnexpectedExpenses] = useState(defaultValue);
 
-  const getUnexpectedExpense = async () => {
-    const response = await get(`unexpected_expenses?from=${beginningOfMonth}`);
-    if (response.length !== 0) {
-      setUnexpectedExpenses();
-    }
+  const getUnexpectedExpense = async (month) => {
+    const response = await get(`unexpected_expenses?from=${month}`);
+    setUnexpectedExpenses(response);
   };
 
-  const updateUnexpectedExpense = async (values) => {
+  const updateUnexpectedExpense = async (values, month) => {
     try {
       setLoading(true);
       const data = {
-        from: beginningOfMonth,
+        from: month,
         expenses: values.unexpectedExpenses,
       };
       const response = await put("unexpected_expenses", data);

@@ -1,22 +1,20 @@
 import { useState } from "react";
 import { get, put } from "../../../utils/api";
-import { getBeginningOfMonth } from "../../../utils/date";
 import { Notify } from "../../../components/Notify";
 
 function useFixedExpense() {
-  const beginningOfMonth = getBeginningOfMonth();
   const [isLoading, setLoading] = useState(false);
   const [fixedExpenses, setFixedExpenses] = useState([]);
 
-  const getFixedExpenses = async () => {
-    const response = await get(`fixed_expenses?from=${beginningOfMonth}`);
+  const getFixedExpenses = async (month) => {
+    const response = await get(`fixed_expenses?from=${month}`);
     setFixedExpenses(response);
   };
 
-  const updateFixedExpenses = async (values) => {
+  const updateFixedExpenses = async (values, month) => {
     try {
       setLoading(true);
-      const data = { from: beginningOfMonth, expenses: values.fixedExpenses };
+      const data = { from: month, expenses: values.fixedExpenses };
       const response = await put("fixed_expenses", data);
       setFixedExpenses(response);
       setLoading(false);
