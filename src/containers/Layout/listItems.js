@@ -5,23 +5,25 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import { Divider } from "@mui/material";
-import { Report } from "@mui/icons-material";
+import {
+  Report,
+  BalanceOutlined,
+  ReceiptLong,
+  PostAdd,
+} from "@mui/icons-material";
+import { SwitchingDiv } from "../../components/Div";
 
 export const mainListItems = (
-  <>
+  <SwitchingDiv>
     <ListItemButton href="/dashboard">
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
+      <DashboardIcon style={{ color: "white" }} />
       <ListItemText primary="Dashboard" />
     </ListItemButton>
-    <Divider sx={{ my: 1, mt: 3 }} />
+    {/* <Divider sx={{ my: 1, mt: 3 }} />
     <ListSubheader component="div" inset sx={{ background: "transparent" }}>
       Settings
-    </ListSubheader>
-    <ListItemButton href="/income">
+    </ListSubheader> */}
+    {/* <ListItemButton href="/income">
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
@@ -38,32 +40,18 @@ export const mainListItems = (
         <Report />
       </ListItemIcon>
       <ListItemText primary="Unplanned Expenses" />
+    </ListItemButton> */}
+    <ListItemButton href="/new">
+      <PostAdd style={{ color: "white" }} />
+      <ListItemText primary="New" />
     </ListItemButton>
-  </>
-);
-
-export const secondaryListItems = (
-  <>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
+    <ListItemButton href="/budget">
+      <BalanceOutlined style={{ color: "white" }} />
+      <ListItemText primary="Budget" />
     </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
+    <ListItemButton href="/expenses">
+      <ReceiptLong style={{ color: "white" }} />
+      <ListItemText primary="Expenses" />
     </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </>
+  </SwitchingDiv>
 );

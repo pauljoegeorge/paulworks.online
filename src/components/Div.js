@@ -6,5 +6,15 @@ export const CentralDiv = styled(Container)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  margin-top: 50px;
+`;
+
+export const SwitchingDiv = styled.div`
+  display: flex;
+  gap: 16px;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
 `;

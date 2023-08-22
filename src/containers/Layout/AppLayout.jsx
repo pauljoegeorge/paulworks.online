@@ -1,55 +1,43 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import MenuIcon from "@mui/icons-material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import styled from "styled-components";
-import { Navbar, Nav, Container, Row, Col } from "react-bootstrap";
-import { List } from "@mui/material";
-import { Menu, ChevronLeft } from "@mui/icons-material";
-import { ToastContainer } from "react-toastify";
+import { Container } from "react-bootstrap";
 import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 import { mainListItems } from "./listItems";
 import { isMobile } from "../../utils/utils";
 
-const FixedCol = styled(Col)`
-  position: fixed;
-  width: ${(props) => (props.isMobile ? "60%" : "unset")};
-  top: 0;
-  left: 0;
-  bottom: 0;
-  height: 100%;
-  z-index: 1;
-`;
-
-const MovableCol = styled(Col)`
-  position: relative;
-  padding-left: ${(props) => (props.isMobile ? "20px" : "200px")};
-`;
-
-const NavWrapper = styled.div`
-  background-color: #f8f9fa;
-  z-index: 1;
-`;
-
-const OpenButton = styled.button`
-  border: none;
-  background-color: transparent;
-  font-size: 1.5rem;
-  color: #6c757d;
-  cursor: pointer;
-  height: 50px;
-`;
-
 const ChildWrapper = styled.div`
   min-height: 100vh;
 `;
 
-function AppLayout(props) {
-  const { children } = props;
-  const mobile = isMobile();
-  const [showNavbar, setShowNavbar] = useState(!mobile);
+const drawerWidth = 240;
+const darkTheme = createTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#3e41a5",
+    },
+  },
+});
 
-  const handleToggleNavbar = () => {
-    setShowNavbar(!showNavbar);
+function AppLayout(props) {
+  const { children, window } = props;
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
   };
 
   const handlePrivacy = () => {
@@ -59,29 +47,73 @@ function AppLayout(props) {
     return window.open(`${process.env.PUBLIC_URL}/privacy.html`, "_blank");
   };
 
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        MoneyProphet
+      </Typography>
+      <Divider />
+      <List>{mainListItems}</List>
+    </Box>
+  );
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
   return (
-    <Container fluid>
-      <Row className="justify-content-center">
-        <FixedCol sm={2} xl={3} xxl={2} isMobile={mobile}>
-          {showNavbar ? (
-            <NavWrapper>
-              <OpenButton onClick={handleToggleNavbar}>
-                <ChevronLeft />
-              </OpenButton>
-              <Navbar className="justify-content-start">
-                <Nav className="flex-column" style={{ height: "100vh" }}>
-                  <List component="nav">{mainListItems}</List>
-                </Nav>
-              </Navbar>
-            </NavWrapper>
-          ) : (
-            <OpenButton onClick={handleToggleNavbar}>
-              <Menu />
-            </OpenButton>
-          )}
-        </FixedCol>
-        <ToastContainer />
-        <MovableCol sm={10} xl={9} xxl={10} isMobile={mobile}>
+    <ThemeProvider theme={darkTheme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar component="nav" color="primary">
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            >
+              MoneyProphet
+            </Typography>
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              {mainListItems}
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Box component="nav">
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          sx={{ p: 3, width: "100%" }}
+        >
           <ChildWrapper>{children}</ChildWrapper>
           <footer className="mt-5 py-3">
             <Container>
@@ -91,9 +123,9 @@ function AppLayout(props) {
               </div>
             </Container>
           </footer>
-        </MovableCol>
-      </Row>
-    </Container>
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
 
@@ -104,6 +136,9 @@ AppLayout.propTypes = {
     }).isRequired,
   }).isRequired,
   children: PropTypes.node.isRequired,
+  window: PropTypes.shape({
+    open: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default AppLayout;
