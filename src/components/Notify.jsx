@@ -7,8 +7,8 @@ const options = {
 };
 
 export const Notify = {
-  success: () => {
-    toast.success("Saved successfully", options);
+  success: (message = "Saved successfully") => {
+    toast.success(message, options);
   },
   error: () => {
     toast.error("Failed. Please try again", options);

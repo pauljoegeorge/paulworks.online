@@ -4,22 +4,22 @@ import { get } from "../../../utils/api";
 
 function useInsights() {
   const [isLoading, setLoading] = useState(false);
-  const [insights, setInsights] = useState([]);
+  const [expenseInsights, setExpenseInsights] = useState([]);
 
-  const getInsights = async () => {
+  const getExpenseInsights = async (date) => {
     setLoading(true);
     const currentDate = moment();
     const currentMonth = currentDate.startOf("month").format("YYYY-MM-DD");
-    const response = await get(`expenses?from=${currentMonth}`);
-    setInsights(response);
+    const response = await get(`expenses/insights?from=${date}`);
+    setExpenseInsights(response);
     setLoading(false);
   };
 
   return {
     isLoading,
-    insights,
+    expenseInsights,
     actions: {
-      getInsights,
+      getExpenseInsights,
     },
   };
 }

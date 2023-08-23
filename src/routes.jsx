@@ -8,6 +8,9 @@ import DashboardRoutes from "./pages/Dashboard/routes";
 import FixedExpensesRoutes from "./pages/FixedExpenses/routes";
 import UnexpectedExpensesRoutes from "./pages/UnexpectedExpenses/routes";
 import IncomeRoutes from "./pages/Income/routes";
+import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
+import Expenses from "./pages/Expenses/routes";
+import TransactionsRoutes from "./pages/Transaction/routes";
 import LayoutContainer from "./containers/Layout";
 import AppLayout from "./containers/Layout/AppLayout";
 import { getAuthToken } from "./utils/auth";
@@ -20,6 +23,9 @@ const routes = [
   ...FixedExpensesRoutes,
   ...UnexpectedExpensesRoutes,
   ...IncomeRoutes,
+  ...ExpenseCategoriesRoutes,
+  ...TransactionsRoutes,
+  ...Expenses,
   ...ErrorRoutes,
 ];
 
