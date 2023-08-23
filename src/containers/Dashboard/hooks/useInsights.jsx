@@ -6,11 +6,11 @@ function useInsights() {
   const [isLoading, setLoading] = useState(false);
   const [expenseInsights, setExpenseInsights] = useState([]);
 
-  const getExpenseInsights = async () => {
+  const getExpenseInsights = async (date) => {
     setLoading(true);
     const currentDate = moment();
     const currentMonth = currentDate.startOf("month").format("YYYY-MM-DD");
-    const response = await get(`expenses/insights?from=${currentMonth}`);
+    const response = await get(`expenses/insights?from=${date}`);
     setExpenseInsights(response);
     setLoading(false);
   };

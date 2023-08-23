@@ -11,12 +11,13 @@ import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { Container } from "react-bootstrap";
 import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 import { mainListItems } from "./listItems";
-import { isMobile } from "../../utils/utils";
+import { colors } from "../../utils/colors";
 
 const ChildWrapper = styled.div`
   min-height: 100vh;
@@ -48,12 +49,19 @@ function AppLayout(props) {
   };
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+    <Box
+      onClick={handleDrawerToggle}
+      sx={{
+        textAlign: "center",
+        background: colors.purpleGrey,
+        height: "100%",
+      }}
+    >
       <Typography variant="h6" sx={{ my: 2 }}>
         MoneyProphet
       </Typography>
       <Divider />
-      <List>{mainListItems}</List>
+      <List sx={{ color: "#000" }}>{mainListItems}</List>
     </Box>
   );
 
@@ -107,6 +115,7 @@ function AppLayout(props) {
             {drawer}
           </Drawer>
         </Box>
+        <ToastContainer />
         <Box
           component="main"
           display="flex"

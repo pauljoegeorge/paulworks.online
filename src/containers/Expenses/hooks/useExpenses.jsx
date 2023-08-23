@@ -17,7 +17,7 @@ function useExpenses() {
       const data = { expense: values.expenses };
       await post("expenses", data);
       setLoading(false);
-      Notify.success();
+      Notify.success("Saved! Ready to add new one?");
     } catch {
       setLoading(false);
       Notify.error();

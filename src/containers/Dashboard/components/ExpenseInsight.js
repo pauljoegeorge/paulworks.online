@@ -1,8 +1,10 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Chart from "react-apexcharts";
+import styled from "styled-components";
 import { Typography } from "@mui/material";
 import { colors } from "../../../utils/colors";
+import { formattedCurrency } from "../../../utils/currency";
 
 export default function ExpenseInsight(props) {
   const { expenseInsights } = props;
@@ -13,12 +15,12 @@ export default function ExpenseInsight(props) {
       {
         name: "Budget",
         data: (expense_by_categories || []).map((a) => a?.budget),
-        color: colors.orange,
+        color: colors.yellow,
       },
       {
         name: "Expense",
         data: (expense_by_categories || []).map((a) => a?.total_expense),
-        color: colors.cherry,
+        color: colors.pastelPurple,
       },
     ],
     chart: {
@@ -28,20 +30,24 @@ export default function ExpenseInsight(props) {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "80%",
+        columnWidth: "60%",
         endingShape: "rounded",
+        dataLabels: {
+          position: "top",
+        },
       },
     },
     dataLabels: {
       enabled: true,
       position: "top",
-      textAnchor: "middle",
-      offsetY: -10,
+      offsetY: -20,
+      rotate: -45,
       style: {
-        fontSize: "12px",
+        colors: ["#ff0000"],
+        fontSize: "10px",
       },
       formatter(val) {
-        return `${val}`;
+        return `${formattedCurrency(val)}`;
       },
     },
     stroke: {
@@ -51,6 +57,10 @@ export default function ExpenseInsight(props) {
     },
     xaxis: {
       categories: (expense_by_categories || []).map((a) => a?.name),
+      labels: {
+        show: true,
+        rotate: -45,
+      },
     },
     yaxis: {
       title: {
@@ -58,13 +68,13 @@ export default function ExpenseInsight(props) {
       },
     },
     fill: {
-      colors: [colors.orange, colors.cherry],
+      colors: [colors.yellow, colors.pastelPurple],
       opacity: 1,
     },
     tooltip: {
       y: {
         formatter(val) {
-          return `$ ${val}`;
+          return `${formattedCurrency(val)}`;
         },
       },
     },
@@ -79,7 +89,7 @@ export default function ExpenseInsight(props) {
         options={options}
         series={options.series}
         type="bar"
-        height={350}
+        height={500}
       />
     </div>
   );

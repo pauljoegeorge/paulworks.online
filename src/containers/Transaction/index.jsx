@@ -67,6 +67,7 @@ function TransactionsContainer() {
                   <Col xs={12} md={6} lg={4}>
                     <Field
                       name="expenses.amount"
+                      label="Amount"
                       component={Input}
                       validate={number}
                     />
@@ -74,6 +75,7 @@ function TransactionsContainer() {
                   <Col xs={12} md={6} lg={4}>
                     <Field
                       name="expenses.transaction_date"
+                      label="Date"
                       type="date"
                       component={Input}
                     />

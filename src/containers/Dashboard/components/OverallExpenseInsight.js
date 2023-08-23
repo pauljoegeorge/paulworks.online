@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Chart from "react-apexcharts";
 import { Typography } from "@mui/material";
 import { colors } from "../../../utils/colors";
+import { formattedCurrency } from "../../../utils/currency";
 
 export default function OverallExpenseInsight(props) {
   const { expenseInsights } = props;
@@ -22,12 +23,12 @@ export default function OverallExpenseInsight(props) {
       {
         name: "budget",
         data: [totalBudget],
-        color: colors.orange,
+        color: colors.yellow,
       },
       {
         name: "expense",
         data: [totalExpense],
-        color: colors.cherry,
+        color: colors.pastelPurple,
       },
     ],
     chart: {
@@ -45,10 +46,12 @@ export default function OverallExpenseInsight(props) {
     },
     dataLabels: {
       enabled: true,
-      offsetX: -6,
-      style: {
-        fontSize: "12px",
-        colors: ["#fff"],
+      position: "top",
+      textAnchor: "middle",
+      offsetY: 10,
+      offsetX: -10,
+      formatter(val) {
+        return `${formattedCurrency(val)}`;
       },
     },
     stroke: {
@@ -56,12 +59,15 @@ export default function OverallExpenseInsight(props) {
       width: 1,
       colors: ["#fff"],
     },
-    tooltip: {
-      shared: true,
-      intersect: false,
-    },
     xaxis: {
       categories: ["Budget", "Expense"],
+    },
+    tooltip: {
+      y: {
+        formatter(val) {
+          return `${formattedCurrency(val)}`;
+        },
+      },
     },
   };
   return (

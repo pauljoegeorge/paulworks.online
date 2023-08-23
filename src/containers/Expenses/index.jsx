@@ -22,7 +22,7 @@ import { LeftArrow, RightArrow } from "../../components/Icon";
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
   const { number } = useValidations();
-  const { actions, expenses } = useExpenses([]);
+  const { actions, expenses, isLoading } = useExpenses([]);
   const { actions: budgetActions, fixedExpenseCategories } = useBudget([]);
   const date = moment(selectedMonth).format("MMMM YYYY");
   const initialValues = { expenses };

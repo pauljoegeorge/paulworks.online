@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-export const H1 = styled.h1(`
+export const H1 = styled.h1`
   font-family: "Plus Jakarta Sans", sans-serif;
   font-weight: 700;
   line-height: 1.2;
-`);
+  color: ${(props) => (props.color ? props.color : "#000")};
+`;
 
 export const H1Bold = styled.h1`
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -35,6 +36,7 @@ export const PBold = styled.p`
   color: #6c737f;
   margin-bottom: 10px;
   text-transform: uppercase;
+  text-align: center;
 `;
 
 export const H3Bold = styled.h3`
