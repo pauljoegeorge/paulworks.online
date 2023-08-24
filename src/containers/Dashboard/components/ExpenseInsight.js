@@ -43,7 +43,7 @@ export default function ExpenseInsight(props) {
       offsetY: -20,
       rotate: -45,
       style: {
-        colors: [colors.cherry],
+        colors: [colors.primary],
         fontSize: "12px",
       },
       formatter(val) {
