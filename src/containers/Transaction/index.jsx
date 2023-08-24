@@ -57,14 +57,14 @@ function TransactionsContainer() {
               </Row>
               <>
                 <Row className="mt-3 w-100 justify-content-center text-center">
-                  <Col xs={12} md={6} lg={4}>
+                  <Col xs={12} md={3} lg={3}>
                     <Field
                       name="expenses.category_uid"
                       component={InputSelect}
                       options={fixedExpenseOptions}
                     />
                   </Col>
-                  <Col xs={12} md={6} lg={4}>
+                  <Col xs={12} md={3} lg={3}>
                     <Field
                       name="expenses.amount"
                       label="Amount"
@@ -72,11 +72,18 @@ function TransactionsContainer() {
                       validate={number}
                     />
                   </Col>
-                  <Col xs={12} md={6} lg={4}>
+                  <Col xs={12} md={3} lg={3}>
                     <Field
                       name="expenses.transaction_date"
                       label="Date"
                       type="date"
+                      component={Input}
+                    />
+                  </Col>
+                  <Col xs={12} md={3} lg={3}>
+                    <Field
+                      name="expenses.notes"
+                      label="Notes"
                       component={Input}
                     />
                   </Col>

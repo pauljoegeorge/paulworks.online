@@ -43,8 +43,8 @@ export default function ExpenseInsight(props) {
       offsetY: -20,
       rotate: -45,
       style: {
-        colors: ["#ff0000"],
-        fontSize: "10px",
+        colors: [colors.cherry],
+        fontSize: "12px",
       },
       formatter(val) {
         return `${formattedCurrency(val)}`;

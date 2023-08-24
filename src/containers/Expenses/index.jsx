@@ -80,14 +80,14 @@ function ExpensesContainer() {
               <>
                 {(initialValues.expenses || []).map((_, index) => (
                   <Row className="mt-3 w-100 justify-content-center text-center">
-                    <Col xs={12} md={4} lg={4}>
+                    <Col xs={12} md={3} lg={3}>
                       <Field
                         name={`expenses[${index}].category_uid`}
                         component={InputSelect}
                         options={fixedExpenseOptions}
                       />
                     </Col>
-                    <Col xs={12} md={4} lg={4}>
+                    <Col xs={12} md={3} lg={3}>
                       <Field
                         name={`expenses[${index}].amount`}
                         component={Input}
@@ -95,12 +95,19 @@ function ExpensesContainer() {
                         label="Amount"
                       />
                     </Col>
-                    <Col xs={12} md={4} lg={4}>
+                    <Col xs={12} md={3} lg={3}>
                       <Field
                         name={`expenses[${index}].transaction_date`}
                         component={Input}
                         type="date"
                         label="Date"
+                      />
+                    </Col>
+                    <Col xs={12} md={3} lg={3}>
+                      <Field
+                        name={`expenses[${index}].notes`}
+                        component={Input}
+                        label="Notes"
                       />
                     </Col>
                   </Row>
