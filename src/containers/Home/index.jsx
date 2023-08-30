@@ -10,6 +10,8 @@ import { MovingText } from "./components/MovingText";
 import { SocialMediaWrapper } from "./components/SocialMediaWrapper";
 import { events, pushEvent } from "../../utils/gtm";
 import { findSocialLink } from "./utils/helper";
+import MoneyProphetLogo from "../../assets/moneyProphet.png";
+// import moneyProphetLogo from "moneyProphet512.png";
 
 const Wrapper = styled.div`
   text-align: center;
@@ -22,6 +24,10 @@ function HomeContainer() {
       ...events.onClickSocial(app),
     });
     window.open(socialUrl, "_blank");
+  };
+
+  const handleRouteToApp = () => {
+    window.location.href = "/dashboard";
   };
 
   return (
@@ -57,6 +63,18 @@ function HomeContainer() {
             </SocialMediaWrapper>
             <SocialMediaWrapper onClick={() => handleSocialClick("Linkedin")}>
               <FaLinkedin size={30} />
+            </SocialMediaWrapper>
+          </Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Col>
+            <SocialMediaWrapper onClick={() => handleRouteToApp()}>
+              <img
+                width="75px"
+                src={MoneyProphetLogo}
+                alt="logo"
+                href="/dashboard"
+              />
             </SocialMediaWrapper>
           </Col>
         </Row>
