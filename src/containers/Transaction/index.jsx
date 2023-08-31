@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { Col } from "react-bootstrap";
 import { CustomRow as Row } from "../../components/Table";
@@ -15,6 +15,8 @@ import { getBeginningOfMonth, currentDate } from "../../utils/date";
 function TransactionsContainer() {
   const { number } = useValidations();
   const currentMonth = getBeginningOfMonth();
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const { actions } = useExpenses([]);
   const { actions: budgetActions, fixedExpenseCategories } = useBudget([]);
   const initialValues = {
@@ -33,12 +35,26 @@ function TransactionsContainer() {
 
   useEffect(() => {
     budgetActions.getExpenseCategories(currentMonth);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      });
+    }
   }, []);
 
   useEffect(() => {}, []);
 
   const handleSubmit = (values) => {
-    actions.createExpense(values);
+    const valuesWithLocation = {
+      ...values,
+      expenses: {
+        ...values.expenses,
+        latitude,
+        longitude,
+      },
+    };
+    actions.createExpense(valuesWithLocation);
   };
 
   return (
