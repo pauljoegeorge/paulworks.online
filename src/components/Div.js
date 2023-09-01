@@ -8,6 +8,7 @@ export const CentralDiv = styled(Container)`
   align-items: center;
   min-height: 100vh;
   margin-top: 50px;
+  width: 100%;
 `;
 
 export const SwitchingDiv = styled.div`

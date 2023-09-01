@@ -11,6 +11,7 @@ import IncomeRoutes from "./pages/Income/routes";
 import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
 import Expenses from "./pages/Expenses/routes";
 import TransactionsRoutes from "./pages/Transaction/routes";
+import MapRoutes from "./pages/Map/routes";
 import LayoutContainer from "./containers/Layout";
 import AppLayout from "./containers/Layout/AppLayout";
 import { getAuthToken } from "./utils/auth";
@@ -26,6 +27,7 @@ const routes = [
   ...ExpenseCategoriesRoutes,
   ...TransactionsRoutes,
   ...Expenses,
+  ...MapRoutes,
   ...ErrorRoutes,
 ];
 

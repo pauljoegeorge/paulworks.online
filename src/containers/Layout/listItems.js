@@ -3,10 +3,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import {
-  Report,
   BalanceOutlined,
   ReceiptLong,
   PostAdd,
+  PinDrop,
 } from "@mui/icons-material";
 import styled from "styled-components";
 import { SwitchingDiv } from "../../components/Div";
@@ -23,6 +23,10 @@ const StyledListItemButton = styled(ListItemButton)`
 
 export const mainListItems = (
   <SwitchingDiv>
+    <StyledListItemButton style={{ color: "white" }} href="/map">
+      <PinDrop />
+      <ListItemText primary="Map" />
+    </StyledListItemButton>
     <StyledListItemButton style={{ color: "white" }} href="/dashboard">
       <DashboardIcon />
       <ListItemText primary="Dashboard" />
