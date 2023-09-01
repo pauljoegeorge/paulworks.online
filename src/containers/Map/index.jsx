@@ -31,7 +31,7 @@ function MapViewContainer() {
 
   const markers = expensesWithLocation.map((expense) => ({
     position: [expense.latitude, expense.longitude],
-    content: `${expense.category_name}: ${expense.amount}`,
+    content: `${expense.category_names}: ${expense.amount_spent}`,
   }));
 
   const customIcon = L.icon({
@@ -51,7 +51,7 @@ function MapViewContainer() {
 
   useEffect(() => {
     if (selectedMonth) {
-      actions.getExpenses(selectedMonth);
+      actions.getGroupedExpenses(selectedMonth);
     }
   }, [selectedMonth]);
 
