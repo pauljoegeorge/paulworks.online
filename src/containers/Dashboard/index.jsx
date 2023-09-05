@@ -73,14 +73,17 @@ function DashboardContent() {
             <NoticeBox
               data={[
                 {
+                  key: "todays",
                   head: "Today's Expense",
                   value: formattedCurrency(todays_expense),
                 },
                 {
+                  key: "balance",
                   head: "Balance",
                   value: totalBalance,
                 },
                 {
+                  key: "weekly",
                   head: "Weekly Expense",
                   value: formattedCurrency(weekly_expense),
                 },

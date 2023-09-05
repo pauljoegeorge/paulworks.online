@@ -42,6 +42,6 @@ export const FlexChild = styled.div`
   align-items: ${(props) => (props.align ? props.align : "center")};
   width: ${(props) => (props.width ? props.width : "auto")};
   height: ${(props) => (props.height ? props.height : "auto")};
-  padding: 10px;
+  padding: ${(props) => (props.padding ? props.padding : "10px")};
   margin: ${(props) => (props.margin ? props.margin : "0px")};
 `;
