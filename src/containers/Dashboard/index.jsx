@@ -23,7 +23,8 @@ function DashboardContent() {
   const [pageLoading, setPageLoading] = useState(true);
   const date = moment(selectedMonth).format("MMMM YYYY");
   const { isLoading, expenseInsights, actions } = useInsights();
-  const { expense_by_categories } = expenseInsights || [];
+  const { expense_by_categories, weekly_expense, todays_expense } =
+    expenseInsights || [];
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
     (totals, category) => {
       return {
@@ -69,7 +70,22 @@ function DashboardContent() {
               <H2Purple>{date}</H2Purple>
               <RightArrow onClick={() => handleMonthChange("next")} />
             </FlexContainer>
-            <NoticeBox data={[{ head: "Balance", value: totalBalance }]} />
+            <NoticeBox
+              data={[
+                {
+                  head: "Today's Expense",
+                  value: formattedCurrency(todays_expense),
+                },
+                {
+                  head: "Balance",
+                  value: totalBalance,
+                },
+                {
+                  head: "Weekly Expense",
+                  value: formattedCurrency(weekly_expense),
+                },
+              ]}
+            />
             <Row className="mt-5">
               <OverallExpenseInsight expenseInsights={expenseInsights} />
             </Row>

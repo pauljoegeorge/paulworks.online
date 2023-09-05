@@ -28,6 +28,11 @@ export const Flex = styled.div`
   align-items: ${(props) => (props.align ? props.align : "center")};
   height: ${(props) => (props.height ? props.height : "auto")};
   flex: 1;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 export const FlexChild = styled.div`
@@ -38,4 +43,5 @@ export const FlexChild = styled.div`
   width: ${(props) => (props.width ? props.width : "auto")};
   height: ${(props) => (props.height ? props.height : "auto")};
   padding: 10px;
+  margin: ${(props) => (props.margin ? props.margin : "0px")};
 `;
