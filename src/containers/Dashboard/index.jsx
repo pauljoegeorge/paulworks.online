@@ -109,7 +109,7 @@ function DashboardContent() {
                       <P>{category.name}</P>
                     </td>
                     <td>
-                      <P>{category.total_expense_of_week}</P>
+                      <P>{formattedCurrency(category.total_expense_of_week)}</P>
                     </td>
                   </tr>
                 ))}
