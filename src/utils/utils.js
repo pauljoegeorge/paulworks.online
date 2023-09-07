@@ -37,16 +37,15 @@ export const formattedDate = (date) => {
   return date.format("YYYY-MM-DD");
 };
 
+export const setExpenseVisibility = (visibilities) => {
+  localStorage.setItem("expenseVisibility", JSON.stringify(visibilities));
+};
+
 export const getExpenseVisibility = () => {
   const visibilities = localStorage.getItem("expenseVisibility");
-  if(visibilities)
-    return JSON.parse(visibilities);
+  if (visibilities) return JSON.parse(visibilities);
 
   const defaultValues = { todays: true, balance: true, weekly: true };
   setExpenseVisibility(defaultValues);
   return defaultValues;
-};
-
-export const setExpenseVisibility = (visibilities) => {
-  localStorage.setItem("expenseVisibility", JSON.stringify(visibilities));
 };
