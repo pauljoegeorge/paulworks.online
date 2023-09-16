@@ -5,7 +5,10 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { H1, PBold } from "../../../components/Text";
 import { Flex, FlexChild } from "../../../components/Div";
 import { colors } from "../../../utils/colors";
-import { getExpenseVisibility, setExpenseVisibility } from "../../../utils/utils";
+import {
+  getExpenseVisibility,
+  setExpenseVisibility,
+} from "../../../utils/utils";
 
 const Item = styled.div`
   text-align: center;
@@ -16,7 +19,7 @@ function NoticeBox(props) {
   const [visibilities, setVisibilities] = useState(getExpenseVisibility());
 
   const switchVisibility = (key) => {
-    const newVisibilities = {...visibilities};
+    const newVisibilities = { ...visibilities };
     newVisibilities[key] = !newVisibilities[key];
     setExpenseVisibility(newVisibilities);
     setVisibilities(newVisibilities);
@@ -38,17 +41,17 @@ function NoticeBox(props) {
             <H1 color={colors.primary}>
               {visibilities[item?.key] ? item?.value : "￥ - - - - -"}
             </H1>
-            {visibilities[item?.key] ?
+            {visibilities[item?.key] ? (
               <Visibility
                 style={{ color: colors.primary }}
                 onClick={() => switchVisibility(item?.key)}
               />
-            :
+            ) : (
               <VisibilityOff
                 style={{ color: colors.primary, cursor: "pointer" }}
                 onClick={() => switchVisibility(item?.key)}
               />
-            }
+            )}
           </Item>
         </FlexChild>
       ))}

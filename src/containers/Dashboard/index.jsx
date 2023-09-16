@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import moment from "moment";
-import { Container, Row, Spinner } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import ExpenseInsight from "./components/ExpenseInsight";
 import OverallExpenseInsight from "./components/OverallExpenseInsight";
 import { useInsights } from "./hooks/useInsights";
 import NoticeBox from "./components/NoticeBox";
-import { Flex } from "../../components/Div";
 import {
   appendUrlToDate,
   addDateToUrl,
@@ -15,8 +14,9 @@ import {
 import CentralLoader from "../../components/CentralLoader";
 import { FlexContainer } from "../../components/Container";
 import { LeftArrow, RightArrow } from "../../components/Icon";
-import { H2Purple } from "../../components/Text";
+import { H2Purple, P } from "../../components/Text";
 import { formattedCurrency } from "../../utils/currency";
+import TableLayout from "../../components/TableLayout";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -35,6 +35,9 @@ function DashboardContent() {
     { totalBudget: 0, totalExpense: 0 }
   );
   const totalBalance = formattedCurrency(totalBudget - totalExpense);
+  const filteredExpenseCategories = (expense_by_categories || []).filter(
+    (category) => category.total_expense_of_week !== 0
+  );
 
   useEffect(() => {
     const month = addDateToUrl();
@@ -94,6 +97,23 @@ function DashboardContent() {
             </Row>
             <Row className="mt-5">
               <ExpenseInsight expenseInsights={expenseInsights} />
+            </Row>
+            <Row className="mt-5">
+              <TableLayout
+                title="Expenses of Week"
+                heads={["Category", "Amount"]}
+              >
+                {(filteredExpenseCategories || []).map((category) => (
+                  <tr>
+                    <td>
+                      <P>{category.name}</P>
+                    </td>
+                    <td>
+                      <P>{formattedCurrency(category.total_expense_of_week)}</P>
+                    </td>
+                  </tr>
+                ))}
+              </TableLayout>
             </Row>
           </Container>
         </>
