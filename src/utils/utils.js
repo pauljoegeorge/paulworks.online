@@ -14,11 +14,7 @@ export const addDateToUrl = () => {
   const dateParam = urlSearchParams.get("date");
   const providedDate = moment(dateParam).startOf("month");
 
-  const finalDate =
-    !dateParam || providedDate.isBefore(currentDate, "month")
-      ? currentDate
-      : providedDate;
-
+  const finalDate = !dateParam ? currentDate : providedDate;
   const formattedDate = finalDate.format("YYYY-MM-DD");
   const urlWithDate = `${window.location.pathname}?date=${formattedDate}`;
 
