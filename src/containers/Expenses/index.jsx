@@ -40,7 +40,12 @@ function ExpensesContainer() {
 
   useEffect(() => {
     if (selectedMonth) {
-      actions.getExpenses(selectedMonth);
+      const query = new URLSearchParams(window.location.search);
+      if (query.get("category")) {
+        actions.getExpenses(selectedMonth, query.get("category"));
+      } else {
+        actions.getExpenses(selectedMonth);
+      }
       budgetActions.getExpenseCategories(selectedMonth);
     }
   }, [selectedMonth]);
