@@ -17,7 +17,7 @@ import {
   formattedDate,
 } from "../../utils/utils";
 import { FlexContainer } from "../../components/Container";
-import { LeftArrow, RightArrow } from "../../components/Icon";
+import { LeftArrow, RightArrow, DownloadIcon } from "../../components/Icon";
 
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -54,6 +54,10 @@ function ExpensesContainer() {
     return setSelectedMonth(nextMonth);
   };
 
+  const handleExportReport = () => {
+    actions.exportExpenses(selectedMonth);
+  };
+
   const handleSubmit = (values) => {
     actions.updateExpenses(values, selectedMonth);
   };
@@ -76,6 +80,7 @@ function ExpensesContainer() {
                 <LeftArrow onClick={() => handleMonthChange("previous")} />
                 <H2Purple>{date}</H2Purple>
                 <RightArrow onClick={() => handleMonthChange("next")} />
+                <DownloadIcon onClick={() => handleExportReport()} />
               </FlexContainer>
               <>
                 {(initialValues.expenses || []).map((_, index) => (
