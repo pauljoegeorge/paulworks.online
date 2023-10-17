@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { NavigateNext, NavigateBefore } from "@mui/icons-material";
+import { NavigateNext, NavigateBefore, Download } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { colors } from "../utils/colors";
@@ -24,4 +24,11 @@ export const PlusIcon = styled(AddIcon)`
   cursor: pointer;
   margin-left: 14px;
   min-width: 50px;
+`;
+
+export const DownloadIcon = styled(Download)`
+  color: ${colors.purpleGrey};
+  cursor: pointer;
+  margin-left: 14px;
+  background: ${colors.grey};
 `;
