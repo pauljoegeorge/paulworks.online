@@ -6,15 +6,14 @@ import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 
 const Wrapper = styled.div`
-  padding-top: 10px;
-  background-color: ${(props) => (props.landingPage ? "black" : "#fff")};
+  background-color: ${(props) => (props.landingPage ? "#fff" : "#fff")};
   min-height: 100vh;
   overflow-y: auto;
 `;
 
 const ChildWrapper = styled.div`
   min-height: 100vh;
-  max-width: 100%;
+  width: 100vw;
 `;
 
 function LayoutContainer(props) {
@@ -28,7 +27,7 @@ function LayoutContainer(props) {
 
   return (
     <Wrapper landingPage={window.location.pathname === "/"}>
-      <Container fluid>
+      <Container fluid style={{ paddingLeft: "0px" }}>
         <Row>
           <Col>
             <ChildWrapper>{children}</ChildWrapper>

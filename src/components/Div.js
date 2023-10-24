@@ -7,7 +7,7 @@ export const CentralDiv = styled(Container)`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  margin-top: 50px;
+  margin-top: ${(props) => (props.mt ? props.mt : "50px")};
   width: 100%;
 `;
 
