@@ -6,8 +6,8 @@ function useExpenses() {
   const [isLoading, setLoading] = useState(false);
   const [expenses, setExpenses] = useState([]);
 
-  const getExpenses = async (month) => {
-    const response = await get(`expenses?from=${month}`);
+  const getExpenses = async (month, category = "") => {
+    const response = await get(`expenses?from=${month}&category=${category}`);
     setExpenses(response);
   };
 

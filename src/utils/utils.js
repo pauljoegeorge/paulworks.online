@@ -16,14 +16,21 @@ export const addDateToUrl = () => {
 
   const finalDate = !dateParam ? currentDate : providedDate;
   const formattedDate = finalDate.format("YYYY-MM-DD");
-  const urlWithDate = `${window.location.pathname}?date=${formattedDate}`;
+  urlSearchParams.set("date", formattedDate);
+  const urlWithDate = `
+    ${window.location.pathname}?${urlSearchParams.toString()}
+  `;
 
   window.history.pushState(null, "", urlWithDate);
   return formattedDate;
 };
 
 export const appendUrlToDate = (date) => {
-  const urlWithDate = `${window.location.pathname}?date=${date}`;
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  urlSearchParams.set("date", date);
+  const urlWithDate = `
+    ${window.location.pathname}?${urlSearchParams.toString()}
+  `;
   window.history.pushState(null, "", urlWithDate);
   return urlWithDate;
 };

@@ -6,10 +6,10 @@ body {
 }
 
 body {
-  font-family: 'Inconsolata', monospace;
+  font-family: 'Source Sans Pro',sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: black;
+  background-color: #fff;
   color: cornsilk;
   margin-bottom: 60px;
 }

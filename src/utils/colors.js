@@ -8,4 +8,5 @@ export const colors = {
   yellow: "#ff8f00",
   pastelPurple: "#966fd6",
   lavender: "#e6e6fa",
+  blue: "#0190cd",
 };

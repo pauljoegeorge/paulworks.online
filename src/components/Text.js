@@ -52,3 +52,20 @@ export const P = styled.p`
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 `;
+
+export const H1Span = styled.span`
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: ${(props) => (props.color ? props.color : "#fff")};
+`;
+
+export const H3Span = styled.span`
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
+  border: 1px solid;
+  padding: 1rem;
+  margin-right: 1rem;
+  color: ${(props) => (props.color ? props.color : "#fff")};
+`;
