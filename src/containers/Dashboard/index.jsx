@@ -17,11 +17,14 @@ import { LeftArrow, RightArrow } from "../../components/Icon";
 import { H2Purple, P } from "../../components/Text";
 import { formattedCurrency } from "../../utils/currency";
 import TableLayout from "../../components/TableLayout";
+import { getBeginningOfMonth } from "../../utils/date";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
   const [pageLoading, setPageLoading] = useState(true);
   const date = moment(selectedMonth).format("MMMM YYYY");
+  const currentMonth = getBeginningOfMonth();
+  const isCurrentMonth = currentMonth === selectedMonth;
   const { isLoading, expenseInsights, actions } = useInsights();
   const { expense_by_categories, weekly_expense, todays_expense } =
     expenseInsights || [];
@@ -98,23 +101,27 @@ function DashboardContent() {
             <Row className="mt-5">
               <ExpenseInsight expenseInsights={expenseInsights} />
             </Row>
-            <Row className="mt-5">
-              <TableLayout
-                title="Expenses of Week"
-                heads={["Category", "Amount"]}
-              >
-                {(filteredExpenseCategories || []).map((category) => (
-                  <tr>
-                    <td>
-                      <P>{category.name}</P>
-                    </td>
-                    <td>
-                      <P>{formattedCurrency(category.total_expense_of_week)}</P>
-                    </td>
-                  </tr>
-                ))}
-              </TableLayout>
-            </Row>
+            {isCurrentMonth && (
+              <Row className="mt-5">
+                <TableLayout
+                  title="Expenses of Week"
+                  heads={["Category", "Amount"]}
+                >
+                  {(filteredExpenseCategories || []).map((category) => (
+                    <tr>
+                      <td>
+                        <P>{category.name}</P>
+                      </td>
+                      <td>
+                        <P>
+                          {formattedCurrency(category.total_expense_of_week)}
+                        </P>
+                      </td>
+                    </tr>
+                  ))}
+                </TableLayout>
+              </Row>
+            )}
           </Container>
         </>
       )}

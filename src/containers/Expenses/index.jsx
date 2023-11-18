@@ -11,16 +11,27 @@ import { useExpenses } from "./hooks/useExpenses";
 import { useBudget } from "../ExpenseCategories/hooks/useBudget";
 import Input from "../../components/Input";
 import { useValidations } from "../../utils/validation";
+import WiseLogo from "../../assets/wise-logo.png";
 import {
   appendUrlToDate,
   addDateToUrl,
   formattedDate,
 } from "../../utils/utils";
 import { FlexContainer } from "../../components/Container";
-import { LeftArrow, RightArrow, DownloadIcon } from "../../components/Icon";
+import {
+  LeftArrow,
+  RightArrow,
+  DownloadIcon,
+  TableViewMode,
+  EditMode,
+} from "../../components/Icon";
+import { getDefaultExpenseSortParams } from "./utils/utils";
+import ExpensesViewMode from "./ExpenseViewMode";
 
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
+  const [viewMode, setViewMode] = useState(false);
+  const [sortParams, setSortParams] = useState(getDefaultExpenseSortParams());
   const { number } = useValidations();
   const { actions, expenses } = useExpenses([]);
   const { actions: budgetActions, fixedExpenseCategories } = useBudget([]);
@@ -42,6 +53,7 @@ function ExpensesContainer() {
     if (selectedMonth) {
       const query = new URLSearchParams(window.location.search);
       const category = query.get("category") || "";
+      setSortParams(getDefaultExpenseSortParams());
       actions.getExpenses(selectedMonth, category);
       budgetActions.getExpenseCategories(selectedMonth);
     }
@@ -54,6 +66,12 @@ function ExpensesContainer() {
         : formattedDate(moment(selectedMonth).subtract(1, "months"));
     appendUrlToDate(nextMonth);
     return setSelectedMonth(nextMonth);
+  };
+
+  const handleSortExpenses = (sortBy, sortOrder) => {
+    const query = new URLSearchParams(window.location.search);
+    const category = query.get("category") || "";
+    actions.getExpenses(selectedMonth, category, sortBy, sortOrder);
   };
 
   const handleExportReport = () => {
@@ -82,55 +100,78 @@ function ExpensesContainer() {
                 <LeftArrow onClick={() => handleMonthChange("previous")} />
                 <H2Purple>{date}</H2Purple>
                 <RightArrow onClick={() => handleMonthChange("next")} />
+                {!viewMode && (
+                  <TableViewMode onClick={() => setViewMode(true)} />
+                )}
+                {viewMode && <EditMode onClick={() => setViewMode(false)} />}
                 <DownloadIcon onClick={() => handleExportReport()} />
               </FlexContainer>
-              <>
-                {(initialValues.expenses || []).map((_, index) => (
+              {viewMode ? (
+                <ExpensesViewMode
+                  expenses={initialValues.expenses}
+                  handleSortExpenses={handleSortExpenses}
+                  sortParams={sortParams}
+                  setSortParams={setSortParams}
+                />
+              ) : (
+                <>
+                  {(initialValues.expenses || []).map((_, index) => (
+                    <Row className="mt-3 w-100 justify-content-center text-center">
+                      <Col xs={6} md={3} lg={3}>
+                        <Field
+                          name={`expenses[${index}].category_uid`}
+                          component={InputSelect}
+                          options={fixedExpenseOptions}
+                        />
+                      </Col>
+                      <Col xs={6} md={3} lg={3}>
+                        <Field
+                          name={`expenses[${index}].amount`}
+                          component={Input}
+                          validate={number}
+                          label="Amount"
+                        />
+                      </Col>
+                      <Col xs={6} md={3} lg={3}>
+                        <Field
+                          name={`expenses[${index}].transaction_date`}
+                          component={Input}
+                          type="date"
+                          label="Date"
+                        />
+                      </Col>
+                      <Col xs={6} md={3} lg={3}>
+                        <Field
+                          name={`expenses[${index}].notes`}
+                          component={Input}
+                          label={
+                            expenses[index].transaction_source === "wise" ? (
+                              <img
+                                src={WiseLogo}
+                                alt="wise logo"
+                                height="20px"
+                              />
+                            ) : (
+                              "Notes"
+                            )
+                          }
+                        />
+                      </Col>
+                    </Row>
+                  ))}
                   <Row className="mt-3 w-100 justify-content-center text-center">
-                    <Col xs={6} md={3} lg={3}>
-                      <Field
-                        name={`expenses[${index}].category_uid`}
-                        component={InputSelect}
-                        options={fixedExpenseOptions}
-                      />
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                      <Field
-                        name={`expenses[${index}].amount`}
-                        component={Input}
-                        validate={number}
-                        label="Amount"
-                      />
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                      <Field
-                        name={`expenses[${index}].transaction_date`}
-                        component={Input}
-                        type="date"
-                        label="Date"
-                      />
-                    </Col>
-                    <Col xs={6} md={3} lg={3}>
-                      <Field
-                        name={`expenses[${index}].notes`}
-                        component={Input}
-                        label="Notes"
-                      />
-                    </Col>
+                    <PrimaryButton
+                      variant="primary"
+                      size="lg"
+                      className="w-50"
+                      type="submit"
+                      disabled={pristine || !valid}
+                    >
+                      Save
+                    </PrimaryButton>
                   </Row>
-                ))}
-              </>
-              <Row className="mt-3 w-100 justify-content-center text-center">
-                <PrimaryButton
-                  variant="primary"
-                  size="lg"
-                  className="w-50"
-                  type="submit"
-                  disabled={pristine || !valid}
-                >
-                  Save
-                </PrimaryButton>
-              </Row>
+                </>
+              )}
             </CentralDiv>
           </form>
         );

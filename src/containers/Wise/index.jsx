@@ -7,14 +7,14 @@ import { PrimaryButton } from "../../components/Button";
 import { H1 } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
 import Input from "../../components/Input";
-import { getBeginningOfMonth, getEndOfMonth } from "../../utils/date";
+import { getPastDate, currentDate } from "../../utils/date";
 import WiseLogo from "../../assets/wise-logo.png";
 
 function WiseContainer() {
   const { actions, isAllowed } = useWise();
   const initialValues = {
-    from: getBeginningOfMonth(),
-    to: getEndOfMonth(),
+    from: getPastDate(30, "days"),
+    to: currentDate(),
   };
 
   useEffect(() => {
@@ -48,32 +48,37 @@ function WiseContainer() {
                   </span>
                 </Col>
               </Row>
-              <>
-                <Row className="mt-3 w-100 justify-content-center text-center">
-                  <Col xs={6}>
-                    <Field
-                      name="from"
-                      label="From"
-                      type="date"
-                      component={Input}
-                    />
-                  </Col>
-                  <Col xs={6}>
-                    <Field name="to" label="To" type="date" component={Input} />
-                  </Col>
-                </Row>
-              </>
               {isAllowed && (
-                <Row className="mt-3 w-100 justify-content-center text-center">
-                  <PrimaryButton
-                    variant="primary"
-                    size="lg"
-                    className="w-50"
-                    type="submit"
-                  >
-                    Save to Expenses
-                  </PrimaryButton>
-                </Row>
+                <>
+                  <Row className="mt-3 w-100 justify-content-center text-center">
+                    <Col xs={6}>
+                      <Field
+                        name="from"
+                        label="From"
+                        type="date"
+                        component={Input}
+                      />
+                    </Col>
+                    <Col xs={6}>
+                      <Field
+                        name="to"
+                        label="To"
+                        type="date"
+                        component={Input}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3 w-100 justify-content-center text-center">
+                    <PrimaryButton
+                      variant="primary"
+                      size="lg"
+                      className="w-50"
+                      type="submit"
+                    >
+                      Save to Expenses
+                    </PrimaryButton>
+                  </Row>
+                </>
               )}
             </CentralDiv>
           </form>

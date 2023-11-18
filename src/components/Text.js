@@ -35,7 +35,7 @@ export const PBold = styled.p`
   line-height: 2.5;
   color: #6c737f;
   margin-bottom: 10px;
-  text-transform: uppercase;
+  text-transform: ${(props) => (props.tt ? props.tt : "uppercase")};
   text-align: center;
 `;
 

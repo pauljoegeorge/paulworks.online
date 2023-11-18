@@ -29,7 +29,7 @@ function GoogleAuth(props) {
           <Image src={GoogleLogo} alt="google" />
         </Col>
         <Col xs={10} sm={8} xxl={8} className="text-start">
-          Sign in with Google
+          Continue with Google
         </Col>
       </Row>
     </Button>

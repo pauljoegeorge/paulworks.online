@@ -21,12 +21,12 @@ export default function OverallExpenseInsight(props) {
   const options = {
     series: [
       {
-        name: "budget",
+        name: "Budget",
         data: [totalBudget],
         color: colors.yellow,
       },
       {
-        name: "expense",
+        name: "Expense",
         data: [totalExpense],
         color: colors.pastelPurple,
       },

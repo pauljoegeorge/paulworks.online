@@ -13,3 +13,9 @@ export const getEndOfMonth = () => {
 };
 
 export const currentDate = () => moment().format("YYYY-MM-DD");
+
+export const getPastDate = (daysOrMonths, unit) => {
+  const today = moment();
+  const pastDate = today.subtract(daysOrMonths, unit);
+  return pastDate.format("YYYY-MM-DD");
+};

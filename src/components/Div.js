@@ -44,4 +44,5 @@ export const FlexChild = styled.div`
   height: ${(props) => (props.height ? props.height : "auto")};
   padding: ${(props) => (props.padding ? props.padding : "10px")};
   margin: ${(props) => (props.margin ? props.margin : "0px")};
+  box-shadow: ${(props) => (props.shadow ? props.shadow : "none")};
 `;
