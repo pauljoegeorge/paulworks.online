@@ -11,6 +11,7 @@ import IncomeRoutes from "./pages/Income/routes";
 import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
 import Expenses from "./pages/Expenses/routes";
 import TransactionsRoutes from "./pages/Transaction/routes";
+import WiseRoutes from "./pages/Wise/routes";
 import MapRoutes from "./pages/Map/routes";
 import LayoutContainer from "./containers/Layout";
 import AppLayout from "./containers/Layout/AppLayout";
@@ -28,6 +29,7 @@ const routes = [
   ...TransactionsRoutes,
   ...Expenses,
   ...MapRoutes,
+  ...WiseRoutes,
   ...ErrorRoutes,
 ];
 

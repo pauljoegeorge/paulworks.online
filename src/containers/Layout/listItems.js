@@ -9,6 +9,7 @@ import {
   PinDrop,
 } from "@mui/icons-material";
 import styled from "styled-components";
+import WiseIcon from "../../assets/wise-icon.png";
 import { SwitchingDiv } from "../../components/Div";
 
 const StyledListItemButton = styled(ListItemButton)`
@@ -42,6 +43,10 @@ export const mainListItems = (
     <StyledListItemButton style={{ color: "white" }} href="/expenses">
       <ReceiptLong />
       <ListItemText primary="Expenses" />
+    </StyledListItemButton>
+    <StyledListItemButton style={{ color: "white" }} href="/wise">
+      <img src={WiseIcon} alt="Wise icon" height="20px" />
+      <ListItemText primary="WISE" />
     </StyledListItemButton>
   </SwitchingDiv>
 );
