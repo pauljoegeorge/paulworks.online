@@ -64,8 +64,8 @@ function MapViewContainer() {
         style={{ width: "100%", height: "90%" }}
       >
         <TileLayer
-          attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-          url="https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png"
+          attributionControl={false}
+          url="https://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
         />
         {circles.map((circle) => (
           <Circle center={circle.center} radius={circle.radius} />
