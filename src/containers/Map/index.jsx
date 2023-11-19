@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
+import { MapContainer, Marker, Popup, Circle } from "react-leaflet";
+import ReactLeafletGoogleLayer from "react-leaflet-google-layer";
 import L from "leaflet";
 import styled from "styled-components";
 import iconMarker from "leaflet/dist/images/marker-icon.png";
@@ -16,6 +17,7 @@ const Wrapper = styled.div`
 `;
 
 function MapViewContainer() {
+  const googleMapsKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
   const [selectedMonth, setSelectedMonth] = useState();
   const { actions, expenses } = useExpenses([]);
   const expensesWithLocation = expenses.filter(
@@ -63,10 +65,7 @@ function MapViewContainer() {
         scrollWheelZoom={false}
         style={{ width: "100%", height: "90%" }}
       >
-        <TileLayer
-          attributionControl={false}
-          url="https://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
-        />
+        <ReactLeafletGoogleLayer apiKey={googleMapsKey} type="roadmap" />
         {circles.map((circle) => (
           <Circle center={circle.center} radius={circle.radius} />
         ))}
