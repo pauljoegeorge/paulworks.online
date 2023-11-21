@@ -33,7 +33,7 @@ function NoticeBox(props) {
           bg={colors.lavender}
           align="center"
           width="100%"
-          margin="20px"
+          margin="0px 20px"
           padding="50px"
           shadow="0 1px 2px rgba(128, 128, 144, 0.2), 0 2px 4px rgba(128, 128, 144, 0.3)"
         >

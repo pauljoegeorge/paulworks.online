@@ -18,6 +18,7 @@ import { H2Purple, P } from "../../components/Text";
 import { formattedCurrency } from "../../utils/currency";
 import TableLayout from "../../components/TableLayout";
 import { getBeginningOfMonth } from "../../utils/date";
+import SpendingRecommendations from "./components/SpendingRecommendations";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -26,8 +27,13 @@ function DashboardContent() {
   const currentMonth = getBeginningOfMonth();
   const isCurrentMonth = currentMonth === selectedMonth;
   const { isLoading, expenseInsights, actions } = useInsights();
-  const { expense_by_categories, weekly_expense, todays_expense } =
-    expenseInsights || [];
+  const {
+    expense_by_categories,
+    weekly_expense,
+    todays_expense,
+    allowance_per_day,
+    allowance_per_week,
+  } = expenseInsights || [];
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
     (totals, category) => {
       return {
@@ -95,6 +101,12 @@ function DashboardContent() {
                 },
               ]}
             />
+            <Row className="mt-5">
+              <SpendingRecommendations
+                allowancePerDay={allowance_per_day}
+                allowancePerWeek={allowance_per_week}
+              />
+            </Row>
             <Row className="mt-5">
               <OverallExpenseInsight expenseInsights={expenseInsights} />
             </Row>
