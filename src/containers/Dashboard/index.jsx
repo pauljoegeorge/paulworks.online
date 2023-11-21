@@ -47,6 +47,7 @@ function DashboardContent() {
   const filteredExpenseCategories = (expense_by_categories || []).filter(
     (category) => category.total_expense_of_week !== 0
   );
+  const showQuota = isCurrentMonth && allowance_per_day !== 0 && allowance_per_week !== 0;
 
   useEffect(() => {
     const month = addDateToUrl();
@@ -101,12 +102,14 @@ function DashboardContent() {
                 },
               ]}
             />
-            <Row className="mt-5">
-              <SpendingRecommendations
-                allowancePerDay={allowance_per_day}
-                allowancePerWeek={allowance_per_week}
-              />
-            </Row>
+            {showQuota && (
+              <Row className="mt-5">
+                <SpendingRecommendations
+                  allowancePerDay={allowance_per_day}
+                  allowancePerWeek={allowance_per_week}
+                />
+              </Row>
+            )}
             <Row className="mt-5">
               <OverallExpenseInsight expenseInsights={expenseInsights} />
             </Row>
