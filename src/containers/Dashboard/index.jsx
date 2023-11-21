@@ -47,7 +47,8 @@ function DashboardContent() {
   const filteredExpenseCategories = (expense_by_categories || []).filter(
     (category) => category.total_expense_of_week !== 0
   );
-  const showQuota = isCurrentMonth && allowance_per_day !== 0 && allowance_per_week !== 0;
+  const showQuota =
+    isCurrentMonth && (allowance_per_day !== 0 || allowance_per_week !== 0);
 
   useEffect(() => {
     const month = addDateToUrl();
