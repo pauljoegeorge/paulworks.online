@@ -19,6 +19,8 @@ import { formattedCurrency } from "../../utils/currency";
 import TableLayout from "../../components/TableLayout";
 import { getBeginningOfMonth } from "../../utils/date";
 import SpendingRecommendations from "./components/SpendingRecommendations";
+import DailyExpenseReport from "./components/DailyExpenseReport";
+import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -33,6 +35,8 @@ function DashboardContent() {
     todays_expense,
     allowance_per_day,
     allowance_per_week,
+    daily_report,
+    weekly_report,
   } = expenseInsights || [];
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
     (totals, category) => {
@@ -116,6 +120,12 @@ function DashboardContent() {
             </Row>
             <Row className="mt-5">
               <ExpenseInsight expenseInsights={expenseInsights} />
+            </Row>
+            <Row className="mt-5">
+              <DailyExpenseReport dailyReport={daily_report} />
+            </Row>
+            <Row className="mt-5">
+              <WeeklyExpenseReport weeklyReport={weekly_report} />
             </Row>
             {isCurrentMonth && (
               <Row className="mt-5">

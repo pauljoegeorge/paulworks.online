@@ -2,11 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { PieChart } from "@mui/x-charts";
 import { Typography } from "@mui/material";
+import { isMobile } from "../../../utils/utils";
 import { formattedCurrency } from "../../../utils/currency";
 import { colors } from "../../../utils/colors";
 
 function SpendingRecommendations(props) {
   const { allowancePerDay, allowancePerWeek } = props;
+  const mobileView = isMobile();
 
   const data = [
     {
@@ -31,8 +33,13 @@ function SpendingRecommendations(props) {
         faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
       },
     ],
-    margin: { top: 10, right: 10 },
-    height: 200,
+    slotProps: {
+      legend: {
+        position: { vertical: "bottom", horizontal: "right" },
+        padding: 0,
+      },
+    },
+    height: mobileView ? 350 : 200,
   };
 
   const tooltipFormatter = (slice) => {
@@ -52,7 +59,6 @@ function SpendingRecommendations(props) {
           ...s,
           valueFormatter: tooltipFormatter,
         }))}
-        height={200}
       />
     </div>
   );
