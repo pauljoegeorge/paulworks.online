@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 import { isMobile } from "../../../utils/utils";
 import { formattedCurrency } from "../../../utils/currency";
 import { colors } from "../../../utils/colors";
+import { MainWrapper } from "./Div";
 
 function SpendingRecommendations(props) {
   const { allowancePerDay, allowancePerWeek } = props;
@@ -14,13 +15,13 @@ function SpendingRecommendations(props) {
     {
       id: 1,
       value: allowancePerDay,
-      label: "Daily Spending Quota",
+      label: "Daily",
       color: colors.pastelPurple,
     },
     {
       id: 0,
       value: allowancePerWeek,
-      label: "Weekly Spending Quota",
+      label: "Weekly",
       color: colors.yellow,
     },
   ];
@@ -36,10 +37,11 @@ function SpendingRecommendations(props) {
     slotProps: {
       legend: {
         position: { vertical: "bottom", horizontal: "right" },
+        orientation: "vertical",
         padding: 0,
       },
     },
-    height: mobileView ? 350 : 200,
+    height: 200,
   };
 
   const tooltipFormatter = (slice) => {
@@ -49,9 +51,14 @@ function SpendingRecommendations(props) {
   };
 
   return (
-    <div style={{ width: "80vw" }}>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Recommendation
+    <MainWrapper>
+      <Typography
+        component="h2"
+        variant="h6"
+        color={colors.primary}
+        gutterBottom
+      >
+        Recommendation - Spending Quota
       </Typography>
       <PieChart
         {...barChartsParams}
@@ -60,7 +67,7 @@ function SpendingRecommendations(props) {
           valueFormatter: tooltipFormatter,
         }))}
       />
-    </div>
+    </MainWrapper>
   );
 }
 

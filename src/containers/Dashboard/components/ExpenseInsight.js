@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Typography } from "@mui/material";
 import { colors } from "../../../utils/colors";
 import { formattedCurrency } from "../../../utils/currency";
+import { MainWrapper } from "./Div";
 
 export default function ExpenseInsight(props) {
   const { expenseInsights } = props;
@@ -81,8 +82,13 @@ export default function ExpenseInsight(props) {
   };
 
   return (
-    <div style={{ width: "80vw" }}>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+    <MainWrapper>
+      <Typography
+        component="h2"
+        variant="h6"
+        color={colors.primary}
+        gutterBottom
+      >
         Expense By Category
       </Typography>
       <Chart
@@ -91,7 +97,7 @@ export default function ExpenseInsight(props) {
         type="bar"
         height={500}
       />
-    </div>
+    </MainWrapper>
   );
 }
 

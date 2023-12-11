@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 import { Typography } from "@mui/material";
 import { formattedCurrency } from "../../../utils/currency";
 import { colors } from "../../../utils/colors";
+import { MainWrapper } from "./Div";
 
 function DailyExpenseReport(props) {
   const { dailyReport } = props;
@@ -65,8 +66,13 @@ function DailyExpenseReport(props) {
   };
 
   return (
-    <div style={{ width: "80vw" }}>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+    <MainWrapper>
+      <Typography
+        component="h2"
+        variant="h6"
+        color={colors.primary}
+        gutterBottom
+      >
         Daily Expense Report
       </Typography>
       <Chart
@@ -75,7 +81,7 @@ function DailyExpenseReport(props) {
         type="line"
         height={350}
       />
-    </div>
+    </MainWrapper>
   );
 }
 

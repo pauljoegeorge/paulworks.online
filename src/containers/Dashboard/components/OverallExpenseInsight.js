@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 import { Typography } from "@mui/material";
 import { colors } from "../../../utils/colors";
 import { formattedCurrency } from "../../../utils/currency";
+import { MainWrapper } from "./Div";
 
 export default function OverallExpenseInsight(props) {
   const { expenseInsights } = props;
@@ -71,8 +72,13 @@ export default function OverallExpenseInsight(props) {
     },
   };
   return (
-    <div style={{ width: "80vw" }}>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+    <MainWrapper>
+      <Typography
+        component="h2"
+        variant="h6"
+        color={colors.primary}
+        gutterBottom
+      >
         Overall Expense
       </Typography>
       <Chart
@@ -81,7 +87,7 @@ export default function OverallExpenseInsight(props) {
         type="bar"
         height={350}
       />
-    </div>
+    </MainWrapper>
   );
 }
 

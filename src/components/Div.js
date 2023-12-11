@@ -27,12 +27,24 @@ export const Flex = styled.div`
   justify-content: ${(props) => (props.justify ? props.justify : "center")};
   align-items: ${(props) => (props.align ? props.align : "center")};
   height: ${(props) => (props.height ? props.height : "auto")};
+  gap: ${(props) => (props.gap ? props.gap : "0px")};
   flex: 1;
 
   @media (max-width: 767px) {
     flex-direction: column;
     width: 100%;
   }
+`;
+
+export const FlexContainer = styled.div`
+  display: flex;
+  background: ${(props) => (props.bg ? props.bg : "none")};
+  flex-direction: ${(props) => (props.direction ? props.direction : "row")};
+  justify-content: ${(props) => (props.justify ? props.justify : "center")};
+  align-items: ${(props) => (props.align ? props.align : "center")};
+  height: ${(props) => (props.height ? props.height : "auto")};
+  gap: ${(props) => (props.gap ? props.gap : "0px")};
+  flex: 1;
 `;
 
 export const FlexChild = styled.div`
