@@ -18,6 +18,9 @@ import { H2Purple, P } from "../../components/Text";
 import { formattedCurrency } from "../../utils/currency";
 import TableLayout from "../../components/TableLayout";
 import { getBeginningOfMonth } from "../../utils/date";
+import SpendingRecommendations from "./components/SpendingRecommendations";
+import DailyExpenseReport from "./components/DailyExpenseReport";
+import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -26,8 +29,15 @@ function DashboardContent() {
   const currentMonth = getBeginningOfMonth();
   const isCurrentMonth = currentMonth === selectedMonth;
   const { isLoading, expenseInsights, actions } = useInsights();
-  const { expense_by_categories, weekly_expense, todays_expense } =
-    expenseInsights || [];
+  const {
+    expense_by_categories,
+    weekly_expense,
+    todays_expense,
+    allowance_per_day,
+    allowance_per_week,
+    daily_report,
+    weekly_report,
+  } = expenseInsights || [];
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
     (totals, category) => {
       return {
@@ -41,6 +51,8 @@ function DashboardContent() {
   const filteredExpenseCategories = (expense_by_categories || []).filter(
     (category) => category.total_expense_of_week !== 0
   );
+  const showQuota =
+    isCurrentMonth && (allowance_per_day !== 0 || allowance_per_week !== 0);
 
   useEffect(() => {
     const month = addDateToUrl();
@@ -95,11 +107,25 @@ function DashboardContent() {
                 },
               ]}
             />
+            {showQuota && (
+              <Row className="mt-5">
+                <SpendingRecommendations
+                  allowancePerDay={allowance_per_day}
+                  allowancePerWeek={allowance_per_week}
+                />
+              </Row>
+            )}
             <Row className="mt-5">
               <OverallExpenseInsight expenseInsights={expenseInsights} />
             </Row>
             <Row className="mt-5">
               <ExpenseInsight expenseInsights={expenseInsights} />
+            </Row>
+            <Row className="mt-5">
+              <DailyExpenseReport dailyReport={daily_report} />
+            </Row>
+            <Row className="mt-5">
+              <WeeklyExpenseReport weeklyReport={weekly_report} />
             </Row>
             {isCurrentMonth && (
               <Row className="mt-5">

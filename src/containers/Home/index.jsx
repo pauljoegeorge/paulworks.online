@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   text-align: center;
   color: #0c1021;
   background: #0c1021;
+  width: 100vw;
 `;
 const Heading = styled.p`
   font-size: 3rem;

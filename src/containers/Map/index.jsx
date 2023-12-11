@@ -12,8 +12,7 @@ import { addDateToUrl } from "../../utils/utils";
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100vh;
-  margin-top: 50px;
+  height: calc(100vh - 64px);
 `;
 
 function MapViewContainer() {
@@ -63,7 +62,7 @@ function MapViewContainer() {
         center={circles.length === 0 ? defaultPosition : circles[0].center}
         zoom={13}
         scrollWheelZoom={false}
-        style={{ width: "100%", height: "90%" }}
+        style={{ width: "100%", height: "100%" }}
       >
         <ReactLeafletGoogleLayer apiKey={googleMapsKey} type="roadmap" />
         {circles.map((circle) => (
