@@ -16,8 +16,7 @@ function useWise() {
   const saveCardTransactions = async (values) => {
     try {
       setLoading(true);
-      const data = { from: values.from, to: values.to };
-      const response = await post("integrations/wise/transactions", data);
+      const response = await post("integrations/wise/transactions", values);
       if (response.data === "") {
         Notify.success("Saved card transactions to expenses!");
       } else {
