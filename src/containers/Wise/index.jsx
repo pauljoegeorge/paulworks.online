@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { Col } from "react-bootstrap";
 import { useWise } from "./hooks/useWise";
@@ -11,6 +11,8 @@ import { getPastDate, currentDate } from "../../utils/date";
 import WiseLogo from "../../assets/wise-logo.png";
 
 function WiseContainer() {
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const { actions, isAllowed } = useWise();
   const initialValues = {
     from: getPastDate(30, "days"),
@@ -19,11 +21,22 @@ function WiseContainer() {
 
   useEffect(() => {
     actions.checkPermission();
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      });
+    }
   }, []);
 
   const handleSubmit = (values) => {
     if (isAllowed) {
-      actions.saveCardTransactions(values);
+      const valuesWithLocation = {
+        ...values,
+        latitude,
+        longitude,
+      };
+      actions.saveCardTransactions(valuesWithLocation);
     }
   };
 

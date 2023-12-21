@@ -102,7 +102,7 @@ function HomeContainer() {
   };
 
   const handleRouteToApp = () => {
-    window.location.href = "/dashboard";
+    window.location.href = mobileView ? "/new" : "/dashboard";
   };
 
   return (
