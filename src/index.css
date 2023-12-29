@@ -12,6 +12,7 @@ body {
   background-color: #fff;
   color: cornsilk;
   margin-bottom: 60px;
+  overflow: hidden;
 }
 
 code {

@@ -6,10 +6,17 @@ import { Typography } from "@mui/material";
 import { colors } from "../../../utils/colors";
 import { formattedCurrency } from "../../../utils/currency";
 import { MainWrapper } from "./Div";
+import { isMobile } from "../../../utils/utils";
+
+const ScrollableChild = styled.div`
+  overflow-x: auto;
+  white-space: nowrap;
+`;
 
 export default function ExpenseInsight(props) {
   const { expenseInsights } = props;
   const { expense_by_categories } = expenseInsights || [];
+  const mobileView = isMobile();
 
   const options = {
     series: [
@@ -31,7 +38,7 @@ export default function ExpenseInsight(props) {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "60%",
+        columnWidth: "80%",
         endingShape: "rounded",
         dataLabels: {
           position: "top",
@@ -53,7 +60,7 @@ export default function ExpenseInsight(props) {
     },
     stroke: {
       show: true,
-      width: 2,
+      width: 10,
       colors: ["transparent"],
     },
     xaxis: {
@@ -91,12 +98,15 @@ export default function ExpenseInsight(props) {
       >
         Expense By Category
       </Typography>
-      <Chart
-        options={options}
-        series={options.series}
-        type="bar"
-        height={500}
-      />
+      <ScrollableChild>
+        <Chart
+          options={options}
+          series={options.series}
+          type="bar"
+          height={500}
+          {...(mobileView ? { width: 700 } : {})}
+        />
+      </ScrollableChild>
     </MainWrapper>
   );
 }

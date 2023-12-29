@@ -21,6 +21,7 @@ import { getBeginningOfMonth } from "../../utils/date";
 import SpendingRecommendations from "./components/SpendingRecommendations";
 import DailyExpenseReport from "./components/DailyExpenseReport";
 import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
+import { MainWrapper } from "./components/Div";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -76,7 +77,7 @@ function DashboardContent() {
   };
 
   return (
-    <>
+    <MainWrapper>
       {isLoading || pageLoading ? (
         <CentralLoader />
       ) : (
@@ -151,7 +152,7 @@ function DashboardContent() {
           </Container>
         </>
       )}
-    </>
+    </MainWrapper>
   );
 }
 

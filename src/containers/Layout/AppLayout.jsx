@@ -12,6 +12,11 @@ import NavigationBar from "./components/NaviBar";
 
 const ChildWrapper = styled.div`
   min-height: 100vh;
+  max-width: 85%;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 function AppLayout(props) {

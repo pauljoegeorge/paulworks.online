@@ -34,7 +34,7 @@ function DailyExpenseReport(props) {
       },
     },
     stroke: {
-      curve: "straight",
+      curve: "smooth",
     },
     grid: {
       row: {
