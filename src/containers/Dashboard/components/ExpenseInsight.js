@@ -54,7 +54,13 @@ export default function ExpenseInsight(props) {
         colors: [colors.primary],
         fontSize: "12px",
       },
-      formatter(val) {
+      formatter(val, opts) {
+        if (
+          opts.globals.series[0][opts.dataPointIndex] ===
+            opts.globals.series[1][opts.dataPointIndex] &&
+          opts.seriesIndex === 1
+        )
+          return "";
         return `${formattedCurrency(val)}`;
       },
     },
