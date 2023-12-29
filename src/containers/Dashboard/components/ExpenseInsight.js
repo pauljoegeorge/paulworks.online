@@ -58,7 +58,7 @@ export default function ExpenseInsight(props) {
         if (
           opts.globals.series[0][opts.dataPointIndex] ===
             opts.globals.series[1][opts.dataPointIndex] &&
-          opts.seriesIndex === 1
+          opts.seriesIndex === 0
         )
           return "";
         return `${formattedCurrency(val)}`;
