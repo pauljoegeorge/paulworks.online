@@ -66,7 +66,7 @@ function DailyExpenseReport(props) {
   };
 
   return (
-    <MainWrapper>
+    <>
       <Typography
         component="h2"
         variant="h6"
@@ -81,7 +81,7 @@ function DailyExpenseReport(props) {
         type="line"
         height={350}
       />
-    </MainWrapper>
+    </>
   );
 }
 
