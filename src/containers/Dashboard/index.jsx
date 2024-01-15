@@ -38,6 +38,8 @@ function DashboardContent() {
     allowance_per_week,
     daily_report,
     weekly_report,
+    top_transactions,
+    popular_transactions,
   } = expenseInsights || [];
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
     (totals, category) => {
@@ -130,27 +132,75 @@ function DashboardContent() {
                 <WeeklyExpenseReport weeklyReport={weekly_report} />
               </Col>
             </Row>
-            {isCurrentMonth && filteredExpenseCategories.length > 0 && (
-              <Row className="mt-5">
-                <TableLayout
-                  title="Current Week Expenses"
-                  heads={["Category", "Amount"]}
-                >
-                  {(filteredExpenseCategories || []).map((category) => (
-                    <tr>
-                      <td>
-                        <P>{category.name}</P>
-                      </td>
-                      <td>
-                        <P>
-                          {formattedCurrency(category.total_expense_of_week)}
-                        </P>
-                      </td>
-                    </tr>
-                  ))}
-                </TableLayout>
-              </Row>
-            )}
+            <Row className="mt-5">
+              <Col>
+                {isCurrentMonth && filteredExpenseCategories.length > 0 && (
+                  <TableLayout
+                    title="Current Week Expenses"
+                    heads={["Category", "Amount"]}
+                  >
+                    {(filteredExpenseCategories || []).map((category) => (
+                      <tr>
+                        <td>
+                          <P>{category.name}</P>
+                        </td>
+                        <td>
+                          <P>
+                            {formattedCurrency(category.total_expense_of_week)}
+                          </P>
+                        </td>
+                      </tr>
+                    ))}
+                  </TableLayout>
+                )}
+              </Col>
+              <Col>
+                {top_transactions.length > 0 && (
+                  <TableLayout
+                    title="Top Transactions"
+                    heads={["Category", "Amount", "Date"]}
+                  >
+                    {(top_transactions || []).map((transaction) => (
+                      <tr>
+                        <td>
+                          <P>{transaction.category_name}</P>
+                        </td>
+                        <td>
+                          <P>{formattedCurrency(transaction.amount)}</P>
+                        </td>
+                        <td>
+                          <P>{transaction.transaction_date}</P>
+                        </td>
+                      </tr>
+                    ))}
+                  </TableLayout>
+                )}
+              </Col>
+              <Col>
+                {Object.keys(popular_transactions).length > 0 && (
+                  <TableLayout
+                    title="Popular Transactions"
+                    heads={["Notes", "Total Transactions", "Total Spent"]}
+                  >
+                    {Object.entries(popular_transactions || []).map(
+                      ([notes, transaction]) => (
+                        <tr>
+                          <td>
+                            <P>{notes}</P>
+                          </td>
+                          <td>
+                            <P>{transaction.count}</P>
+                          </td>
+                          <td>
+                            <P>{formattedCurrency(transaction.total_spent)}</P>
+                          </td>
+                        </tr>
+                      )
+                    )}
+                  </TableLayout>
+                )}
+              </Col>
+            </Row>
           </Container>
         </>
       )}
