@@ -26,13 +26,10 @@ function ExpenseCategoriesContainer() {
   const currentMonth = getBeginningOfMonth();
   const { actions, fixedExpenseCategories } = useBudget();
   const date = moment(selectedMonth).format("MMMM YYYY");
+  const prevWeekDisabled = currentMonth === selectedMonth;
   const initialValues = { fixedExpenseCategories };
   const [numExpenseCategories, setNumExpenseCategories] = useState(
     fixedExpenseCategories.length
-  );
-  const prevWeekDisabled = currentMonth === selectedMonth;
-  const totalBudget = formattedCurrency(
-    fixedExpenseCategories.reduce((acc, expense) => acc + expense.budget, 0)
   );
 
   useEffect(() => {
@@ -74,7 +71,14 @@ function ExpenseCategoriesContainer() {
       onSubmit={handleSubmit}
       initialValues={initialValues}
       render={({ handleSubmit: formHandleSubmit, form: { getState } }) => {
-        const { pristine, valid } = getState();
+        const { pristine, valid, values } = getState();
+        const totalBudget = formattedCurrency(
+          values.fixedExpenseCategories.reduce(
+            (acc, expense) => acc + parseInt(expense.budget || 0, 10),
+            0
+          )
+        );
+
         return (
           <form onSubmit={formHandleSubmit}>
             <CentralDiv className="justify-content-center text-center">

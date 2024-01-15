@@ -39,9 +39,6 @@ function ExpensesContainer() {
   const { actions: budgetActions, fixedExpenseCategories } = useBudget([]);
   const date = moment(selectedMonth).format("MMMM YYYY");
   const initialValues = { expenses };
-  const totalExpense = formattedCurrency(
-    expenses.reduce((total, expense) => total + expense.amount, 0)
-  );
   const fixedExpenseOptions = Object.keys(fixedExpenseCategories).map(
     (ind) => ({
       value: fixedExpenseCategories[ind].uid,
@@ -92,7 +89,13 @@ function ExpensesContainer() {
       onSubmit={handleSubmit}
       initialValues={initialValues}
       render={({ handleSubmit: formHandleSubmit, form: { getState } }) => {
-        const { pristine, valid } = getState();
+        const { pristine, valid, values } = getState();
+        const totalExpense = formattedCurrency(
+          values.expenses.reduce(
+            (total, expense) => total + parseInt(expense.amount || 0, 10),
+            0
+          )
+        );
         return (
           <form onSubmit={formHandleSubmit}>
             <CentralDiv className="justify-content-center text-center">
