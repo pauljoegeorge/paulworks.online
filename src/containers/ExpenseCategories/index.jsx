@@ -4,7 +4,7 @@ import { Col } from "react-bootstrap";
 import moment from "moment";
 import { CustomRow as Row } from "../../components/Table";
 import { PrimaryButton } from "../../components/Button";
-import { H1, H2Purple } from "../../components/Text";
+import { H1, H2Purple, H1Span } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
 import { useBudget } from "./hooks/useBudget";
 import Input from "../../components/Input";
@@ -17,6 +17,8 @@ import {
 import { FlexContainer } from "../../components/Container";
 import { LeftArrow, RightArrow, PlusIcon } from "../../components/Icon";
 import { getBeginningOfMonth } from "../../utils/date";
+import { colors } from "../../utils/colors";
+import { formattedCurrency } from "../../utils/currency";
 
 function ExpenseCategoriesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -24,11 +26,11 @@ function ExpenseCategoriesContainer() {
   const currentMonth = getBeginningOfMonth();
   const { actions, fixedExpenseCategories } = useBudget();
   const date = moment(selectedMonth).format("MMMM YYYY");
+  const prevWeekDisabled = currentMonth === selectedMonth;
   const initialValues = { fixedExpenseCategories };
   const [numExpenseCategories, setNumExpenseCategories] = useState(
     fixedExpenseCategories.length
   );
-  const prevWeekDisabled = currentMonth === selectedMonth;
 
   useEffect(() => {
     const month = addDateToUrl();
@@ -69,7 +71,14 @@ function ExpenseCategoriesContainer() {
       onSubmit={handleSubmit}
       initialValues={initialValues}
       render={({ handleSubmit: formHandleSubmit, form: { getState } }) => {
-        const { pristine, valid } = getState();
+        const { pristine, valid, values } = getState();
+        const totalBudget = formattedCurrency(
+          values.fixedExpenseCategories.reduce(
+            (acc, expense) => acc + parseInt(expense.budget || 0, 10),
+            0
+          )
+        );
+
         return (
           <form onSubmit={formHandleSubmit}>
             <CentralDiv className="justify-content-center text-center">
@@ -83,10 +92,13 @@ function ExpenseCategoriesContainer() {
                   disabled={prevWeekDisabled}
                   onClick={() => handleMonthChange("previous")}
                 />
-                <H2Purple>{date}</H2Purple>
+                <div>
+                  <H2Purple>{date}</H2Purple>
+                  <H1Span color={colors.primary}>Total: {totalBudget}</H1Span>
+                </div>
                 <RightArrow onClick={() => handleMonthChange("next")} />
               </FlexContainer>
-              <>
+              <div className="mt-3">
                 {Array.from({ length: numExpenseCategories }).map(
                   (_, index) => (
                     <Row className="mt-3 w-100 justify-content-center text-center">
@@ -108,7 +120,7 @@ function ExpenseCategoriesContainer() {
                     </Row>
                   )
                 )}
-              </>
+              </div>
               <Row className="mt-3 w-100 justify-content-center text-center">
                 <PlusIcon onClick={() => handleAddCategory()} />
               </Row>

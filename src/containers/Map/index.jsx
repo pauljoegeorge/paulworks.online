@@ -11,6 +11,8 @@ import { useExpenses } from "../Expenses/hooks/useExpenses";
 import { addDateToUrl } from "../../utils/utils";
 
 const Wrapper = styled.div`
+  position: fixed;
+  left: 0;
   width: 100vw;
   height: calc(100vh - 64px);
 `;

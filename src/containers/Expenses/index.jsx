@@ -5,7 +5,7 @@ import moment from "moment";
 import { CustomRow as Row } from "../../components/Table";
 import InputSelect from "../../components/InputSelect";
 import { PrimaryButton } from "../../components/Button";
-import { H1, H2Purple } from "../../components/Text";
+import { H1, H2Purple, H1Span } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
 import { useExpenses } from "./hooks/useExpenses";
 import { useBudget } from "../ExpenseCategories/hooks/useBudget";
@@ -17,6 +17,7 @@ import {
   addDateToUrl,
   formattedDate,
 } from "../../utils/utils";
+import { formattedCurrency } from "../../utils/currency";
 import { FlexContainer } from "../../components/Container";
 import {
   LeftArrow,
@@ -27,6 +28,7 @@ import {
 } from "../../components/Icon";
 import { getDefaultExpenseSortParams } from "./utils/utils";
 import ExpensesViewMode from "./ExpenseViewMode";
+import { colors } from "../../utils/colors";
 
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -87,7 +89,13 @@ function ExpensesContainer() {
       onSubmit={handleSubmit}
       initialValues={initialValues}
       render={({ handleSubmit: formHandleSubmit, form: { getState } }) => {
-        const { pristine, valid } = getState();
+        const { pristine, valid, values } = getState();
+        const totalExpense = formattedCurrency(
+          values.expenses.reduce(
+            (total, expense) => total + parseInt(expense.amount || 0, 10),
+            0
+          )
+        );
         return (
           <form onSubmit={formHandleSubmit}>
             <CentralDiv className="justify-content-center text-center">
@@ -98,7 +106,10 @@ function ExpensesContainer() {
               </Row>
               <FlexContainer alignItems="baseline">
                 <LeftArrow onClick={() => handleMonthChange("previous")} />
-                <H2Purple>{date}</H2Purple>
+                <div>
+                  <H2Purple>{date}</H2Purple>
+                  <H1Span color={colors.primary}>Total: {totalExpense}</H1Span>
+                </div>
                 <RightArrow onClick={() => handleMonthChange("next")} />
                 {!viewMode && (
                   <TableViewMode onClick={() => setViewMode(true)} />
@@ -114,7 +125,7 @@ function ExpensesContainer() {
                   setSortParams={setSortParams}
                 />
               ) : (
-                <>
+                <div className="mt-3">
                   {(initialValues.expenses || []).map((_, index) => (
                     <Row className="mt-3 w-100 justify-content-center text-center">
                       <Col xs={6} md={3} lg={3}>
@@ -170,7 +181,7 @@ function ExpensesContainer() {
                       Save
                     </PrimaryButton>
                   </Row>
-                </>
+                </div>
               )}
             </CentralDiv>
           </form>

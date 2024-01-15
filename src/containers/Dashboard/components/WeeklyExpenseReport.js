@@ -66,7 +66,7 @@ function WeeklyExpenseReport(props) {
   };
 
   return (
-    <MainWrapper>
+    <>
       <Typography
         component="h2"
         variant="h6"
@@ -79,9 +79,9 @@ function WeeklyExpenseReport(props) {
         options={options}
         series={options.series}
         type="line"
-        height={350}
+        height={300}
       />
-    </MainWrapper>
+    </>
   );
 }
 

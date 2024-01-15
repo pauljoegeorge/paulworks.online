@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import moment from "moment";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import ExpenseInsight from "./components/ExpenseInsight";
 import OverallExpenseInsight from "./components/OverallExpenseInsight";
 import { useInsights } from "./hooks/useInsights";
@@ -21,6 +21,7 @@ import { getBeginningOfMonth } from "../../utils/date";
 import SpendingRecommendations from "./components/SpendingRecommendations";
 import DailyExpenseReport from "./components/DailyExpenseReport";
 import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
+import { MainWrapper } from "./components/Div";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -76,7 +77,7 @@ function DashboardContent() {
   };
 
   return (
-    <>
+    <MainWrapper>
       {isLoading || pageLoading ? (
         <CentralLoader />
       ) : (
@@ -122,15 +123,17 @@ function DashboardContent() {
               <ExpenseInsight expenseInsights={expenseInsights} />
             </Row>
             <Row className="mt-5">
-              <DailyExpenseReport dailyReport={daily_report} />
+              <Col>
+                <DailyExpenseReport dailyReport={daily_report} />
+              </Col>
+              <Col>
+                <WeeklyExpenseReport weeklyReport={weekly_report} />
+              </Col>
             </Row>
-            <Row className="mt-5">
-              <WeeklyExpenseReport weeklyReport={weekly_report} />
-            </Row>
-            {isCurrentMonth && (
+            {isCurrentMonth && filteredExpenseCategories.length > 0 && (
               <Row className="mt-5">
                 <TableLayout
-                  title="Expenses of Week"
+                  title="Current Week Expenses"
                   heads={["Category", "Amount"]}
                 >
                   {(filteredExpenseCategories || []).map((category) => (
@@ -151,7 +154,7 @@ function DashboardContent() {
           </Container>
         </>
       )}
-    </>
+    </MainWrapper>
   );
 }
 
