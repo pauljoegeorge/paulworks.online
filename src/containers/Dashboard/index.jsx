@@ -158,7 +158,7 @@ function DashboardContent() {
                 {top_transactions.length > 0 && (
                   <TableLayout
                     title="Top Transactions"
-                    heads={["Category", "Amount", "Date"]}
+                    heads={["Category", "Amount", "Date", "Notes"]}
                   >
                     {(top_transactions || []).map((transaction) => (
                       <tr>
@@ -170,6 +170,9 @@ function DashboardContent() {
                         </td>
                         <td>
                           <P>{transaction.transaction_date}</P>
+                        </td>
+                        <td>
+                          <P>{transaction.notes}</P>
                         </td>
                       </tr>
                     ))}
