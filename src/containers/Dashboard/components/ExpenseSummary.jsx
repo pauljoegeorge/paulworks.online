@@ -104,7 +104,12 @@ function ExpenseSummary(props) {
                     </FirstFlexChild>
                     <Flex justify="space-between">
                       <FlexChild>
-                        <PBold tt="capitalize" size="1rem" mb="0px">
+                        <PBold
+                          tt="capitalize"
+                          size="1rem"
+                          mb="0px"
+                          align="left"
+                        >
                           {transaction.category_name}
                         </PBold>
                         <P align="left">{transaction.notes || ""}</P>

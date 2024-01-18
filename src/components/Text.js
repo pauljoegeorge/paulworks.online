@@ -36,7 +36,7 @@ export const PBold = styled.p`
   color: #6c737f;
   margin-bottom: ${(props) => (props.mb ? props.mb : "10px")};
   text-transform: ${(props) => (props.tt ? props.tt : "uppercase")};
-  text-align: center;
+  text-align: ${(props) => (props.align ? props.align : "center")};
   padding: ${(props) => (props.padding ? props.padding : "0px")};
 `;
 
