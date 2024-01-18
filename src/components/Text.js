@@ -38,6 +38,7 @@ export const PBold = styled.p`
   text-transform: ${(props) => (props.tt ? props.tt : "uppercase")};
   text-align: ${(props) => (props.align ? props.align : "center")};
   padding: ${(props) => (props.padding ? props.padding : "0px")};
+  width: 100%;
 `;
 
 export const H3Bold = styled.h3`

@@ -54,7 +54,7 @@ function ExpenseSummary(props) {
               fontSize="1.5rem"
               fontWeight="600"
             >
-              This Week
+              This Week 📈
             </Typography>
             {(filteredExpenseCategories || []).map((category) => (
               <Item>
@@ -65,7 +65,7 @@ function ExpenseSummary(props) {
                     </PBold>
                   </FlexChild>
                   <FlexChild>
-                    <PText bg={colors.lightOrange} padding="8px">
+                    <PText bg={colors.lightOrange} padding="8px" br="10px">
                       {formattedCurrency(category.total_expense_of_week)}
                     </PText>
                   </FlexChild>
