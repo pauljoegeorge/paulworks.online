@@ -15,7 +15,7 @@ import { formattedCurrency } from "../../../utils/currency";
 
 const DateBox = styled.div`
   padding: 8px;
-  background-color: rgb(243, 244, 246);
+  background-color: ${colors.lightGrey};
   border-radius: 16px;
   max-width: fit-content;
 `;
@@ -23,6 +23,13 @@ const DateBox = styled.div`
 const FirstFlexChild = styled.div`
   padding-top: 3px;
   flex: 0 0 15%;
+`;
+
+const Item = styled.div`
+  cursor: auto;
+  &:hover {
+    background-color: ${colors.lightGrey};
+  }
 `;
 
 function ExpenseSummary(props) {
@@ -50,7 +57,7 @@ function ExpenseSummary(props) {
               This Week
             </Typography>
             {(filteredExpenseCategories || []).map((category) => (
-              <>
+              <Item>
                 <Flex justify="space-between">
                   <FlexChild>
                     <PBold tt="capitalize" size="1rem">
@@ -64,7 +71,7 @@ function ExpenseSummary(props) {
                   </FlexChild>
                 </Flex>
                 <Divider />
-              </>
+              </Item>
             ))}
           </BoxWithShadow>
         </Col>
@@ -90,7 +97,7 @@ function ExpenseSummary(props) {
               });
               const dayOfTransaction = `0${dateObject.getDate()}`.slice(-2);
               return (
-                <>
+                <Item>
                   <Flex>
                     <FirstFlexChild>
                       <DateBox>
@@ -122,7 +129,7 @@ function ExpenseSummary(props) {
                     </Flex>
                   </Flex>
                   <Divider />
-                </>
+                </Item>
               );
             })}
           </BoxWithShadow>
@@ -144,7 +151,7 @@ function ExpenseSummary(props) {
             </Typography>
             {Object.entries(popularTransactions || []).map(
               ([notes, transaction]) => (
-                <>
+                <Item>
                   <Flex justify="space-between">
                     <FlexChild>
                       <PBold tt="capitalize" size="1rem">
@@ -158,7 +165,7 @@ function ExpenseSummary(props) {
                     </FlexChild>
                   </Flex>
                   <Divider />
-                </>
+                </Item>
               )
             )}
           </BoxWithShadow>
