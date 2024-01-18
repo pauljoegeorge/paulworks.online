@@ -58,3 +58,19 @@ export const FlexChild = styled.div`
   margin: ${(props) => (props.margin ? props.margin : "0px")};
   box-shadow: ${(props) => (props.shadow ? props.shadow : "none")};
 `;
+
+export const Divider = styled.hr`
+  border: none;
+  height: 2px;
+  background-color: #000;
+  margin: 2px 0;
+`;
+
+export const BoxWithShadow = styled.div`
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 20px;
+  text-align: center;
+  height: auto;
+`;

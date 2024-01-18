@@ -14,14 +14,14 @@ import {
 import CentralLoader from "../../components/CentralLoader";
 import { FlexContainer } from "../../components/Container";
 import { LeftArrow, RightArrow } from "../../components/Icon";
-import { H2Purple, P } from "../../components/Text";
+import { H2Purple } from "../../components/Text";
 import { formattedCurrency } from "../../utils/currency";
-import TableLayout from "../../components/TableLayout";
 import { getBeginningOfMonth } from "../../utils/date";
 import SpendingRecommendations from "./components/SpendingRecommendations";
 import DailyExpenseReport from "./components/DailyExpenseReport";
 import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
 import { MainWrapper } from "./components/Div";
+import ExpenseSummary from "./components/ExpenseSummary";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -132,78 +132,12 @@ function DashboardContent() {
                 <WeeklyExpenseReport weeklyReport={weekly_report} />
               </Col>
             </Row>
-            <Row className="mt-5">
-              <Col>
-                {isCurrentMonth && filteredExpenseCategories.length > 0 && (
-                  <TableLayout
-                    title="Current Week Expenses"
-                    heads={["Category", "Amount"]}
-                  >
-                    {(filteredExpenseCategories || []).map((category) => (
-                      <tr>
-                        <td>
-                          <P>{category.name}</P>
-                        </td>
-                        <td>
-                          <P>
-                            {formattedCurrency(category.total_expense_of_week)}
-                          </P>
-                        </td>
-                      </tr>
-                    ))}
-                  </TableLayout>
-                )}
-              </Col>
-              <Col>
-                {top_transactions.length > 0 && (
-                  <TableLayout
-                    title="Top Transactions"
-                    heads={["Category", "Amount", "Date", "Notes"]}
-                  >
-                    {(top_transactions || []).map((transaction) => (
-                      <tr>
-                        <td>
-                          <P>{transaction.category_name}</P>
-                        </td>
-                        <td>
-                          <P>{formattedCurrency(transaction.amount)}</P>
-                        </td>
-                        <td>
-                          <P>{transaction.transaction_date}</P>
-                        </td>
-                        <td>
-                          <P>{transaction.notes}</P>
-                        </td>
-                      </tr>
-                    ))}
-                  </TableLayout>
-                )}
-              </Col>
-              <Col>
-                {Object.keys(popular_transactions).length > 0 && (
-                  <TableLayout
-                    title="Popular Transactions"
-                    heads={["Notes", "Total Transactions", "Total Spent"]}
-                  >
-                    {Object.entries(popular_transactions || []).map(
-                      ([notes, transaction]) => (
-                        <tr>
-                          <td>
-                            <P>{notes}</P>
-                          </td>
-                          <td>
-                            <P>{transaction.count}</P>
-                          </td>
-                          <td>
-                            <P>{formattedCurrency(transaction.total_spent)}</P>
-                          </td>
-                        </tr>
-                      )
-                    )}
-                  </TableLayout>
-                )}
-              </Col>
-            </Row>
+            <ExpenseSummary
+              isCurrentMonth={isCurrentMonth}
+              filteredExpenseCategories={filteredExpenseCategories}
+              topTransactions={top_transactions}
+              popularTransactions={popular_transactions}
+            />
           </Container>
         </>
       )}

@@ -5,6 +5,7 @@ export const colors = {
   grey: "#e9ecef",
   cherry: "#D2042D",
   orange: "#FA5F55",
+  lightOrange: "#ffc36d61",
   yellow: "#ff8f00",
   pastelPurple: "#966fd6",
   lavender: "#e6e6fa",
