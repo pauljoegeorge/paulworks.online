@@ -17,6 +17,10 @@ export default function ExpenseInsight(props) {
   const { expenseInsights } = props;
   const { expense_by_categories } = expenseInsights || [];
   const mobileView = isMobile();
+  const graphCustomWidth = mobileView
+    ? expense_by_categories.length * 31
+    : expense_by_categories.length * 11;
+  const graphWidth = graphCustomWidth > 100 ? `${graphCustomWidth}%` : "100%";
 
   const options = {
     series: [
@@ -112,12 +116,7 @@ export default function ExpenseInsight(props) {
           series={options.series}
           type="bar"
           height={500}
-          width={
-            mobileView
-              ? `${expense_by_categories.length * 30}%`
-              : `${expense_by_categories.length * 10}%`
-          }
-          // {...(mobileView ? { width: 700 } : {})}
+          width={graphWidth}
         />
       </ScrollableChild>
     </MainWrapper>
