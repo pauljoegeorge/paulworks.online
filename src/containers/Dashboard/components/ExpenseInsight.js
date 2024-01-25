@@ -77,8 +77,10 @@ export default function ExpenseInsight(props) {
       },
     },
     yaxis: {
-      title: {
-        text: "total in yen",
+      labels: {
+        formatter(val) {
+          return `${formattedCurrency(val)}`;
+        },
       },
     },
     fill: {
@@ -110,7 +112,12 @@ export default function ExpenseInsight(props) {
           series={options.series}
           type="bar"
           height={500}
-          {...(mobileView ? { width: 700 } : {})}
+          width={
+            mobileView
+              ? `${expense_by_categories.length * 30}%`
+              : `${expense_by_categories.length * 10}%`
+          }
+          // {...(mobileView ? { width: 700 } : {})}
         />
       </ScrollableChild>
     </MainWrapper>

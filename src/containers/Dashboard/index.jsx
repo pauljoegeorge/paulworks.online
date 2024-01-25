@@ -22,6 +22,7 @@ import DailyExpenseReport from "./components/DailyExpenseReport";
 import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
 import { MainWrapper } from "./components/Div";
 import ExpenseSummary from "./components/ExpenseSummary";
+import { Flex, FlexChild } from "../../components/Div";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -124,14 +125,14 @@ function DashboardContent() {
             <Row className="mt-5">
               <ExpenseInsight expenseInsights={expenseInsights} />
             </Row>
-            <Row className="mt-5">
-              <Col>
+            <Flex className="mt-5">
+              <FlexChild width="100%">
                 <DailyExpenseReport dailyReport={daily_report} />
-              </Col>
-              <Col>
+              </FlexChild>
+              <FlexChild width="100%">
                 <WeeklyExpenseReport weeklyReport={weekly_report} />
-              </Col>
-            </Row>
+              </FlexChild>
+            </Flex>
             <ExpenseSummary
               isCurrentMonth={isCurrentMonth}
               filteredExpenseCategories={filteredExpenseCategories}

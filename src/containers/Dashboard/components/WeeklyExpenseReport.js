@@ -35,6 +35,7 @@ function WeeklyExpenseReport(props) {
     },
     stroke: {
       curve: "straight",
+      width: 2,
     },
     grid: {
       row: {
@@ -45,6 +46,7 @@ function WeeklyExpenseReport(props) {
     xaxis: {
       categories: days,
       labels: {
+        show: true,
         rotate: -45,
         style: {
           fontSize: "12px",
@@ -52,8 +54,11 @@ function WeeklyExpenseReport(props) {
       },
     },
     yaxis: {
-      title: {
-        text: "total in yen",
+      labels: {
+        show: true,
+        formatter(val) {
+          return `${formattedCurrency(val)}`;
+        },
       },
     },
     tooltip: {
@@ -66,7 +71,7 @@ function WeeklyExpenseReport(props) {
   };
 
   return (
-    <>
+    <div style={{ width: "100%" }}>
       <Typography
         component="h2"
         variant="h6"
@@ -81,7 +86,7 @@ function WeeklyExpenseReport(props) {
         type="line"
         height={300}
       />
-    </>
+    </div>
   );
 }
 
