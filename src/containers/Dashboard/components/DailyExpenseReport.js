@@ -20,7 +20,7 @@ function DailyExpenseReport(props) {
     ],
     chart: {
       height: 350,
-      type: "line",
+      type: "area",
       zoom: {
         enabled: false,
       },
@@ -39,7 +39,6 @@ function DailyExpenseReport(props) {
     },
     grid: {
       row: {
-        colors: [colors.lightGrey, "transparent"],
         opacity: 0.5,
       },
     },
@@ -82,7 +81,7 @@ function DailyExpenseReport(props) {
       <Chart
         options={options}
         series={options.series}
-        type="line"
+        type="area"
         height={350}
         width="100%"
       />
