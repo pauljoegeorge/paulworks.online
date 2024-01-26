@@ -20,7 +20,7 @@ function DailyExpenseReport(props) {
     ],
     chart: {
       height: 350,
-      type: "line",
+      type: "area",
       zoom: {
         enabled: false,
       },
@@ -35,16 +35,17 @@ function DailyExpenseReport(props) {
     },
     stroke: {
       curve: "smooth",
+      width: 3,
     },
     grid: {
       row: {
-        colors: [colors.lightGrey, "transparent"],
         opacity: 0.5,
       },
     },
     xaxis: {
       categories: days,
       labels: {
+        show: false,
         rotate: -45,
         style: {
           fontSize: "12px",
@@ -52,8 +53,10 @@ function DailyExpenseReport(props) {
       },
     },
     yaxis: {
-      title: {
-        text: "total in yen",
+      labels: {
+        formatter(val) {
+          return `${formattedCurrency(val)}`;
+        },
       },
     },
     tooltip: {
@@ -66,7 +69,7 @@ function DailyExpenseReport(props) {
   };
 
   return (
-    <>
+    <div style={{ width: "100%" }}>
       <Typography
         component="h2"
         variant="h6"
@@ -78,10 +81,11 @@ function DailyExpenseReport(props) {
       <Chart
         options={options}
         series={options.series}
-        type="line"
+        type="area"
         height={350}
+        width="100%"
       />
-    </>
+    </div>
   );
 }
 

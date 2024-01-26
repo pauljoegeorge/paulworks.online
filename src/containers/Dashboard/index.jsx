@@ -14,14 +14,15 @@ import {
 import CentralLoader from "../../components/CentralLoader";
 import { FlexContainer } from "../../components/Container";
 import { LeftArrow, RightArrow } from "../../components/Icon";
-import { H2Purple, P } from "../../components/Text";
+import { H2Purple } from "../../components/Text";
 import { formattedCurrency } from "../../utils/currency";
-import TableLayout from "../../components/TableLayout";
 import { getBeginningOfMonth } from "../../utils/date";
 import SpendingRecommendations from "./components/SpendingRecommendations";
 import DailyExpenseReport from "./components/DailyExpenseReport";
 import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
 import { MainWrapper } from "./components/Div";
+import ExpenseSummary from "./components/ExpenseSummary";
+import { Flex, FlexChild } from "../../components/Div";
 
 function DashboardContent() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -38,6 +39,8 @@ function DashboardContent() {
     allowance_per_week,
     daily_report,
     weekly_report,
+    top_transactions,
+    popular_transactions,
   } = expenseInsights || [];
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
     (totals, category) => {
@@ -122,35 +125,20 @@ function DashboardContent() {
             <Row className="mt-5">
               <ExpenseInsight expenseInsights={expenseInsights} />
             </Row>
-            <Row className="mt-5">
-              <Col>
+            <Flex className="mt-5">
+              <FlexChild width="100%">
                 <DailyExpenseReport dailyReport={daily_report} />
-              </Col>
-              <Col>
+              </FlexChild>
+              <FlexChild width="100%">
                 <WeeklyExpenseReport weeklyReport={weekly_report} />
-              </Col>
-            </Row>
-            {isCurrentMonth && filteredExpenseCategories.length > 0 && (
-              <Row className="mt-5">
-                <TableLayout
-                  title="Current Week Expenses"
-                  heads={["Category", "Amount"]}
-                >
-                  {(filteredExpenseCategories || []).map((category) => (
-                    <tr>
-                      <td>
-                        <P>{category.name}</P>
-                      </td>
-                      <td>
-                        <P>
-                          {formattedCurrency(category.total_expense_of_week)}
-                        </P>
-                      </td>
-                    </tr>
-                  ))}
-                </TableLayout>
-              </Row>
-            )}
+              </FlexChild>
+            </Flex>
+            <ExpenseSummary
+              isCurrentMonth={isCurrentMonth}
+              filteredExpenseCategories={filteredExpenseCategories}
+              topTransactions={top_transactions}
+              popularTransactions={popular_transactions}
+            />
           </Container>
         </>
       )}
