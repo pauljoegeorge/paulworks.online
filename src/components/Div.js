@@ -28,6 +28,7 @@ export const Flex = styled.div`
   align-items: ${(props) => (props.align ? props.align : "center")};
   height: ${(props) => (props.height ? props.height : "auto")};
   gap: ${(props) => (props.gap ? props.gap : "0px")};
+  width: ${(props) => (props.width ? props.width : "auto")};
   flex: 1;
 
   @media (max-width: 767px) {
@@ -68,9 +69,9 @@ export const Divider = styled.hr`
 
 export const BoxWithShadow = styled.div`
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 20px;
-  padding: 20px;
+  padding: ${(props) => (props.padding ? props.padding : "20px")};
   text-align: center;
   height: auto;
 `;
