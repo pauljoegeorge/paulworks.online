@@ -39,6 +39,7 @@ export const PBold = styled.p`
   text-align: ${(props) => (props.align ? props.align : "center")};
   padding: ${(props) => (props.padding ? props.padding : "0px")};
   width: 100%;
+  word-break: ${(props) => (props.wordBreak ? props.wordBreak : "none")};
 `;
 
 export const H3Bold = styled.h3`
@@ -57,6 +58,7 @@ export const P = styled.p`
   width: 100%;
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  word-break: ${(props) => (props.wordBreak ? props.wordBreak : "none")};
 `;
 
 export const H1Span = styled.span`

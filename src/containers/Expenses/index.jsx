@@ -125,7 +125,7 @@ function ExpensesContainer() {
                   setSortParams={setSortParams}
                 />
               ) : (
-                <div className="mt-3">
+                <div className="mt-3 w-100">
                   {(initialValues.expenses || []).map((_, index) => (
                     <Row className="mt-3 w-100 justify-content-center text-center">
                       <Col xs={6} md={3} lg={3}>
@@ -170,7 +170,7 @@ function ExpensesContainer() {
                       </Col>
                     </Row>
                   ))}
-                  <Row className="mt-3 w-100 justify-content-center text-center">
+                  <Row className="mt-5 w-100 justify-content-center text-center">
                     <PrimaryButton
                       variant="primary"
                       size="lg"
