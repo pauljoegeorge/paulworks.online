@@ -84,7 +84,7 @@ function WeeklyExpenseReport(props) {
         options={options}
         series={options.series}
         type="line"
-        height={300}
+        height={350}
       />
     </div>
   );
