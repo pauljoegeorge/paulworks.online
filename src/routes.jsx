@@ -10,6 +10,7 @@ import UnexpectedExpensesRoutes from "./pages/UnexpectedExpenses/routes";
 import IncomeRoutes from "./pages/Income/routes";
 import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
 import Expenses from "./pages/Expenses/routes";
+import RecurrentExpensesRoutes from "./pages/RecurrentExpenses/routes";
 import TransactionsRoutes from "./pages/Transaction/routes";
 import WiseRoutes from "./pages/Wise/routes";
 import MapRoutes from "./pages/Map/routes";
@@ -29,6 +30,7 @@ const routes = [
   ...ExpenseCategoriesRoutes,
   ...TransactionsRoutes,
   ...Expenses,
+  ...RecurrentExpensesRoutes,
   ...MapRoutes,
   ...SettingsRoutes,
   ...WiseRoutes,

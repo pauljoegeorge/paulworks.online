@@ -11,6 +11,7 @@ import {
   PostAdd,
   PinDrop,
   Settings,
+  AccountBalance,
 } from "@mui/icons-material";
 import { DrawerHeader, Drawer } from "../utils/drawer";
 import WiseIcon from "../../../assets/wise-icon.svg";
@@ -22,6 +23,7 @@ function NavDrawer(props) {
   const overViewItems = [
     { name: "Dashboard", icon: DashboardIcon, href: "/dashboard" },
     { name: "Expenses", icon: ReceiptLong, href: "/expenses" },
+    { name: "Fixed Expenses", icon: AccountBalance, href: "/r_expenses" },
     { name: "Map", icon: PinDrop, href: "/map" },
   ];
   const managementItems = [
