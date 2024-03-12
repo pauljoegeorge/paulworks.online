@@ -35,6 +35,7 @@ function DashboardContent() {
     expense_by_categories,
     weekly_expense,
     todays_expense,
+    total_monthly_expense,
     allowance_per_day,
     allowance_per_week,
     daily_report,
@@ -108,6 +109,11 @@ function DashboardContent() {
                   key: "weekly",
                   head: "Weekly Expense",
                   value: formattedCurrency(weekly_expense),
+                },
+                {
+                  key: "total",
+                  head: "Total Expense",
+                  value: formattedCurrency(total_monthly_expense),
                 },
               ]}
             />
