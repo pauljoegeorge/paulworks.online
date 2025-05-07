@@ -12,6 +12,7 @@ import {
   PinDrop,
   Settings,
   AccountBalance,
+  AutoAwesome,
 } from "@mui/icons-material";
 import { DrawerHeader, Drawer } from "../utils/drawer";
 import WiseIcon from "../../../assets/wise-icon.svg";
@@ -27,6 +28,7 @@ function NavDrawer(props) {
     { name: "Map", icon: PinDrop, href: "/map" },
   ];
   const managementItems = [
+    { name: "Chat", icon: AutoAwesome, href: "/chat" },
     { name: "New", icon: PostAdd, href: "/new" },
     { name: "Budget", icon: BalanceOutlined, href: "/budget" },
     { name: "WISE", icon: WiseIcon, href: "/wise" },

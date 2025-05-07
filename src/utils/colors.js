@@ -10,4 +10,5 @@ export const colors = {
   pastelPurple: "#966fd6",
   lavender: "#e6e6fa",
   blue: "#0190cd",
+  white: "#ffffff",
 };
