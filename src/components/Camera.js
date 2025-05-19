@@ -60,7 +60,7 @@ function Camera({ onCapture }) {
           <video
             ref={videoRef}
             width="640"
-            height="480"
+            height="580"
             controls={false}
             autoPlay
             loop

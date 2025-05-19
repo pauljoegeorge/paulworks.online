@@ -1,5 +1,6 @@
 import Transactions from "./index";
 import AutoTransaction from "./AutoTransaction";
+import AutoVisionTransaction from "./AutoVisionTransaction";
 
 const TransactionsRoutes = [
   {
@@ -11,6 +12,12 @@ const TransactionsRoutes = [
   {
     component: AutoTransaction,
     path: "/chat",
+    exact: true,
+    type: "private",
+  },
+  {
+    component: AutoVisionTransaction,
+    path: "/new/bill",
     exact: true,
     type: "private",
   },

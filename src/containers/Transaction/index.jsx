@@ -7,12 +7,10 @@ import { H1 } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
 import { useExpenses } from "../Expenses/hooks/useExpenses";
 import { useBudget } from "../ExpenseCategories/hooks/useBudget";
-import { useOcr } from "./hooks/useOcr";
 import Input from "../../components/Input";
 import InputSelect from "../../components/InputSelect";
 import { useValidations } from "../../utils/validation";
 import { getBeginningOfMonth, currentDate } from "../../utils/date";
-import Camera from "../../components/Camera";
 
 function TransactionsContainer() {
   const formRef = useRef(null);
@@ -20,10 +18,8 @@ function TransactionsContainer() {
   const currentMonth = getBeginningOfMonth();
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [photoTaken, setPhotoTaken] = useState(false);
   const { actions } = useExpenses([]);
   const { actions: budgetActions, fixedExpenseCategories } = useBudget([]);
-  const { actions: ocrActions, ocrResult } = useOcr();
   const initialValues = {
     expenses: {
       category_uid: fixedExpenseCategories[0]?.uid,
@@ -58,20 +54,6 @@ function TransactionsContainer() {
       },
     };
     actions.createExpense(valuesWithLocation);
-  };
-
-  useEffect(() => {
-    if (ocrResult && formRef.current) {
-      formRef.current.change("expenses.notes", ocrResult.merchant_name);
-      const totalAmount =
-        ocrResult.items?.find((i) => i.description === "合計")?.amount || 0;
-      formRef.current.change("expenses.amount", totalAmount);
-    }
-  }, [ocrResult, formRef]);
-
-  const handleCapture = async (imageSrc) => {
-    setPhotoTaken(true);
-    await ocrActions.readReceipt(imageSrc);
   };
 
   return (
@@ -135,12 +117,6 @@ function TransactionsContainer() {
                     Save
                   </PrimaryButton>
                 </Row>
-                {!photoTaken && (
-                  <Row className="mt-5 w-100 justify-content-center text-center">
-                    <H1>Read Receipt</H1>
-                    <Camera onCapture={handleCapture} />
-                  </Row>
-                )}
               </CentralDiv>
             </form>
           </>
