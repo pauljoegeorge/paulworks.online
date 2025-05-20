@@ -59,8 +59,6 @@ function Camera({ onCapture }) {
         <>
           <video
             ref={videoRef}
-            width="640"
-            height="580"
             controls={false}
             autoPlay
             loop
@@ -69,12 +67,11 @@ function Camera({ onCapture }) {
           >
             <track kind="captions" />
           </video>
-          <Row className="mt-3 w-100 justify-content-center text-center">
+          <div className="mt-3 d-flex gap-2 mb-2 justify-content-center text-center">
             <PrimaryButton
               type="button"
               variant="primary"
               size="lg"
-              className="w-50"
               onClick={capturePhoto}
             >
               Take Photo
@@ -83,12 +80,11 @@ function Camera({ onCapture }) {
               type="button"
               variant="secondary"
               size="lg"
-              className="w-50 ml-2"
               onClick={stopCamera}
             >
               Turn Off Camera
             </PrimaryButton>
-          </Row>
+          </div>
         </>
       )}
       <canvas

@@ -6,7 +6,7 @@ export const CentralDiv = styled(Container)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  // min-height: 100vh;
   margin-top: ${(props) => (props.mt ? props.mt : "50px")};
   width: 100%;
 `;

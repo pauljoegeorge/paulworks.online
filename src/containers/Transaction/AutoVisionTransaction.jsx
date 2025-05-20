@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
 import { CentralDiv } from "../../components/Div";
 import { CustomRow as Row } from "../../components/Table";
 import { H1 } from "../../components/Text";
@@ -8,7 +9,7 @@ import { useExpenses } from "../Expenses/hooks/useExpenses";
 function AutoVisionTransactionContainer() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const { actions } = useExpenses([]);
+  const { actions, isLoading } = useExpenses([]);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -31,12 +32,14 @@ function AutoVisionTransactionContainer() {
   };
 
   return (
-    <CentralDiv
-      className="justify-content-center text-center"
-      style={{ minHeight: "100vh" }}
-    >
-      <Row className="mt-5 w-100 justify-content-center text-center">
+    <CentralDiv className="justify-content-center text-center">
+      <Row className="mt-5 w-100">
         <H1>Read Receipt</H1>
+        {isLoading && (
+          <div className="justify-content-center">
+            <Spinner animation="border" />
+          </div>
+        )}
         <Camera onCapture={handleCapture} />
       </Row>
     </CentralDiv>
