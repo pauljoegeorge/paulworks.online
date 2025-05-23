@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Row } from "react-bootstrap";
 
@@ -8,7 +8,7 @@ function Camera({ onCapture }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
-  const [cameraOn, setCameraOn] = useState(false);
+  const [cameraOn, setCameraOn] = useState(true);
 
   const stopCamera = () => {
     if (streamRef.current) {
@@ -31,6 +31,13 @@ function Camera({ onCapture }) {
         console.error("Error accessing camera: ", err);
       });
   };
+
+  useEffect(() => {
+    startCamera();
+    return () => {
+      stopCamera();
+    };
+  }, []);
 
   const capturePhoto = () => {
     const context = canvasRef.current.getContext("2d");

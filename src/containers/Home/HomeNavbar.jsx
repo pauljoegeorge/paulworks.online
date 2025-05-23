@@ -1,11 +1,7 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import styled from "styled-components";
-import { AddAPhoto, AutoAwesome } from "@mui/icons-material";
-import { getCurrentUser } from "../../utils/auth";
 import PjLogo from "../../assets/PJ_Logo.png";
-import { isMobile } from "../../utils/utils";
-import { colors } from "../../utils/colors";
 
 const Span = styled.span`
   padding: 1rem 1rem;
@@ -19,9 +15,6 @@ const Span = styled.span`
 `;
 
 function HomeNavbar() {
-  const isMobileDevice = isMobile();
-  const currentUser = getCurrentUser();
-
   return (
     <Navbar bg="light" expand="lg" fixed="top">
       <Navbar.Brand href="#home" style={{ paddingLeft: "10px" }}>
@@ -35,16 +28,6 @@ function HomeNavbar() {
           <Nav.Link href="#">
             <Span>paulworks.online</Span>
           </Nav.Link>
-          {isMobileDevice && currentUser && (
-            <>
-              <Nav.Link href="/chat">
-                <Span>MONEYPROPHET<AutoAwesome sx={{ color: colors.blue }}/> </Span>
-              </Nav.Link>
-              <Nav.Link href="/new/bill">
-                <Span>MONEYPROPHET <AddAPhoto sx={{ color: "primary", mb: '5px' }}/> </Span>
-              </Nav.Link>
-            </>
-          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
