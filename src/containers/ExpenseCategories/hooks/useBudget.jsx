@@ -25,12 +25,36 @@ function useBudget() {
     }
   };
 
+  const exportBudget = async (month) => {
+    try {
+      setLoading(true);
+      const response = await get(
+        `fixed_expense_categories/export?from=${month}`
+      );
+
+      const blob = new Blob([response], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${month}_budget.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      setLoading(false);
+      Notify.success();
+    } catch {
+      setLoading(false);
+      Notify.error();
+    }
+  };
+
   return {
     isLoading,
     fixedExpenseCategories,
     actions: {
       getExpenseCategories,
       updateExpenseCategories,
+      exportBudget,
     },
   };
 }

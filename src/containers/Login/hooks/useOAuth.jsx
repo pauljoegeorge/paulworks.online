@@ -24,9 +24,11 @@ function useOAuth() {
     setLoading(true);
     const response = await get(`auth/google/callback?code=${code}`);
     const { token, user } = response;
-    saveAuthToken(token);
-    saveCurrentUser(user);
-    setToken(token);
+    if (token) {
+      saveAuthToken(token);
+      saveCurrentUser(user);
+      setToken(token);
+    }
     setLoading(false);
   };
 
