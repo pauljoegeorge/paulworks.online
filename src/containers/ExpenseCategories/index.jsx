@@ -15,7 +15,12 @@ import {
   formattedDate,
 } from "../../utils/utils";
 import { FlexContainer } from "../../components/Container";
-import { LeftArrow, RightArrow, PlusIcon } from "../../components/Icon";
+import {
+  LeftArrow,
+  RightArrow,
+  PlusIcon,
+  DownloadIcon,
+} from "../../components/Icon";
 import { getBeginningOfMonth } from "../../utils/date";
 import { colors } from "../../utils/colors";
 import { formattedCurrency } from "../../utils/currency";
@@ -66,6 +71,10 @@ function ExpenseCategoriesContainer() {
     actions.updateExpenseCategories(values, selectedMonth);
   };
 
+  const handleExportReport = () => {
+    actions.exportBudget(selectedMonth);
+  };
+
   return (
     <Form
       onSubmit={handleSubmit}
@@ -97,6 +106,7 @@ function ExpenseCategoriesContainer() {
                   <H1Span color={colors.primary}>Total: {totalBudget}</H1Span>
                 </div>
                 <RightArrow onClick={() => handleMonthChange("next")} />
+                <DownloadIcon onClick={() => handleExportReport()} />
               </FlexContainer>
               <div className="mt-3">
                 {Array.from({ length: numExpenseCategories }).map(
