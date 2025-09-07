@@ -11,8 +11,10 @@ import { DrawerHeader } from "./utils/drawer";
 import NavigationBar from "./components/NaviBar";
 
 const ChildWrapper = styled.div`
-  min-height: 100vh;
+  // min-height: 100vh;
+  width: 100%;
   max-width: 85%;
+  flex: 1 0 auto;
 
   @media (max-width: 768px) {
     max-width: 100%;
@@ -33,18 +35,29 @@ function AppLayout(props) {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <NavigationBar />
-      <Box component="main" sx={{ flexGrow: 1, width: "80%" }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          width: "80%",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <DrawerHeader />
         <Box
           component="main"
           display="flex"
-          alignItems="center"
           flexDirection="column"
-          sx={{ width: "100%" }}
+          alignItems="center"
+          sx={{ width: "100%", flex: 1 }}
         >
           <ToastContainer />
-          <ChildWrapper>{children}</ChildWrapper>
-          <footer className="mt-5 py-3">
+          <ChildWrapper style={{ flex: 1, width: "100%" }}>
+            {children}
+          </ChildWrapper>
+          <footer className="mt-5 py-3" style={{ width: "100%" }}>
             <Container>
               <div className="text-center">
                 <Link onClick={() => handlePrivacy()}>| Privacy Policy |</Link>

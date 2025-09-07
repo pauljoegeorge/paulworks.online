@@ -35,6 +35,19 @@ function useExpenses() {
     }
   };
 
+  const creatAutoeExpense = async (values) => {
+    try {
+      setLoading(true);
+      const data = { expense: values.expenses };
+      await post("auto_expenses", data);
+      setLoading(false);
+      Notify.success("Saved! Ready to add new one?");
+    } catch {
+      setLoading(false);
+      Notify.error();
+    }
+  };
+
   const updateExpenses = async (values, month) => {
     try {
       setLoading(true);
@@ -79,6 +92,7 @@ function useExpenses() {
       updateExpenses,
       createExpense,
       exportExpenses,
+      creatAutoeExpense,
     },
   };
 }
