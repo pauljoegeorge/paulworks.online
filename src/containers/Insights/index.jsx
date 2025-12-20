@@ -23,7 +23,7 @@ export default function InsightsContainer() {
     const fetchData = async () => {
       try {
         const response = await get("expense_insights");
-        setData(response);
+        setData(response?.analytics);
       } catch (err) {
         setError("Failed to load insights.");
       } finally {
