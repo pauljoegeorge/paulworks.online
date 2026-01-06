@@ -9,31 +9,19 @@ import {
   Table,
   Alert,
 } from "react-bootstrap";
-import { get } from "../../utils/api";
+import { useInsights } from "./hooks/useInsights";
 import CentralLoader from "../../components/CentralLoader";
 import { MainWrapper } from "../Dashboard/components/Div";
 import { H2Purple } from "../../components/Text";
 
 export default function InsightsContainer() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+  const { isLoading, insights, error, actions } = useInsights();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await get("expense_insights");
-        setData(response?.analytics);
-      } catch (err) {
-        setError("Failed to load insights.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    actions.getInsights();
   }, []);
 
-  if (loading) return <CentralLoader />;
+  if (isLoading) return <CentralLoader />;
   if (error)
     return (
       <MainWrapper>
@@ -43,7 +31,7 @@ export default function InsightsContainer() {
         </Container>
       </MainWrapper>
     );
-  if (!data)
+  if (!insights || Object.keys(insights).length === 0)
     return (
       <MainWrapper>
         <Toolbar />
@@ -61,7 +49,7 @@ export default function InsightsContainer() {
     behavioral_insights,
     smart_highlights,
     metrics,
-  } = data;
+  } = insights;
 
   const renderOverBudget = () => {
     if (!budget_warnings?.over_budget?.length) return null;
