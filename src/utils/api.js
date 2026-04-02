@@ -1,4 +1,10 @@
 import axios from "axios";
+import {
+  getRefreshToken,
+  saveAuthToken,
+  saveRefreshToken,
+  clearTokens,
+} from "./auth";
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_API_ROOT}/api/v1/`,
@@ -28,13 +34,87 @@ api.interceptors.request.use(
   }
 );
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem("authToken");
-      window.location.href = "/sign_in";
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Prevent infinite loops if refresh fails
+    if (originalRequest.url.includes("/auth/refresh")) {
+      return Promise.reject(error);
     }
+
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest.hasRetried
+    ) {
+      const refreshToken = getRefreshToken();
+
+      if (!refreshToken) {
+        clearTokens();
+        window.location.href = "/sign_in";
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
+      originalRequest.hasRetried = true;
+      isRefreshing = true;
+
+      try {
+        const { data } = await axios.post(
+          `${process.env.REACT_APP_API_ROOT}/api/v1/auth/refresh`,
+          {
+            refresh_token: refreshToken,
+          }
+        );
+
+        saveAuthToken(data.token);
+        if (data.refresh_token) {
+          saveRefreshToken(data.refresh_token);
+        }
+
+        originalRequest.headers.Authorization = `Bearer ${data.token}`;
+        processQueue(null, data.token);
+
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        clearTokens();
+        window.location.href = "/sign_in";
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
     return Promise.reject(error);
   }
 );

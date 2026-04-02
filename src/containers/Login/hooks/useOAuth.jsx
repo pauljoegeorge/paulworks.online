@@ -3,6 +3,7 @@ import { get, put } from "../../../utils/api";
 import {
   saveAuthToken,
   getAuthToken,
+  saveRefreshToken,
   saveCurrentUser,
   getCurrentUser,
 } from "../../../utils/auth";
@@ -23,9 +24,10 @@ function useOAuth() {
   const startOAuth = async (code) => {
     setLoading(true);
     const response = await get(`auth/google/callback?code=${code}`);
-    const { token, user } = response;
+    const { token, refresh_token: refreshToken, user } = response;
     if (token) {
       saveAuthToken(token);
+      if (refreshToken) saveRefreshToken(refreshToken);
       saveCurrentUser(user);
       setToken(token);
     }
