@@ -7,7 +7,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { colors } from "../../../utils/colors";
-import WiseIcon from "../../../assets/wise-icon.svg";
+
 
 function NavDrawerSection(props) {
   const { open, sectionHead, sectionItems } = props;
@@ -42,17 +42,6 @@ function NavDrawerSection(props) {
             }}
             href={item.href}
           >
-            {item.name === "WISE" ? (
-              <img
-                src={WiseIcon}
-                alt="Wise icon"
-                height="20px"
-                style={{
-                  marginRight: open ? `calc(${theme.spacing(3)} + 1px)` : "0px",
-                  justifyContent: "center",
-                }}
-              />
-            ) : (
               <ListItemIcon
                 sx={{
                   minWidth: 0,
@@ -62,7 +51,6 @@ function NavDrawerSection(props) {
               >
                 <item.icon />
               </ListItemIcon>
-            )}
             <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>

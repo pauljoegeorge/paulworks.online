@@ -23,8 +23,16 @@ export const H2Purple = styled.h2`
   font-family: "Plus Jakarta Sans", sans-serif;
   font-weight: 700;
   line-height: 1.57;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
   color: #3e41a5;
 `;
 
@@ -56,8 +64,16 @@ export const P = styled.p`
   text-align: ${(props) => (props.align ? props.align : "center")};
   text-transform: ${(props) => (props.tt ? props.tt : "none")};
   width: 100%;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
   word-break: ${(props) => (props.wordBreak ? props.wordBreak : "none")};
 `;
 
@@ -88,6 +104,14 @@ export const PText = styled.span`
   padding: ${(props) => (props.padding ? props.padding : "0px")};
   border-radius: ${(props) => (props.br ? props.br : "0px")};
   color: ${(props) => (props.color ? props.color : "none")};
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
 `;

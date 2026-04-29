@@ -16,7 +16,6 @@ import {
   Insights,
 } from "@mui/icons-material";
 import { DrawerHeader, Drawer } from "../utils/drawer";
-import WiseIcon from "../../../assets/wise-icon.svg";
 import NavDrawerSection from "./NaviDrawerSection";
 
 function NavDrawer(props) {
@@ -33,7 +32,7 @@ function NavDrawer(props) {
     { name: "Insights", icon: Insights, href: "/insights" },
     { name: "New", icon: PostAdd, href: "/new" },
     { name: "Budget", icon: BalanceOutlined, href: "/budget" },
-    { name: "WISE", icon: WiseIcon, href: "/wise" },
+
   ];
   const OtherItems = [{ name: "Settings", icon: Settings, href: "/settings" }];
 

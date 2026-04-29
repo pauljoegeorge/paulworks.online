@@ -5,7 +5,6 @@ import InteractiveTable from "../../components/InteractiveTable";
 import { formattedCurrency } from "../../utils/currency";
 import { P, PBold } from "../../components/Text";
 import { setExpenseSortParams } from "./utils/utils";
-import WiseLogo from "../../assets/wise-logo.png";
 
 function ExpensesViewMode(props) {
   const { expenses, handleSortExpenses, sortParams, setSortParams } = props;
@@ -35,12 +34,7 @@ function ExpensesViewMode(props) {
         {(expenses || []).map((expense) => (
           <tr>
             <td>
-              <PBold tt="none">
-                {expense.category_name}
-                {expense.transaction_source === "wise" && (
-                  <img src={WiseLogo} alt="wise logo" height="20px" />
-                )}
-              </PBold>
+              <PBold tt="none">{expense.category_name}</PBold>
             </td>
             <td>
               <P>{formattedCurrency(expense.amount)}</P>

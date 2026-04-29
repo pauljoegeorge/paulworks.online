@@ -11,7 +11,7 @@ import { useExpenses } from "./hooks/useExpenses";
 import { useBudget } from "../ExpenseCategories/hooks/useBudget";
 import Input from "../../components/Input";
 import { useValidations } from "../../utils/validation";
-import WiseLogo from "../../assets/wise-logo.png";
+
 import {
   appendUrlToDate,
   addDateToUrl,
@@ -155,17 +155,7 @@ function ExpensesContainer() {
                         <Field
                           name={`expenses[${index}].notes`}
                           component={Input}
-                          label={
-                            expenses[index].transaction_source === "wise" ? (
-                              <img
-                                src={WiseLogo}
-                                alt="wise logo"
-                                height="20px"
-                              />
-                            ) : (
-                              "Notes"
-                            )
-                          }
+                          label="Notes"
                         />
                       </Col>
                     </Row>

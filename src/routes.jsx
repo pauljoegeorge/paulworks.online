@@ -12,7 +12,6 @@ import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
 import Expenses from "./pages/Expenses/routes";
 import RecurrentExpensesRoutes from "./pages/RecurrentExpenses/routes";
 import TransactionsRoutes from "./pages/Transaction/routes";
-import WiseRoutes from "./pages/Wise/routes";
 import MapRoutes from "./pages/Map/routes";
 import SettingsRoutes from "./pages/Settings/routes";
 import InsightsRoutes from "./pages/Insights/routes";
@@ -34,7 +33,7 @@ const routes = [
   ...RecurrentExpensesRoutes,
   ...MapRoutes,
   ...SettingsRoutes,
-  ...WiseRoutes,
+
   ...InsightsRoutes,
   ...ErrorRoutes,
 ];
