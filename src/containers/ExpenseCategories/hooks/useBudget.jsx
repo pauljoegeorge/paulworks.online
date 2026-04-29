@@ -14,9 +14,35 @@ function useBudget() {
   const updateExpenseCategories = async (values, month) => {
     try {
       setLoading(true);
-      const data = { from: month, categories: values.fixedExpenseCategories };
+      const data = { 
+        from: month, 
+        categories: values.fixedExpenseCategories.map(item => ({ ...item, update_future: true }))
+      };
       const response = await put("fixed_expense_categories", data);
       setFixedExpenseCategories(response);
+      setLoading(false);
+      Notify.success();
+    } catch {
+      setLoading(false);
+      Notify.error();
+    }
+  };
+
+  const exportBudget = async (month) => {
+    try {
+      setLoading(true);
+      const response = await get(
+        `fixed_expense_categories/export?from=${month}`
+      );
+
+      const blob = new Blob([response], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${month}_budget.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
       setLoading(false);
       Notify.success();
     } catch {
@@ -31,6 +57,7 @@ function useBudget() {
     actions: {
       getExpenseCategories,
       updateExpenseCategories,
+      exportBudget,
     },
   };
 }
