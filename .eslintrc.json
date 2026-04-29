@@ -39,12 +39,6 @@
         "singleQuote": false,
         "trailingComma": "es5",
         "semi": true
-      },
-      {
-        "usePrettierrc": false,
-        "singleQuote": false,
-        "trailingComma": "es5",
-        "semi": true
       }
     ],
     "no-unused-vars": [

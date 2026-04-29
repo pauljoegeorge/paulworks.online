@@ -7,7 +7,7 @@ import {
 } from "./auth";
 
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_ROOT}/api/v1/`,
+  baseURL: `${import.meta.env.VITE_API_ROOT}/api/v1/`,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -90,7 +90,7 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          `${process.env.REACT_APP_API_ROOT}/api/v1/auth/refresh`,
+          `${import.meta.env.VITE_API_ROOT}/api/v1/auth/refresh`,
           {
             refresh_token: refreshToken,
           }

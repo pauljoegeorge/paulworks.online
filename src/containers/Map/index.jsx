@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 `;
 
 function MapViewContainer() {
-  const googleMapsKey = process.env.REACT_APP_GOOGLE_MAPS_KEY;
+  const googleMapsKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
   const [selectedMonth, setSelectedMonth] = useState();
   const { actions, expenses } = useExpenses([]);
   const expensesWithLocation = expenses.filter(

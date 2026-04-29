@@ -28,7 +28,7 @@ function AppLayout(props) {
     pushEvent({
       ...events.onClickPrivacy(),
     });
-    return window.open(`${process.env.PUBLIC_URL}/privacy.html`, "_blank");
+    return window.open(`${import.meta.env.BASE_URL}/privacy.html`, "_blank");
   };
 
   return (
@@ -39,7 +39,7 @@ function AppLayout(props) {
         component="main"
         sx={{
           flexGrow: 1,
-          width: "80%",
+          width: "100%",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -47,11 +47,13 @@ function AppLayout(props) {
       >
         <DrawerHeader />
         <Box
-          component="main"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          sx={{ width: "100%", flex: 1 }}
+          sx={{
+            width: "100%",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
           <ToastContainer />
           <ChildWrapper style={{ flex: 1, width: "100%" }}>

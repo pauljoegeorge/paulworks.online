@@ -24,7 +24,7 @@ function LayoutContainer(props) {
     pushEvent({
       ...events.onClickPrivacy(),
     });
-    return window.open(`${process.env.PUBLIC_URL}/privacy.html`, "_blank");
+    return window.open(`${import.meta.env.BASE_URL}/privacy.html`, "_blank");
   };
 
   return (
