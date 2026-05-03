@@ -22,7 +22,6 @@ import {
   DownloadIcon,
 } from "../../components/Icon";
 import { getBeginningOfMonth } from "../../utils/date";
-import { colors } from "../../utils/colors";
 import { formattedCurrency } from "../../utils/currency";
 
 function ExpenseCategoriesContainer() {
@@ -103,7 +102,7 @@ function ExpenseCategoriesContainer() {
                 />
                 <div>
                   <H2Purple>{date}</H2Purple>
-                  <H1Span color={colors.primary}>Total: {totalBudget}</H1Span>
+                  <H1Span color="var(--primary)">Total: {totalBudget}</H1Span>
                 </div>
                 <RightArrow onClick={() => handleMonthChange("next")} />
                 <DownloadIcon onClick={() => handleExportReport()} />

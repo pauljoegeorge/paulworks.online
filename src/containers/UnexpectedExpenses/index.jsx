@@ -77,7 +77,7 @@ function UnexpectedExpensesContainer() {
                 <H2Purple>{date}</H2Purple>
                 <RightArrow onClick={() => handleMonthChange("next")} />
               </FlexContainer>
-              <Row className="mt-3 w-100 justify-content-center text-center">
+              <Row className="mt-3 w-100 justify-content-center">
                 {(initialValues.unexpectedExpenses || []).map((_, index) => (
                   <Field
                     name={`unexpectedExpenses[${index}].amount`}

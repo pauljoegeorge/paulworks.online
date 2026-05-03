@@ -11,13 +11,14 @@ import { DrawerHeader } from "./utils/drawer";
 import NavigationBar from "./components/NaviBar";
 
 const ChildWrapper = styled.div`
-  // min-height: 100vh;
   width: 100%;
   max-width: 85%;
   flex: 1 0 auto;
+  padding: 8px 24px 24px;
 
   @media (max-width: 768px) {
     max-width: 100%;
+    padding: 8px 12px 16px;
   }
 `;
 
@@ -43,6 +44,8 @@ function AppLayout(props) {
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
+          backgroundColor: "var(--background)",
+          transition: "background-color 0.2s ease",
         }}
       >
         <DrawerHeader />
@@ -55,11 +58,25 @@ function AppLayout(props) {
             alignItems: "center",
           }}
         >
-          <ToastContainer />
+          <ToastContainer
+            toastStyle={{
+              borderRadius: "8px",
+              fontFamily: '"IBM Plex Sans", sans-serif',
+              fontSize: "14px",
+            }}
+          />
           <ChildWrapper style={{ flex: 1, width: "100%" }}>
             {children}
           </ChildWrapper>
-          <footer className="mt-5 py-3" style={{ width: "100%" }}>
+          <footer
+            className="mt-5 py-3"
+            style={{
+              width: "100%",
+              borderTop: "1px solid var(--border)",
+              backgroundColor: "var(--background)",
+              transition: "background-color 0.2s ease",
+            }}
+          >
             <Container>
               <div className="text-center">
                 <Link onClick={() => handlePrivacy()}>| Privacy Policy |</Link>

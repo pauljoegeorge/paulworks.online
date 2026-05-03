@@ -19,7 +19,7 @@ function InteractiveTable(props) {
         </Row>
       )}
       <Row className="w-100">
-        <Table bordered striped responsive>
+        <Table bordered responsive>
           <THead>
             <tr>
               {(heads || []).map((head) => {

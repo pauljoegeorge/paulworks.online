@@ -17,7 +17,6 @@ import {
 import { FlexContainer } from "../../components/Container";
 import { LeftArrow, RightArrow, PlusIcon } from "../../components/Icon";
 import { getBeginningOfMonth } from "../../utils/date";
-import { colors } from "../../utils/colors";
 import { formattedCurrency } from "../../utils/currency";
 
 function RecurrentExpensesContainer() {
@@ -94,14 +93,14 @@ function RecurrentExpensesContainer() {
                 />
                 <div>
                   <H2Purple>{date}</H2Purple>
-                  <H1Span color={colors.primary}>Total: {totalAmount}</H1Span>
+                  <H1Span color="var(--primary)">Total: {totalAmount}</H1Span>
                 </div>
                 <RightArrow onClick={() => handleMonthChange("next")} />
               </FlexContainer>
               <div className="mt-3">
                 {Array.from({ length: numExpenseCategories }).map(
                   (_, index) => (
-                    <Row className="mt-3 w-100 justify-content-center text-center">
+                    <Row className="mt-3 w-100 justify-content-center">
                       <Col>
                         <Field
                           name={`recurrentExpenseCategories[${index}].name`}

@@ -77,7 +77,7 @@ function IncomeContainer() {
                 <H2Purple>{date}</H2Purple>
                 <RightArrow onClick={() => handleMonthChange("next")} />
               </FlexContainer>
-              <Row className="mt-3 w-100 justify-content-center text-center">
+              <Row className="mt-3 w-100 justify-content-center">
                 {(initialValues.incomes || []).map((_, index) => (
                   <Field
                     name={`incomes[${index}].amount`}

@@ -14,9 +14,9 @@ import { P, PBold, PText } from "../../../components/Text";
 import { formattedCurrency } from "../../../utils/currency";
 
 const DateBox = styled.div`
-  padding: 8px;
-  background-color: ${colors.lightGrey};
-  border-radius: 16px;
+  padding: 6px 10px;
+  background-color: var(--muted);
+  border-radius: var(--radius-md);
   max-width: fit-content;
 `;
 
@@ -27,8 +27,10 @@ const FirstFlexChild = styled.div`
 
 const Item = styled.div`
   cursor: auto;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
   &:hover {
-    background-color: ${colors.lightGrey};
+    background-color: var(--muted);
   }
 `;
 
@@ -48,7 +50,7 @@ function ExpenseSummary(props) {
             <Typography
               component="h1"
               variant="h6"
-              color={colors.primary}
+              style={{ color: "var(--primary)" }}
               gutterBottom
               align="left"
               fontSize="1.5rem"
@@ -82,7 +84,7 @@ function ExpenseSummary(props) {
             <Typography
               component="h1"
               variant="h6"
-              color={colors.primary}
+              style={{ color: "var(--primary)" }}
               gutterBottom
               align="left"
               fontSize="1.5rem"
@@ -143,7 +145,7 @@ function ExpenseSummary(props) {
             <Typography
               component="h1"
               variant="h6"
-              color={colors.primary}
+              style={{ color: "var(--primary)" }}
               gutterBottom
               align="left"
               fontSize="1.5rem"

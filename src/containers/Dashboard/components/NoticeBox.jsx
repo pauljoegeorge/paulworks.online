@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { H1, PBold } from "../../../components/Text";
 import { Flex, FlexChild } from "../../../components/Div";
-import { colors } from "../../../utils/colors";
 import {
   getExpenseVisibility,
   setExpenseVisibility,
 } from "../../../utils/utils";
-
-const Item = styled.div`
-  text-align: center;
-`;
 
 function NoticeBox(props) {
   const { data } = props;
@@ -26,33 +20,52 @@ function NoticeBox(props) {
   };
 
   return (
-    <Flex justify="space-evenly" gap="15px">
+    <Flex justify="space-evenly" gap="12px" style={{ padding: "8px 0" }}>
       {(data || []).map((item) => (
         <FlexChild
+          key={item.key}
           direction="column"
-          bg={colors.lavender}
+          bg="var(--card)"
           align="center"
           width="100%"
-          padding="50px 0px"
-          shadow="0 1px 2px rgba(128, 128, 144, 0.2), 0 2px 4px rgba(128, 128, 144, 0.3)"
+          padding="20px 16px"
+          style={{
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border)",
+            boxShadow: "var(--shadow-sm)",
+            transition: "box-shadow 0.2s ease, background-color 0.2s ease",
+            textAlign: "center",
+          }}
         >
-          <Item>
-            <PBold>{item?.head}</PBold>
-            <H1 color={colors.primary}>
-              {visibilities[item?.key] ? item?.value : "￥ - - - - -"}
-            </H1>
+          <PBold mb="8px">{item?.head}</PBold>
+          <H1 color="var(--foreground)" style={{ margin: "4px 0" }}>
+            {visibilities[item?.key] ? item?.value : "— — —"}
+          </H1>
+          <button
+            type="button"
+            aria-label={
+              visibilities[item?.key]
+                ? `Hide ${item?.head}`
+                : `Show ${item?.head}`
+            }
+            onClick={() => switchVisibility(item?.key)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--muted-foreground)",
+              padding: "4px",
+              marginTop: "4px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             {visibilities[item?.key] ? (
-              <Visibility
-                style={{ color: colors.primary }}
-                onClick={() => switchVisibility(item?.key)}
-              />
+              <Visibility style={{ fontSize: "1.1rem" }} />
             ) : (
-              <VisibilityOff
-                style={{ color: colors.primary, cursor: "pointer" }}
-                onClick={() => switchVisibility(item?.key)}
-              />
+              <VisibilityOff style={{ fontSize: "1.1rem" }} />
             )}
-          </Item>
+          </button>
         </FlexChild>
       ))}
     </Flex>
@@ -60,7 +73,13 @@ function NoticeBox(props) {
 }
 
 NoticeBox.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.string).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      head: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default NoticeBox;

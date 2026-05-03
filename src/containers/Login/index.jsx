@@ -9,33 +9,32 @@ import { H2Purple } from "../../components/Text";
 import { useOAuth } from "./hooks/useOAuth";
 
 const wave = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(20deg);
-  }
-  75% {
-    transform: rotate(-20deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(20deg); }
+  75%  { transform: rotate(-20deg); }
+  100% { transform: rotate(0deg); }
 `;
 
 const LoginWrapper = styled(Col)`
-  border-radius: 20px;
-  box-shadow: 0px 0px 10px 2px #00000040;
-  background: #f8f8f8;
-  transition: transform 0.2s ease-in-out;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 48px 40px !important;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    background-color 0.2s ease;
 
   &:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
   }
 `;
 
 const AnimatedWavingHand = styled(InsertEmoticonSharp)`
   animation: ${wave} 2s infinite;
+  color: var(--primary);
+  font-size: 3rem !important;
+  margin-bottom: 16px;
 `;
 
 function LoginContainer(props) {
@@ -66,7 +65,13 @@ function LoginContainer(props) {
   }, [window.location]);
 
   return (
-    <CentralDiv className="justify-content-center text-center">
+    <CentralDiv
+      className="justify-content-center text-center"
+      style={{
+        minHeight: "100vh",
+        background: "var(--background)",
+      }}
+    >
       <Container>
         <Row>
           <LoginWrapper className="py-5" xs={12} md={{ span: 6, offset: 3 }}>

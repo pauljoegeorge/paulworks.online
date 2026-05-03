@@ -11,6 +11,9 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
+  backgroundColor: "var(--bg-sidebar)",
+  borderRight: "1px solid var(--border)",
+  boxShadow: "2px 0 8px rgba(15, 23, 42, 0.04)",
 });
 
 const closedMixin = (theme) => ({
@@ -23,6 +26,9 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
+  backgroundColor: "var(--bg-sidebar)",
+  borderRight: "1px solid var(--border)",
+  boxShadow: "2px 0 8px rgba(15, 23, 42, 0.04)",
 });
 
 export const DrawerHeader = mStyled("div")(({ theme }) => ({
@@ -30,7 +36,7 @@ export const DrawerHeader = mStyled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
+  borderBottom: "1px solid var(--border)",
   ...theme.mixins.toolbar,
 }));
 
@@ -38,6 +44,9 @@ export const AppBar = mStyled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
+  background: "var(--card)",
+  borderBottom: "1px solid var(--border)",
+  boxShadow: "var(--shadow-sm)",
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,

@@ -28,7 +28,6 @@ import {
 } from "../../components/Icon";
 import { getDefaultExpenseSortParams } from "./utils/utils";
 import ExpensesViewMode from "./ExpenseViewMode";
-import { colors } from "../../utils/colors";
 
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -108,7 +107,7 @@ function ExpensesContainer() {
                 <LeftArrow onClick={() => handleMonthChange("previous")} />
                 <div>
                   <H2Purple>{date}</H2Purple>
-                  <H1Span color={colors.primary}>Total: {totalExpense}</H1Span>
+                  <H1Span color="var(--primary)">Total: {totalExpense}</H1Span>
                 </div>
                 <RightArrow onClick={() => handleMonthChange("next")} />
                 {!viewMode && (
@@ -127,12 +126,13 @@ function ExpensesContainer() {
               ) : (
                 <div className="mt-3 w-100">
                   {(initialValues.expenses || []).map((_, index) => (
-                    <Row className="mt-3 w-100 justify-content-center text-center">
+                    <Row className="mt-3 w-100 justify-content-center">
                       <Col xs={6} md={3} lg={3}>
                         <Field
                           name={`expenses[${index}].category_uid`}
                           component={InputSelect}
                           options={fixedExpenseOptions}
+                          label="Category"
                         />
                       </Col>
                       <Col xs={6} md={3} lg={3}>

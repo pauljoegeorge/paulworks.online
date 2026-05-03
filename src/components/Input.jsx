@@ -1,51 +1,70 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-import TextField from "@mui/material/TextField";
-import { Form as BootstrapForm, InputGroup } from "react-bootstrap";
+import { Input as InputPrimitive } from "./ui/input";
 
-const Span = styled.span`
-  text-align: left;
-  color: #be1010;
-`;
 function Input({ input, meta, placeholder, label }) {
   const showError = meta.touched && meta.error;
+
   return (
-    <>
-      {/* <InputGroup className="mb-1 w-75">
-        <InputGroup.Text id="basic-addon1">{label || "Overall"}</InputGroup.Text>
-        <BootstrapForm.Control
-          {...input}
-          placeholder={placeholder || "$Expense"}
-          aria-label="Expense"
-          aria-describedby="basic-addon1"
-        />
-      </InputGroup>
-      {meta.error && meta.touched && (
-        <Span className="mb-3 w-75">{meta.error}</Span>
-      )} */}
-      <TextField
-        label={label}
-        variant="outlined"
-        fullWidth
+    <div className="w-full">
+      {label && (
+        <label
+          htmlFor={input.name}
+          style={{
+            display: "block",
+            fontSize: "0.75rem",
+            fontWeight: 600,
+            letterSpacing: "0.4px",
+            textTransform: "uppercase",
+            color: "var(--muted-foreground)",
+            marginBottom: "6px",
+            textAlign: "left",
+            paddingLeft: "2px",
+          }}
+        >
+          {label}
+        </label>
+      )}
+      <InputPrimitive
+        id={input.name}
         placeholder={placeholder}
         {...input}
+        style={showError ? { borderColor: "var(--destructive)" } : undefined}
       />
-      {showError && <span>{meta.error}</span>}
-    </>
+      {showError && (
+        <p
+          style={{
+            marginTop: "4px",
+            fontSize: "0.75rem",
+            color: "var(--destructive)",
+          }}
+        >
+          {meta.error}
+        </p>
+      )}
+    </div>
   );
 }
 
 Input.propTypes = {
-  input: PropTypes.arrayOf(PropTypes.string).isRequired,
-  meta: PropTypes.arrayOf(PropTypes.string).isRequired,
+  input: PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    onChange: PropTypes.func,
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
+  }).isRequired,
+  meta: PropTypes.shape({
+    touched: PropTypes.bool,
+    error: PropTypes.string,
+  }).isRequired,
   placeholder: PropTypes.string,
   label: PropTypes.string,
 };
 
 Input.defaultProps = {
-  placeholder: "$Expenser",
-  label: "Overall",
+  placeholder: "",
+  label: "",
 };
 
 export default Input;

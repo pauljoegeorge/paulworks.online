@@ -73,12 +73,13 @@ function TransactionsContainer() {
                   </Col>
                 </Row>
                 <>
-                  <Row className="mt-3 w-100 justify-content-center text-center">
+                  <Row className="mt-3 w-100 justify-content-center">
                     <Col xs={12} md={3} lg={3}>
                       <Field
                         name="expenses.category_uid"
                         component={InputSelect}
                         options={fixedExpenseOptions}
+                        label="Category"
                       />
                     </Col>
                     <Col xs={12} md={3} lg={3}>

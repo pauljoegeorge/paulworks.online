@@ -15,6 +15,8 @@ import TransactionsRoutes from "./pages/Transaction/routes";
 import MapRoutes from "./pages/Map/routes";
 import SettingsRoutes from "./pages/Settings/routes";
 import InsightsRoutes from "./pages/Insights/routes";
+import ForecastsRoutes from "./pages/Forecasts/routes";
+import BudgetSuggestionsRoutes from "./pages/BudgetSuggestions/routes";
 import LayoutContainer from "./containers/Layout";
 import AppLayout from "./containers/Layout/AppLayout";
 import { getAuthToken } from "./utils/auth";
@@ -35,6 +37,8 @@ const routes = [
   ...SettingsRoutes,
 
   ...InsightsRoutes,
+  ...ForecastsRoutes,
+  ...BudgetSuggestionsRoutes,
   ...ErrorRoutes,
 ];
 

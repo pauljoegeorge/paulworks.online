@@ -1,157 +1,97 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Toolbar from "@mui/material/Toolbar";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Badge,
-  Table,
-  Alert,
-} from "react-bootstrap";
+import { Container, Row, Col, Table } from "react-bootstrap";
 import { useInsights } from "./hooks/useInsights";
 import CentralLoader from "../../components/CentralLoader";
 import { MainWrapper } from "../Dashboard/components/Div";
-import { H2Purple } from "../../components/Text";
+import { H2Purple, P } from "../../components/Text";
 
+// ─── Lightweight token-aware card ────────────────────────────────────────
+function Card({ children, className = "" }) {
+  return (
+    <div
+      className={className}
+      style={{
+        backgroundColor: "var(--card)",
+        border: "1px solid var(--border)",
+        borderRadius: "var(--radius-lg)",
+        boxShadow: "var(--shadow-sm)",
+        overflow: "hidden",
+        height: "100%",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function CardHeader({ children, variant }) {
+  const styles = {
+    danger:  { backgroundColor: "var(--destructive)", color: "var(--destructive-foreground)" },
+    default: { backgroundColor: "var(--muted)",       color: "var(--muted-foreground)" },
+  };
+  const s = styles[variant] || styles.default;
+  return (
+    <div style={{ ...s, padding: "10px 16px", fontSize: "0.8125rem", fontWeight: 600, letterSpacing: "0.3px", borderBottom: "1px solid var(--border)" }}>
+      {children}
+    </div>
+  );
+}
+
+function CardBody({ children }) {
+  return <div style={{ padding: "16px" }}>{children}</div>;
+}
+
+// ─── Badge ────────────────────────────────────────────────────────────────
+const BADGE = {
+  danger:    { bg: "var(--destructive)",         text: "var(--destructive-foreground)" },
+  warning:   { bg: "rgba(245,158,11,0.15)",      text: "#92400e" },
+  success:   { bg: "rgba(16,185,129,0.15)",      text: "#065f46" },
+  info:      { bg: "rgba(14,165,233,0.15)",      text: "#0c4a6e" },
+  secondary: { bg: "var(--muted)",               text: "var(--muted-foreground)" },
+};
+
+function Badge({ variant = "secondary", children }) {
+  const { bg, text } = BADGE[variant] || BADGE.secondary;
+  return (
+    <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: "var(--radius-sm)", fontSize: "0.6875rem", fontWeight: 600, letterSpacing: "0.3px", backgroundColor: bg, color: text, marginRight: "4px", marginBottom: "4px" }}>
+      {children}
+    </span>
+  );
+}
+
+// ─── Alert ────────────────────────────────────────────────────────────────
+const ALERT = {
+  danger:  { bg: "rgba(239,68,68,0.08)",  border: "rgba(239,68,68,0.25)" },
+  warning: { bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.25)" },
+  info:    { bg: "rgba(14,165,233,0.08)", border: "rgba(14,165,233,0.25)" },
+};
+
+function Alert({ variant = "info", children }) {
+  const { bg, border } = ALERT[variant] || ALERT.info;
+  return (
+    <div style={{ padding: "12px 16px", borderRadius: "var(--radius-md)", backgroundColor: bg, border: `1px solid ${border}`, color: "var(--foreground)", fontSize: "0.875rem", marginBottom: "8px" }}>
+      {children}
+    </div>
+  );
+}
+
+// ─── InsightsContainer ────────────────────────────────────────────────────
 export default function InsightsContainer() {
   const { isLoading, insights, error, actions } = useInsights();
 
-  useEffect(() => {
-    actions.getInsights();
-  }, []);
+  useEffect(() => { actions.getInsights(); }, []);
 
   if (isLoading) return <CentralLoader />;
   if (error)
-    return (
-      <MainWrapper>
-        <Toolbar />
-        <Container fluid>
-          <Alert variant="danger">{error}</Alert>
-        </Container>
-      </MainWrapper>
-    );
+    return <MainWrapper><Toolbar /><Container fluid><Alert variant="danger">{error}</Alert></Container></MainWrapper>;
   if (!insights || Object.keys(insights).length === 0)
-    return (
-      <MainWrapper>
-        <Toolbar />
-        <Container fluid>
-          <Alert variant="info">No insights available.</Alert>
-        </Container>
-      </MainWrapper>
-    );
+    return <MainWrapper><Toolbar /><Container fluid><Alert variant="info">No insights available.</Alert></Container></MainWrapper>;
 
-  const {
-    summary_by_category,
-    budget_warnings,
-    merchant_insights,
-    time_trends,
-    behavioral_insights,
-    smart_highlights,
-    metrics,
-  } = insights;
+  const { summary_by_category, budget_warnings, merchant_insights, time_trends, behavioral_insights, smart_highlights, metrics } = insights;
 
-  const renderOverBudget = () => {
-    if (!budget_warnings?.over_budget?.length) return null;
-    return (
-      <div className="mb-3">
-        <strong>Over Budget:</strong>
-        <div>
-          {budget_warnings.over_budget.map((cat) => (
-            <Badge bg="danger" className="me-1" key={cat}>
-              {cat}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderCloseToLimit = () => {
-    if (!budget_warnings?.close_to_limit?.length) return null;
-    return (
-      <div>
-        <strong>Close to Limit:</strong>
-        <div>
-          {budget_warnings.close_to_limit.map((cat) => (
-            <Badge bg="warning" text="dark" className="me-1" key={cat}>
-              {cat}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderBudgetWarnings = () => {
-    if (
-      !budget_warnings ||
-      (!budget_warnings.over_budget?.length &&
-        !budget_warnings.close_to_limit?.length)
-    ) {
-      return <p className="text-muted">No warnings at this time.</p>;
-    }
-
-    return (
-      <>
-        {renderOverBudget()}
-        {renderCloseToLimit()}
-      </>
-    );
-  };
-
-  const renderMerchantTop = () => {
-    if (
-      !merchant_insights?.top_merchants ||
-      merchant_insights.top_merchants.length === 0
-    ) {
-      return <p className="text-muted">No data.</p>;
-    }
-    return (
-      <ul className="list-unstyled">
-        {merchant_insights.top_merchants.map((m) => (
-          <li key={m.merchant} className="mb-2 d-flex justify-content-between">
-            <span>{m.merchant}</span>
-            <strong>{m.spent}</strong>
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  const renderMerchantFrequent = () => {
-    if (
-      !merchant_insights?.most_frequent_merchants ||
-      merchant_insights.most_frequent_merchants.length === 0
-    ) {
-      return <p className="text-muted">No data.</p>;
-    }
-    return (
-      <ul className="list-unstyled">
-        {merchant_insights.most_frequent_merchants.map((m) => (
-          <li key={m.merchant} className="mb-2 d-flex justify-content-between">
-            <span>{m.merchant}</span>
-            <Badge bg="info">{m.count}</Badge>
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  const renderAnomalies = () => {
-    if (
-      !merchant_insights?.anomalies ||
-      merchant_insights.anomalies.length === 0
-    ) {
-      return <p className="text-muted">No anomalies detected.</p>;
-    }
-    return merchant_insights.anomalies.map((a) => (
-      <Alert variant="warning" key={a.merchant}>
-        <strong>{a.merchant}</strong>: {a.transaction}
-        <div className="small">{a.note}</div>
-      </Alert>
-    ));
-  };
+  const muted = { color: "var(--muted-foreground)", fontSize: "0.875rem" };
+  const label = { fontWeight: 600, fontSize: "0.875rem" };
 
   return (
     <MainWrapper>
@@ -160,66 +100,53 @@ export default function InsightsContainer() {
         <H2Purple className="mb-4">Financial Insights</H2Purple>
 
         {/* Smart Highlights */}
-        {smart_highlights && smart_highlights.length > 0 && (
+        {smart_highlights?.length > 0 && (
           <Row className="mb-4">
             <Col>
-              <Card className="bg-light border-0 shadow-sm">
-                <Card.Body>
-                  <Card.Title>Smart Highlights</Card.Title>
-                  <ul>
-                    {smart_highlights.map((highlight) => (
-                      <li key={highlight}>{highlight}</li>
-                    ))}
+              <Card>
+                <CardHeader>Smart Highlights</CardHeader>
+                <CardBody>
+                  <ul style={{ margin: 0, paddingLeft: "20px" }}>
+                    {smart_highlights.map((h) => <li key={h} style={{ marginBottom: "4px", fontSize: "0.875rem" }}>{h}</li>)}
                   </ul>
-                </Card.Body>
+                </CardBody>
               </Card>
             </Col>
           </Row>
         )}
 
-        {/* Budget Warnings & Metrics */}
+        {/* Budget Warnings & Key Metrics */}
         <Row className="mb-4">
           <Col md={6} className="mb-3 mb-md-0">
-            <Card className="h-100 shadow-sm">
-              <Card.Header className="bg-danger text-white">
-                Budget Warnings
-              </Card.Header>
-              <Card.Body>{renderBudgetWarnings()}</Card.Body>
+            <Card>
+              <CardHeader variant="danger">Budget Warnings</CardHeader>
+              <CardBody>
+                {!budget_warnings || (!budget_warnings.over_budget?.length && !budget_warnings.close_to_limit?.length)
+                  ? <P align="left" style={muted}>No warnings at this time.</P>
+                  : <>
+                      {budget_warnings.over_budget?.length > 0 && <div className="mb-3"><P align="left" style={label}>Over Budget:</P>{budget_warnings.over_budget.map((c) => <Badge key={c} variant="danger">{c}</Badge>)}</div>}
+                      {budget_warnings.close_to_limit?.length > 0 && <div><P align="left" style={label}>Close to Limit:</P>{budget_warnings.close_to_limit.map((c) => <Badge key={c} variant="warning">{c}</Badge>)}</div>}
+                    </>
+                }
+              </CardBody>
             </Card>
           </Col>
           <Col md={6}>
-            <Card className="h-100 shadow-sm">
-              <Card.Header>Key Metrics</Card.Header>
-              <Card.Body>
-                <Row className="mb-2">
-                  <Col xs={6}>
-                    <strong>Total Transactions:</strong>
-                  </Col>
-                  <Col xs={6}>{metrics?.total_transactions ?? 0}</Col>
-                </Row>
-                <Row className="mb-2">
-                  <Col xs={6}>
-                    <strong>Avg Spend/Tx:</strong>
-                  </Col>
-                  <Col xs={6}>{metrics?.avg_spend_per_transaction ?? 0}</Col>
-                </Row>
-                <Row className="mb-2">
-                  <Col xs={6}>
-                    <strong>Most Tx Category:</strong>
-                  </Col>
-                  <Col xs={6}>
-                    {metrics?.category_with_most_transactions || "N/A"}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs={6}>
-                    <strong>Largest Share:</strong>
-                  </Col>
-                  <Col xs={6}>
-                    {metrics?.category_with_largest_share || "N/A"}
-                  </Col>
-                </Row>
-              </Card.Body>
+            <Card>
+              <CardHeader>Key Metrics</CardHeader>
+              <CardBody>
+                {[
+                  ["Total Transactions",   metrics?.total_transactions ?? 0],
+                  ["Avg Spend / Tx",       metrics?.avg_spend_per_transaction ?? 0],
+                  ["Most Tx Category",     metrics?.category_with_most_transactions || "N/A"],
+                  ["Largest Share",        metrics?.category_with_largest_share || "N/A"],
+                ].map(([l, v]) => (
+                  <Row key={l} className="mb-2">
+                    <Col xs={6} style={label}>{l}:</Col>
+                    <Col xs={6} style={{ fontSize: "0.875rem" }}>{v}</Col>
+                  </Row>
+                ))}
+              </CardBody>
             </Card>
           </Col>
         </Row>
@@ -227,54 +154,30 @@ export default function InsightsContainer() {
         {/* Summary by Category */}
         <Row className="mb-4">
           <Col>
-            <Card className="shadow-sm">
-              <Card.Header>Summary by Category</Card.Header>
-              <Card.Body>
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Spent</th>
-                      <th>Budget</th>
-                      <th>Remaining</th>
-                      <th>% Used</th>
-                      <th>Status</th>
-                    </tr>
+            <Card>
+              <CardHeader>Summary by Category</CardHeader>
+              <CardBody>
+                <Table responsive>
+                  <thead style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)", fontSize: "0.6875rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.6px" }}>
+                    <tr>{["Category","Spent","Budget","Remaining","% Used","Status"].map((h) => <th key={h}>{h}</th>)}</tr>
                   </thead>
                   <tbody>
-                    {summary_by_category && summary_by_category.length > 0 ? (
-                      summary_by_category.map((item) => (
-                        <tr key={item.category}>
-                          <td>{item.category}</td>
-                          <td>{item.spent}</td>
-                          <td>{item.budget}</td>
-                          <td>{item.remaining}</td>
-                          <td>{item.percent_used}%</td>
-                          <td>
-                            <Badge
-                              bg={
-                                {
-                                  ok: "success",
-                                  careful: "warning",
-                                  unused: "secondary",
-                                }[item.status] || "danger"
-                              }
-                            >
-                              {item.status}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="text-center">
-                          No category data available.
-                        </td>
-                      </tr>
-                    )}
+                    {summary_by_category?.length > 0
+                      ? summary_by_category.map((item) => (
+                          <tr key={item.category}>
+                            <td>{item.category}</td>
+                            <td>{item.spent}</td>
+                            <td>{item.budget}</td>
+                            <td>{item.remaining}</td>
+                            <td>{item.percent_used}%</td>
+                            <td><Badge variant={{ ok: "success", careful: "warning", unused: "secondary" }[item.status] || "danger"}>{item.status}</Badge></td>
+                          </tr>
+                        ))
+                      : <tr><td colSpan="6" style={{ textAlign: "center", ...muted, padding: "24px" }}>No category data available.</td></tr>
+                    }
                   </tbody>
                 </Table>
-              </Card.Body>
+              </CardBody>
             </Card>
           </Col>
         </Row>
@@ -282,21 +185,36 @@ export default function InsightsContainer() {
         {/* Merchant Insights */}
         <Row className="mb-4">
           <Col md={4} className="mb-3 mb-md-0">
-            <Card className="h-100 shadow-sm">
-              <Card.Header>Top Merchants</Card.Header>
-              <Card.Body>{renderMerchantTop()}</Card.Body>
+            <Card>
+              <CardHeader>Top Merchants</CardHeader>
+              <CardBody>
+                {!merchant_insights?.top_merchants?.length
+                  ? <P align="left" style={muted}>No data.</P>
+                  : <ul className="list-unstyled" style={{ margin: 0 }}>{merchant_insights.top_merchants.map((m) => <li key={m.merchant} className="mb-2 d-flex justify-content-between"><span>{m.merchant}</span><strong>{m.spent}</strong></li>)}</ul>
+                }
+              </CardBody>
             </Card>
           </Col>
           <Col md={4} className="mb-3 mb-md-0">
-            <Card className="h-100 shadow-sm">
-              <Card.Header>Frequent Merchants</Card.Header>
-              <Card.Body>{renderMerchantFrequent()}</Card.Body>
+            <Card>
+              <CardHeader>Frequent Merchants</CardHeader>
+              <CardBody>
+                {!merchant_insights?.most_frequent_merchants?.length
+                  ? <P align="left" style={muted}>No data.</P>
+                  : <ul className="list-unstyled" style={{ margin: 0 }}>{merchant_insights.most_frequent_merchants.map((m) => <li key={m.merchant} className="mb-2 d-flex justify-content-between"><span>{m.merchant}</span><Badge variant="info">{m.count}</Badge></li>)}</ul>
+                }
+              </CardBody>
             </Card>
           </Col>
           <Col md={4}>
-            <Card className="h-100 shadow-sm">
-              <Card.Header>Anomalies</Card.Header>
-              <Card.Body>{renderAnomalies()}</Card.Body>
+            <Card>
+              <CardHeader>Anomalies</CardHeader>
+              <CardBody>
+                {!merchant_insights?.anomalies?.length
+                  ? <P align="left" style={muted}>No anomalies detected.</P>
+                  : merchant_insights.anomalies.map((a) => <Alert key={a.merchant} variant="warning"><strong>{a.merchant}</strong>: {a.transaction}<div style={{ fontSize: "0.75rem", marginTop: "4px" }}>{a.note}</div></Alert>)
+                }
+              </CardBody>
             </Card>
           </Col>
         </Row>
@@ -304,42 +222,27 @@ export default function InsightsContainer() {
         {/* Time Trends & Behavioral */}
         <Row className="mb-4">
           <Col md={6} className="mb-3 mb-md-0">
-            <Card className="h-100 shadow-sm">
-              <Card.Header>Time Trends</Card.Header>
-              <Card.Body>
-                <p>
-                  <strong>Avg Daily Spend:</strong>{" "}
-                  {time_trends?.avg_daily_spend ?? 0}
-                </p>
-                <p>
-                  <strong>Required Daily to Stay in Budget:</strong>{" "}
-                  {time_trends?.required_daily_spend_to_stay_in_budget ?? 0}
-                </p>
-                <p>
-                  <strong>Peak Spending Day:</strong>{" "}
-                  {time_trends?.peak_spending_day || "N/A"}
-                </p>
-                <p>
-                  <strong>Rolling Weekly Spend:</strong>{" "}
-                  {time_trends?.rolling_weekly_spend ?? 0}
-                </p>
-              </Card.Body>
+            <Card>
+              <CardHeader>Time Trends</CardHeader>
+              <CardBody>
+                {[
+                  ["Avg Daily Spend",              time_trends?.avg_daily_spend ?? 0],
+                  ["Required Daily (on budget)",   time_trends?.required_daily_spend_to_stay_in_budget ?? 0],
+                  ["Peak Spending Day",            time_trends?.peak_spending_day || "N/A"],
+                  ["Rolling Weekly Spend",         time_trends?.rolling_weekly_spend ?? 0],
+                ].map(([l, v]) => <p key={l} style={{ fontSize: "0.875rem", marginBottom: "8px" }}><strong>{l}:</strong> {v}</p>)}
+              </CardBody>
             </Card>
           </Col>
           <Col md={6}>
-            <Card className="h-100 shadow-sm">
-              <Card.Header>Behavioral Insights</Card.Header>
-              <Card.Body>
-                {behavioral_insights && behavioral_insights.length > 0 ? (
-                  <ul>
-                    {behavioral_insights.map((insight) => (
-                      <li key={insight}>{insight}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-muted">No behavioral insights.</p>
-                )}
-              </Card.Body>
+            <Card>
+              <CardHeader>Behavioral Insights</CardHeader>
+              <CardBody>
+                {behavioral_insights?.length > 0
+                  ? <ul style={{ margin: 0, paddingLeft: "20px" }}>{behavioral_insights.map((i) => <li key={i} style={{ marginBottom: "4px", fontSize: "0.875rem" }}>{i}</li>)}</ul>
+                  : <P align="left" style={muted}>No behavioral insights.</P>
+                }
+              </CardBody>
             </Card>
           </Col>
         </Row>
