@@ -20,7 +20,7 @@ const iconBtnSx = {
 };
 
 function NavigationBar() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const { mode, toggleMode } = useThemeMode();
   const isMapPage = window.location.pathname.includes("/map") && !open;
 

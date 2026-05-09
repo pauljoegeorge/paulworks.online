@@ -25,7 +25,7 @@ export default function ExpenseInsight(props) {
     Expense: a?.total_expense ?? 0,
   }));
 
-  const minWidth = Math.max(data.length * 80, 400);
+  const minWidth = Math.max(data.length * 120, 400);
 
   return (
     <div>
@@ -35,7 +35,7 @@ export default function ExpenseInsight(props) {
           <ResponsiveContainer width="100%" height={500}>
             <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
               <CartesianGrid stroke={gridColor} vertical={false} />
-              <XAxis dataKey="name" tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} interval={0} />
+              <XAxis dataKey="name" tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} interval={0} angle={-35} textAnchor="end" height={60} />
               <YAxis tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formattedCurrency(v)} width={80} />
               <Tooltip
                 contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--foreground)" }}

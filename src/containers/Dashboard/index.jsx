@@ -138,7 +138,6 @@ function DashboardContent() {
   const daysElapsed = Math.max(today.diff(monthStart, "days") + 1, 1);
   const daysInMonth = moment(selectedMonth).daysInMonth();
   const dailyAvg = total_monthly_expense / daysElapsed;
-  const projected = Math.round(dailyAvg * daysInMonth);
 
   const toggleVisibility = (key) => {
     const next = { ...visibilities, [key]: !visibilities[key] };
@@ -265,32 +264,7 @@ function DashboardContent() {
                 {formattedCurrency(Math.round(dailyAvg))}
               </div>
             </div>
-            <div>
-              <div
-                style={{
-                  fontSize: "10px",
-                  fontWeight: 600,
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
-                  color: "var(--muted-foreground)",
-                  marginBottom: "2px",
-                }}
-              >
-                Projected
-              </div>
-              <div
-                style={{
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  color:
-                    projected > totalBudget
-                      ? "var(--destructive)"
-                      : "var(--foreground)",
-                }}
-              >
-                {formattedCurrency(projected)}
-              </div>
-            </div>
+
             <div>
               <div
                 style={{
