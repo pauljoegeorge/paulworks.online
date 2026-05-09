@@ -1,14 +1,18 @@
 import React from "react";
-import { Container, Spinner } from "react-bootstrap";
 import { Flex } from "./Div";
 
 function CentralLoader() {
   return (
-    <Container fluid>
+    <div className="w-full">
       <Flex align="center" justify="center" height="100vh">
-        <Spinner animation="border" />
+        <div
+          className="inline-block w-8 h-8 rounded-full animate-spin"
+          style={{ border: "4px solid var(--border)", borderTopColor: "var(--primary)" }}
+          role="status"
+          aria-label="Loading"
+        />
       </Flex>
-    </Container>
+    </div>
   );
 }
 

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { Col } from "react-bootstrap";
 import moment from "moment";
-import { CustomRow as Row } from "../../components/Table";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import { PrimaryButton } from "../../components/Button";
 import { H1, H2Purple, H1Span } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
@@ -53,7 +54,6 @@ function ExpenseCategoriesContainer() {
 
   const handleMonthChange = (direction) => {
     if (prevWeekDisabled && direction === "previous") return 0;
-
     const nextMonth =
       direction === "next"
         ? formattedDate(moment(selectedMonth).add(1, "months"))
@@ -89,17 +89,12 @@ function ExpenseCategoriesContainer() {
 
         return (
           <form onSubmit={formHandleSubmit}>
-            <CentralDiv className="justify-content-center text-center">
-              <Row className="w-100 mb-5">
-                <Col sm={12}>
-                  <H1>Budget</H1>
-                </Col>
-              </Row>
+            <CentralDiv className="text-center">
+              <div className="w-full mb-12 text-center">
+                <H1>Budget</H1>
+              </div>
               <FlexContainer alignItems="baseline">
-                <LeftArrow
-                  disabled={prevWeekDisabled}
-                  onClick={() => handleMonthChange("previous")}
-                />
+                <LeftArrow disabled={prevWeekDisabled} onClick={() => handleMonthChange("previous")} />
                 <div>
                   <H2Purple>{date}</H2Purple>
                   <H1Span color="var(--primary)">Total: {totalBudget}</H1Span>
@@ -107,43 +102,46 @@ function ExpenseCategoriesContainer() {
                 <RightArrow onClick={() => handleMonthChange("next")} />
                 <DownloadIcon onClick={() => handleExportReport()} />
               </FlexContainer>
-              <div className="mt-3">
-                {Array.from({ length: numExpenseCategories }).map(
-                  (_, index) => (
-                    <Row className="mt-3 w-100 justify-content-center text-center">
-                      <Col>
-                        <Field
-                          name={`fixedExpenseCategories[${index}].name`}
-                          component={Input}
-                          label="Category"
-                        />
-                      </Col>
-                      <Col>
-                        <Field
-                          name={`fixedExpenseCategories[${index}].budget`}
-                          component={Input}
-                          validate={number}
-                          label="Budget"
-                        />
-                      </Col>
-                    </Row>
-                  )
-                )}
+              <div className="mt-4 w-full">
+                {Array.from({ length: numExpenseCategories }).map((_, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <div key={index} className="flex items-end gap-3 mt-4 w-full">
+                    <div className="flex-1">
+                      <Field name={`fixedExpenseCategories[${index}].name`} component={Input} label="Category" />
+                    </div>
+                    <div className="flex-1">
+                      <Field name={`fixedExpenseCategories[${index}].budget`} component={Input} validate={number} label="Budget" />
+                    </div>
+                    <Field name={`fixedExpenseCategories[${index}].update_future`} type="checkbox">
+                      {({ input }) => (
+                        <Tooltip title={input.checked ? "Will update future months" : "Only current month"} placement="top">
+                          <IconButton
+                            onClick={() => input.onChange(!input.checked)}
+                            sx={{
+                              mb: "2px",
+                              color: input.checked ? "var(--primary)" : "var(--muted-foreground)",
+                              backgroundColor: input.checked ? "rgba(99,102,241,0.1)" : "transparent",
+                              borderRadius: "var(--radius-md)",
+                              transition: "all 0.2s",
+                              "&:hover": { backgroundColor: "rgba(99,102,241,0.15)" },
+                            }}
+                          >
+                            <EventRepeatIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Field>
+                  </div>
+                ))}
               </div>
-              <Row className="mt-3 w-100 justify-content-center text-center">
+              <div className="flex justify-center mt-4 w-full">
                 <PlusIcon onClick={() => handleAddCategory()} />
-              </Row>
-              <Row className="mt-3 w-100 justify-content-center text-center">
-                <PrimaryButton
-                  variant="primary"
-                  size="lg"
-                  className="w-50"
-                  type="submit"
-                  disabled={pristine || !valid}
-                >
+              </div>
+              <div className="flex justify-center mt-4 w-full">
+                <PrimaryButton size="lg" type="submit" disabled={pristine || !valid}>
                   Save
                 </PrimaryButton>
-              </Row>
+              </div>
             </CentralDiv>
           </form>
         );

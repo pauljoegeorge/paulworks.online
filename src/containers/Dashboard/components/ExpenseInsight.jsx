@@ -1,131 +1,62 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import Chart from "react-apexcharts";
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+} from "recharts";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
-import { colors } from "../../../utils/colors";
 import { formattedCurrency } from "../../../utils/currency";
-import { MainWrapper } from "./Div";
-import { isMobile } from "../../../utils/utils";
+import { dataColors } from "../../../utils/colors";
+import { useThemeMode } from "../../../contexts/ThemeContext";
 
 const ScrollableChild = styled.div`
   overflow-x: auto;
-  white-space: nowrap;
 `;
 
 export default function ExpenseInsight(props) {
   const { expenseInsights } = props;
   const { expense_by_categories } = expenseInsights || [];
-  const mobileView = isMobile();
-  const graphCustomWidth = mobileView
-    ? expense_by_categories.length * 31
-    : expense_by_categories.length * 11;
-  const graphWidth = graphCustomWidth > 100 ? `${graphCustomWidth}%` : "100%";
+  const { mode } = useThemeMode();
+  const axisColor = mode === "dark" ? "#94a3b8" : "#6b6b6b";
+  const gridColor = mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
 
-  const options = {
-    series: [
-      {
-        name: "Budget",
-        data: (expense_by_categories || []).map((a) => a?.budget),
-        color: colors.yellow,
-      },
-      {
-        name: "Expense",
-        data: (expense_by_categories || []).map((a) => a?.total_expense),
-        color: colors.pastelPurple,
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 350,
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "80%",
-        endingShape: "rounded",
-        dataLabels: {
-          position: "top",
-        },
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      position: "top",
-      offsetY: -20,
-      rotate: -45,
-      style: {
-        colors: [colors.primary],
-        fontSize: "12px",
-      },
-      formatter(val, opts) {
-        if (
-          opts.globals.series[0][opts.dataPointIndex] ===
-            opts.globals.series[1][opts.dataPointIndex] &&
-          opts.seriesIndex === 0
-        )
-          return "";
-        return `${formattedCurrency(val)}`;
-      },
-    },
-    stroke: {
-      show: true,
-      width: 10,
-      colors: ["transparent"],
-    },
-    xaxis: {
-      categories: (expense_by_categories || []).map((a) => a?.name),
-      labels: {
-        show: true,
-        rotate: -45,
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter(val) {
-          return `${formattedCurrency(val)}`;
-        },
-      },
-    },
-    fill: {
-      colors: [colors.yellow, colors.pastelPurple],
-      opacity: 1,
-    },
-    tooltip: {
-      y: {
-        formatter(val) {
-          return `${formattedCurrency(val)}`;
-        },
-      },
-    },
-  };
+  const data = (expense_by_categories || []).map((a) => ({
+    name: a?.name,
+    Budget: a?.budget ?? 0,
+    Expense: a?.total_expense ?? 0,
+  }));
+
+  const minWidth = Math.max(data.length * 80, 400);
 
   return (
-    <MainWrapper>
-      <Typography
-        component="h2"
-        variant="h6"
-        color={colors.primary}
-        gutterBottom
-      >
+    <div>
+      <Typography component="h2" variant="h6" sx={{ color: "var(--primary)" }} gutterBottom>
         Expense By Category
       </Typography>
       <ScrollableChild>
-        <Chart
-          options={options}
-          series={options.series}
-          type="bar"
-          height={500}
-          width={graphWidth}
-        />
+        <div style={{ minWidth }}>
+          <ResponsiveContainer width="100%" height={500}>
+            <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
+              <CartesianGrid stroke={gridColor} vertical={false} />
+              <XAxis dataKey="name" tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} interval={0} />
+              <YAxis tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formattedCurrency(v)} width={80} />
+              <Tooltip
+                contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--foreground)" }}
+                formatter={(v) => formattedCurrency(v)}
+              />
+              <Legend wrapperStyle={{ color: axisColor, fontSize: 12, paddingTop: "16px" }} />
+              <Bar dataKey="Budget" fill={dataColors.yellow} radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="Expense" fill={dataColors.pastelPurple} radius={[4, 4, 0, 0]} maxBarSize={40} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </ScrollableChild>
-    </MainWrapper>
+    </div>
   );
 }
 
 ExpenseInsight.propTypes = {
   expenseInsights: PropTypes.shape({
-    months: PropTypes.instanceOf(Array).isRequired,
-    savings: PropTypes.instanceOf(Array).isRequired,
+    expense_by_categories: PropTypes.instanceOf(Array),
   }).isRequired,
 };

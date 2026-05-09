@@ -24,11 +24,12 @@ export function useBudgetSuggestions() {
     }
   }, []);
 
-  const generateSuggestions = useCallback(async (maxOverBudget) => {
+  const generateSuggestions = useCallback(async (maxOverBudget, additionalExpenses) => {
     try {
       setGenerating(true);
       const response = await post("expense_insights/suggest_reductions", {
         max_over_budget: maxOverBudget,
+        expected_additional_expenses: additionalExpenses,
       });
       setSuggestions((prev) => [response, ...prev]);
       Notify.success("Suggestions generated successfully.");

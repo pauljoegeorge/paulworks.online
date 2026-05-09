@@ -45,13 +45,9 @@ export default {
         sm: "var(--radius-sm)",
       },
       fontFamily: {
-        sans: [
-          "IBM Plex Sans",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "sans-serif",
-        ],
+        sans: ["DM Sans", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        display: ["General Sans", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
     },
   },

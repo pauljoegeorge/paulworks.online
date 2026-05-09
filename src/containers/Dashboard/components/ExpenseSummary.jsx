@@ -1,15 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Row, Col } from "react-bootstrap";
 import { Typography } from "@mui/material";
 import { colors } from "../../../utils/colors";
-import {
-  Flex,
-  FlexChild,
-  BoxWithShadow,
-  Divider,
-} from "../../../components/Div";
+import { Flex, FlexChild, BoxWithShadow, Divider } from "../../../components/Div";
 import { P, PBold, PText } from "../../../components/Text";
 import { formattedCurrency } from "../../../utils/currency";
 
@@ -29,106 +23,56 @@ const Item = styled.div`
   cursor: auto;
   border-radius: var(--radius-sm);
   transition: background-color 0.15s ease;
-  &:hover {
-    background-color: var(--muted);
-  }
+  &:hover { background-color: var(--muted); }
 `;
 
-function ExpenseSummary(props) {
-  const {
-    filteredExpenseCategories,
-    topTransactions,
-    popularTransactions,
-    isCurrentMonth,
-  } = props;
-
+function ExpenseSummary({ filteredExpenseCategories, topTransactions, popularTransactions, isCurrentMonth }) {
   return (
-    <Row className="mt-5">
+    <div className="flex flex-wrap gap-5 mt-12">
       {isCurrentMonth && filteredExpenseCategories.length > 0 && (
-        <Col>
+        <div className="flex-1 min-w-[280px]">
           <BoxWithShadow>
-            <Typography
-              component="h1"
-              variant="h6"
-              style={{ color: "var(--primary)" }}
-              gutterBottom
-              align="left"
-              fontSize="1.5rem"
-              fontWeight="600"
-            >
+            <Typography component="h1" variant="h6" style={{ color: "var(--primary)" }} gutterBottom align="left" fontSize="1.5rem" fontWeight="600">
               This Week 📈
             </Typography>
             {(filteredExpenseCategories || []).map((category) => (
-              <Item>
+              <Item key={category.name}>
                 <Flex justify="space-between">
-                  <FlexChild>
-                    <PBold tt="capitalize" size="1rem">
-                      {category.name}
-                    </PBold>
-                  </FlexChild>
-                  <FlexChild>
-                    <PText bg={colors.lightOrange} padding="8px" br="10px">
-                      {formattedCurrency(category.total_expense_of_week)}
-                    </PText>
-                  </FlexChild>
+                  <FlexChild><PBold tt="capitalize" size="1rem">{category.name}</PBold></FlexChild>
+                  <FlexChild><PText bg={colors.lightOrange} padding="8px" br="10px">{formattedCurrency(category.total_expense_of_week)}</PText></FlexChild>
                 </Flex>
                 <Divider />
               </Item>
             ))}
           </BoxWithShadow>
-        </Col>
+        </div>
       )}
       {topTransactions.length > 0 && (
-        <Col>
+        <div className="flex-1 min-w-[280px]">
           <BoxWithShadow>
-            <Typography
-              component="h1"
-              variant="h6"
-              style={{ color: "var(--primary)" }}
-              gutterBottom
-              align="left"
-              fontSize="1.5rem"
-              fontWeight="600"
-            >
+            <Typography component="h1" variant="h6" style={{ color: "var(--primary)" }} gutterBottom align="left" fontSize="1.5rem" fontWeight="600">
               Peak Transactions 🤑
             </Typography>
             {(topTransactions || []).map((transaction) => {
               const dateObject = new Date(transaction.transaction_date);
-              const monthOfTransaction = dateObject.toLocaleString("default", {
-                month: "short",
-              });
+              const monthOfTransaction = dateObject.toLocaleString("default", { month: "short" });
               const dayOfTransaction = `0${dateObject.getDate()}`.slice(-2);
               return (
-                <Item>
+                <Item key={transaction.transaction_date}>
                   <Flex>
                     <FirstFlexChild>
                       <DateBox>
-                        <P height="0" padding="5px 0px" tt="uppercase">
-                          {monthOfTransaction}
-                        </P>
-                        <PBold height="0" size="16px">
-                          {dayOfTransaction}
-                        </PBold>
+                        <P height="0" padding="5px 0px" tt="uppercase">{monthOfTransaction}</P>
+                        <PBold height="0" size="16px">{dayOfTransaction}</PBold>
                       </DateBox>
                     </FirstFlexChild>
                     <Flex justify="space-between">
                       <FlexChild>
-                        <PBold
-                          tt="capitalize"
-                          size="1rem"
-                          mb="0px"
-                          align="left"
-                        >
-                          {transaction.category_name}
-                        </PBold>
-                        <P align="left" wordBreak="break-all">
-                          {transaction.notes || ""}
-                        </P>
+                        <PBold tt="capitalize" size="1rem" mb="0px" align="left">{transaction.category_name}</PBold>
+                        <P align="left" wordBreak="break-all">{transaction.notes || ""}</P>
                       </FlexChild>
                       <FlexChild>
-                        <PText bg={colors.lightOrange} padding="10px" br="10px">
-                          {formattedCurrency(transaction.amount)}
-                        </PText>
+                        <PText bg={colors.lightOrange} padding="10px" br="10px">{formattedCurrency(transaction.amount)}</PText>
                       </FlexChild>
                     </Flex>
                   </Flex>
@@ -137,50 +81,31 @@ function ExpenseSummary(props) {
               );
             })}
           </BoxWithShadow>
-        </Col>
+        </div>
       )}
       {Object.keys(popularTransactions).length > 0 && (
-        <Col>
+        <div className="flex-1 min-w-[280px]">
           <BoxWithShadow>
-            <Typography
-              component="h1"
-              variant="h6"
-              style={{ color: "var(--primary)" }}
-              gutterBottom
-              align="left"
-              fontSize="1.5rem"
-              fontWeight="600"
-            >
+            <Typography component="h1" variant="h6" style={{ color: "var(--primary)" }} gutterBottom align="left" fontSize="1.5rem" fontWeight="600">
               Popular Transactions 🔥
             </Typography>
-            {Object.entries(popularTransactions || []).map(
-              ([notes, transaction]) => (
-                <Item>
-                  <Flex justify="space-between">
-                    <FlexChild>
-                      <PBold
-                        tt="capitalize"
-                        size="1rem"
-                        wordBreak="break-all"
-                        align="left"
-                      >
-                        {`${notes}(${transaction.count})`}
-                      </PBold>
-                    </FlexChild>
-                    <FlexChild>
-                      <PText bg={colors.lightOrange} padding="10px" br="10px">
-                        {formattedCurrency(transaction.total_spent)}
-                      </PText>
-                    </FlexChild>
-                  </Flex>
-                  <Divider />
-                </Item>
-              )
-            )}
+            {Object.entries(popularTransactions || []).map(([notes, transaction]) => (
+              <Item key={notes}>
+                <Flex justify="space-between">
+                  <FlexChild>
+                    <PBold tt="capitalize" size="1rem" wordBreak="break-all" align="left">{`${notes}(${transaction.count})`}</PBold>
+                  </FlexChild>
+                  <FlexChild>
+                    <PText bg={colors.lightOrange} padding="10px" br="10px">{formattedCurrency(transaction.total_spent)}</PText>
+                  </FlexChild>
+                </Flex>
+                <Divider />
+              </Item>
+            ))}
           </BoxWithShadow>
-        </Col>
+        </div>
       )}
-    </Row>
+    </div>
   );
 }
 

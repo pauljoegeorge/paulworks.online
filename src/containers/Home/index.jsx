@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Row, Col } from "react-bootstrap";
 import styled, { keyframes } from "styled-components";
 import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa";
 import avatar from "../../assets/pj-avatar.svg";
@@ -22,6 +21,7 @@ const Wrapper = styled.div`
   background: #0c1021;
   width: 100vw;
 `;
+
 const Heading = styled.p`
   font-size: 3rem;
   letter-spacing: 3px;
@@ -31,12 +31,8 @@ const Heading = styled.p`
 `;
 
 const gradientText = keyframes`
-  0% {
-      background-position: 0% 50%;
-  }
-  100% {
-      background-position: 100% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 `;
 
 const SubHeading = styled.p`
@@ -47,13 +43,7 @@ const SubHeading = styled.p`
   font-weight: 200;
   text-transform: uppercase;
   font-family: courier, monospace;
-  background: linear-gradient(
-    to right,
-    #7953cd 20%,
-    #00affa 30%,
-    #0190cd 70%,
-    #764ada 80%
-  );
+  background: linear-gradient(to right, #7953cd 20%, #00affa 30%, #0190cd 70%, #764ada 80%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -71,18 +61,10 @@ const Summary = styled.p`
 `;
 
 const wave = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(20deg);
-  }
-  75% {
-    transform: rotate(-20deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  75% { transform: rotate(-20deg); }
+  100% { transform: rotate(0deg); }
 `;
 
 const Emoji = styled.span`
@@ -93,11 +75,10 @@ const Emoji = styled.span`
 
 function HomeContainer() {
   const mobileView = isMobile();
+
   const handleSocialClick = (app) => {
     const socialUrl = findSocialLink(app);
-    pushEvent({
-      ...events.onClickSocial(app),
-    });
+    pushEvent({ ...events.onClickSocial(app) });
     window.open(socialUrl, "_blank");
   };
 
@@ -109,61 +90,44 @@ function HomeContainer() {
     <Wrapper>
       <HomeNavbar />
       <CentralDiv mt="6rem">
-        <Row className="justify-content-center mt-4">
-          <Col>
-            <Heading>
-              Hi There!&nbsp;
-              <Emoji role="img" aria-label="Wave Emoji" aria-hidden="false">
-                👋
-              </Emoji>
-            </Heading>
-            <Heading>
-              I&rsquo;m <H1Span color={colors.blue}>Paul Joe George </H1Span>
-            </Heading>
-            <Row className="justify-content-center mb-2">
-              <Col>
-                <Avatar src={avatar} roundedCircle />
-              </Col>
-            </Row>
-            <Flex align={mobileView ? "center" : "baseline"}>
-              <SubHeading>{designation}&nbsp;</SubHeading>
-              <span style={{ fontSize: "2rem" }}>👨🏻‍💻</span>
-            </Flex>
-            <Summary>{summary}</Summary>
-          </Col>
-        </Row>
+        <div className="flex flex-col items-center mt-4">
+          <Heading>
+            Hi There!&nbsp;
+            <Emoji role="img" aria-label="Wave Emoji" aria-hidden="false">👋</Emoji>
+          </Heading>
+          <Heading>
+            I&rsquo;m <H1Span color={colors.blue}>Paul Joe George </H1Span>
+          </Heading>
+          <div className="flex justify-center mb-2">
+            <Avatar src={avatar} roundedCircle />
+          </div>
+          <Flex align={mobileView ? "center" : "baseline"}>
+            <SubHeading>{designation}&nbsp;</SubHeading>
+            <span style={{ fontSize: "2rem" }}>👨🏻‍💻</span>
+          </Flex>
+          <Summary>{summary}</Summary>
+        </div>
         <SwitchingDiv>
           {skills.map((skill) => (
-            <H3Span color={colors.blue}>{skill}</H3Span>
+            <H3Span key={skill} color={colors.blue}>{skill}</H3Span>
           ))}
         </SwitchingDiv>
-        <Row className="justify-content-center mt-4">
-          <Col>
-            <SocialMediaWrapper onClick={() => handleSocialClick("Github")}>
-              <FaGithub size={30} />
-            </SocialMediaWrapper>
-            <SocialMediaWrapper onClick={() => handleSocialClick("Twitter")}>
-              <FaTwitter size={30} />
-            </SocialMediaWrapper>
-            <SocialMediaWrapper onClick={() => handleSocialClick("Linkedin")}>
-              <FaLinkedin size={30} />
-            </SocialMediaWrapper>
-          </Col>
-        </Row>
-        <Row className="justify-content-center mt-4 mb-4">
-          <Col>
-            <div style={{ color: "white" }}>
-              <SocialMediaWrapper onClick={() => handleRouteToApp()}>
-                <img
-                  width="75px"
-                  src={MoneyProphetLogo}
-                  alt="logo"
-                  href="/dashboard"
-                />
-              </SocialMediaWrapper>
-            </div>
-          </Col>
-        </Row>
+        <div className="flex justify-center mt-4">
+          <SocialMediaWrapper onClick={() => handleSocialClick("Github")}>
+            <FaGithub size={30} />
+          </SocialMediaWrapper>
+          <SocialMediaWrapper onClick={() => handleSocialClick("Twitter")}>
+            <FaTwitter size={30} />
+          </SocialMediaWrapper>
+          <SocialMediaWrapper onClick={() => handleSocialClick("Linkedin")}>
+            <FaLinkedin size={30} />
+          </SocialMediaWrapper>
+        </div>
+        <div className="flex justify-center mt-4 mb-4">
+          <SocialMediaWrapper onClick={() => handleRouteToApp()}>
+            <img width="75px" src={MoneyProphetLogo} alt="logo" href="/dashboard" />
+          </SocialMediaWrapper>
+        </div>
       </CentralDiv>
     </Wrapper>
   );
@@ -172,7 +136,5 @@ function HomeContainer() {
 export default HomeContainer;
 
 HomeContainer.propTypes = {
-  match: PropTypes.shape({
-    path: PropTypes.string,
-  }).isRequired,
+  match: PropTypes.shape({ path: PropTypes.string }).isRequired,
 };

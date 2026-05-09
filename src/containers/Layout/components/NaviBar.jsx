@@ -63,10 +63,10 @@ function NavigationBar() {
               noWrap
               component="div"
               sx={{
-                fontFamily: '"IBM Plex Sans", sans-serif',
+                fontFamily: "var(--font-display), sans-serif",
                 fontWeight: 700,
                 fontSize: "1rem",
-                letterSpacing: "-0.3px",
+                letterSpacing: "-0.03em",
                 color: "var(--foreground)",
               }}
             >

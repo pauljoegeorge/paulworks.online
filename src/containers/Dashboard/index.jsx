@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import moment from "moment";
-import { Container, Row, Col } from "react-bootstrap";
 import ExpenseInsight from "./components/ExpenseInsight";
 import OverallExpenseInsight from "./components/OverallExpenseInsight";
 import { useInsights } from "./hooks/useInsights";
 import NoticeBox from "./components/NoticeBox";
-import {
-  appendUrlToDate,
-  addDateToUrl,
-  formattedDate,
-} from "../../utils/utils";
+import { appendUrlToDate, addDateToUrl, formattedDate } from "../../utils/utils";
 import CentralLoader from "../../components/CentralLoader";
 import { FlexContainer } from "../../components/Container";
 import { LeftArrow, RightArrow } from "../../components/Icon";
@@ -43,21 +38,19 @@ function DashboardContent() {
     top_transactions,
     popular_transactions,
   } = expenseInsights || [];
+
   const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
-    (totals, category) => {
-      return {
-        totalBudget: totals.totalBudget + (category?.budget || 0),
-        totalExpense: totals.totalExpense + (category?.total_expense || 0),
-      };
-    },
+    (totals, category) => ({
+      totalBudget: totals.totalBudget + (category?.budget || 0),
+      totalExpense: totals.totalExpense + (category?.total_expense || 0),
+    }),
     { totalBudget: 0, totalExpense: 0 }
   );
   const totalBalance = formattedCurrency(totalBudget - totalExpense);
   const filteredExpenseCategories = (expense_by_categories || []).filter(
     (category) => category.total_expense_of_week !== 0
   );
-  const showQuota =
-    isCurrentMonth && (allowance_per_day !== 0 || allowance_per_week !== 0);
+  const showQuota = isCurrentMonth && (allowance_per_day !== 0 || allowance_per_week !== 0);
 
   useEffect(() => {
     const month = addDateToUrl();
@@ -87,51 +80,35 @@ function DashboardContent() {
       ) : (
         <>
           <Toolbar />
-          <Container fluid>
-            <FlexContainer alignItems="center" className="mb-5">
+          <div>
+            <FlexContainer alignItems="center" className="mb-12">
               <LeftArrow onClick={() => handleMonthChange("previous")} />
               <H2Purple>{date}</H2Purple>
               <RightArrow onClick={() => handleMonthChange("next")} />
             </FlexContainer>
             <NoticeBox
               data={[
-                {
-                  key: "todays",
-                  head: "Today's Expense",
-                  value: formattedCurrency(todays_expense),
-                },
-                {
-                  key: "balance",
-                  head: "Balance",
-                  value: totalBalance,
-                },
-                {
-                  key: "weekly",
-                  head: "Weekly Expense",
-                  value: formattedCurrency(weekly_expense),
-                },
-                {
-                  key: "total",
-                  head: "Total Expense",
-                  value: formattedCurrency(total_monthly_expense),
-                },
+                { key: "todays", head: "Today's Expense", value: formattedCurrency(todays_expense) },
+                { key: "balance", head: "Balance", value: totalBalance },
+                { key: "weekly", head: "Weekly Expense", value: formattedCurrency(weekly_expense) },
+                { key: "total", head: "Total Expense", value: formattedCurrency(total_monthly_expense) },
               ]}
             />
             {showQuota && (
-              <Row className="mt-5">
+              <div className="mt-12">
                 <SpendingRecommendations
                   allowancePerDay={allowance_per_day}
                   allowancePerWeek={allowance_per_week}
                 />
-              </Row>
+              </div>
             )}
-            <Row className="mt-5">
+            <div className="mt-12">
               <OverallExpenseInsight expenseInsights={expenseInsights} />
-            </Row>
-            <Row className="mt-5">
+            </div>
+            <div className="mt-12">
               <ExpenseInsight expenseInsights={expenseInsights} />
-            </Row>
-            <Flex className="mt-5">
+            </div>
+            <Flex className="mt-12">
               <FlexChild width="100%">
                 <DailyExpenseReport dailyReport={daily_report} />
               </FlexChild>
@@ -145,7 +122,7 @@ function DashboardContent() {
               topTransactions={top_transactions}
               popularTransactions={popular_transactions}
             />
-          </Container>
+          </div>
         </>
       )}
     </MainWrapper>

@@ -1,114 +1,162 @@
 import React, { useEffect } from "react";
 import Toolbar from "@mui/material/Toolbar";
-import { Container, Table, Button } from "react-bootstrap";
 import { useForecasts } from "./hooks/useForecasts";
 import CentralLoader from "../../components/CentralLoader";
 import { MainWrapper } from "../Dashboard/components/Div";
-import { H2Purple } from "../../components/Text";
+import { BoxWithShadow, Flex } from "../../components/Div";
+import { H2Purple, H3Bold, PBold, P } from "../../components/Text";
+import { PrimaryButton } from "../../components/Button";
+import { THead } from "../../components/Table";
 
-function Card({ children, className = "" }) {
-  return (
-    <div
-      className={className}
-      style={{
-        backgroundColor: "var(--card)",
-        border: "1px solid var(--border)",
-        borderRadius: "var(--radius-lg)",
-        boxShadow: "var(--shadow-sm)",
-        overflow: "hidden",
-        marginBottom: "20px"
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function CardHeader({ children }) {
-  return (
-    <div style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)", padding: "10px 16px", fontSize: "0.8125rem", fontWeight: 600, letterSpacing: "0.3px", borderBottom: "1px solid var(--border)" }}>
-      {children}
-    </div>
-  );
-}
-
-function CardBody({ children }) {
-  return <div style={{ padding: "16px" }}>{children}</div>;
-}
+const STATUS_COLORS = {
+  ok: "var(--success)",
+  warning: "#f59e0b",
+  over_budget: "var(--destructive)",
+  no_budget: "var(--muted-foreground)",
+};
 
 export default function ForecastsContainer() {
   const { isLoading, isGenerating, forecasts, error, actions } = useForecasts();
 
   useEffect(() => { actions.getForecasts(); }, []);
 
-  const muted = { color: "var(--muted-foreground)", fontSize: "0.875rem" };
-
   return (
     <MainWrapper>
       <Toolbar />
-      <Container fluid>
-        <div className="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <Flex justify="space-between" align="center" className="mb-4">
           <H2Purple>Expense Forecasts</H2Purple>
-          <Button 
-            variant="primary" 
-            onClick={actions.generateForecast} 
+          <PrimaryButton
+            size="lg"
+            onClick={actions.generateForecast}
             disabled={isGenerating}
           >
-            {isGenerating ? "Generating..." : "Generate New Forecast"}
-          </Button>
-        </div>
+            {isGenerating ? "Generating..." : "Generate Forecast"}
+          </PrimaryButton>
+        </Flex>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+        {error && (
+          <div style={{
+            padding: "12px 16px",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--destructive)",
+            color: "var(--destructive)",
+            backgroundColor: "rgba(239,68,68,0.08)",
+            marginBottom: "16px",
+            fontSize: "14px",
+          }}>
+            {error}
+          </div>
+        )}
+
         {isLoading && <CentralLoader />}
 
         {!isLoading && forecasts.length === 0 && (
-          <div className="alert alert-info">No forecasts available. Generate one to see predictions.</div>
+          <div style={{
+            padding: "12px 16px",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border)",
+            color: "var(--muted-foreground)",
+            backgroundColor: "var(--muted)",
+            fontSize: "14px",
+          }}>
+            No forecasts available. Generate one to see predictions.
+          </div>
         )}
 
         {!isLoading && forecasts.map((forecastData) => {
           const analytics = forecastData.analytics || {};
-          const generatedDate = new Date(forecastData.generated_on).toLocaleDateString(undefined, {
-             year: 'numeric', month: 'long', day: 'numeric'
-          });
+          const generatedDate = new Date(forecastData.generated_on).toLocaleDateString(
+            undefined,
+            { year: "numeric", month: "long", day: "numeric" }
+          );
 
           return (
-            <Card key={forecastData.id}>
-              <CardHeader>Forecast from {generatedDate}</CardHeader>
-              <CardBody>
-                <div style={{ marginBottom: "16px", fontSize: "1.125rem", fontWeight: "bold" }}>
-                  Expected Total Expense: {analytics.forecasted_total_expense}
-                </div>
-                {analytics.message && (
-                  <div style={{ marginBottom: "16px", ...muted }}>
-                    {analytics.message}
+            <BoxWithShadow key={forecastData.id} padding="0" style={{ overflow: "hidden", marginBottom: "20px" }}>
+              <div style={{
+                padding: "10px 20px",
+                borderBottom: "1px solid var(--border)",
+                backgroundColor: "var(--muted)",
+                color: "var(--muted-foreground)",
+                fontSize: "0.8125rem",
+                fontWeight: 600,
+                letterSpacing: "0.3px",
+              }}>
+                Forecast from {generatedDate}
+              </div>
+
+              <div style={{ padding: "20px" }}>
+                <Flex gap="32px" className="mb-4" style={{ flexWrap: "wrap" }}>
+                  <div>
+                    <PBold align="left" mb="4px">Spent So Far</PBold>
+                    <P size="1.125rem" style={{ fontWeight: 700, color: "var(--foreground)" }}>
+                      {analytics.total_spent_so_far ?? "—"}
+                    </P>
                   </div>
+                  <div>
+                    <PBold align="left" mb="4px">Forecasted Total</PBold>
+                    <P size="1.125rem" style={{ fontWeight: 700, color: "var(--foreground)" }}>
+                      {analytics.forecasted_total_expense}
+                    </P>
+                  </div>
+                  {analytics.total_budget && (
+                    <div>
+                      <PBold align="left" mb="4px">Total Budget</PBold>
+                      <P size="1.125rem" style={{ fontWeight: 700, color: "var(--foreground)" }}>
+                        {analytics.total_budget}
+                      </P>
+                    </div>
+                  )}
+                </Flex>
+
+                {analytics.message && (
+                  <P size="0.875rem" style={{ color: "var(--muted-foreground)", marginBottom: "16px" }}>
+                    {analytics.message}
+                  </P>
                 )}
-                <h6 style={{ fontWeight: 600, marginTop: "20px" }}>Forecast by Category</h6>
-                <Table responsive size="sm" style={{ marginTop: "10px" }}>
-                  <thead style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)", fontSize: "0.6875rem", textTransform: "uppercase" }}>
-                    <tr>
-                      <th>Category</th>
-                      <th>Forecasted Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {analytics.forecast_by_category?.length > 0 ? (
-                      analytics.forecast_by_category.map((item) => (
-                        <tr key={item.category}>
-                          <td>{item.category}</td>
-                          <td>{item.forecasted_amount}</td>
+
+                <H3Bold style={{ marginBottom: "12px", marginTop: "16px" }}>
+                  Forecast by Category
+                </H3Bold>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <THead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Spent So Far</th>
+                        <th>Forecasted Amount</th>
+                        <th>Budget</th>
+                      </tr>
+                    </THead>
+                    <tbody>
+                      {analytics.forecast_by_category?.length > 0 ? (
+                        analytics.forecast_by_category.map((item) => (
+                          <tr key={item.category}>
+                            <td style={{ color: STATUS_COLORS[item.status] ?? "inherit", fontWeight: item.status === "over_budget" ? 600 : "inherit" }}>
+                              {item.category}
+                            </td>
+                            <td>{item.spent_so_far ?? "—"}</td>
+                            <td>{item.forecasted_amount}</td>
+                            <td style={{ color: "var(--muted-foreground)" }}>
+                              {item.budget ?? "—"}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="4" style={{ color: "var(--muted-foreground)", textAlign: "center", padding: "16px", fontSize: "0.875rem" }}>
+                            No category breakdown available.
+                          </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr><td colSpan="2" style={{ ...muted, textAlign: "center", padding: "16px" }}>No category breakdown available.</td></tr>
-                    )}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </BoxWithShadow>
           );
         })}
-      </Container>
+      </div>
     </MainWrapper>
   );
 }

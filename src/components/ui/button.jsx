@@ -4,27 +4,27 @@ import { cva } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(99,102,241,0.12)] disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:-translate-y-px active:translate-y-0",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm hover:opacity-90 hover:shadow-md hover:-translate-y-px active:translate-y-0 active:shadow-sm",
+          "bg-[#6366F1] text-white hover:bg-[#4F46E5] hover:shadow-[0_4px_12px_rgba(99,102,241,0.35)]",
         secondary:
-          "bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:bg-[var(--muted)] hover:border-[var(--ring)]",
+          "bg-transparent text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--muted)] hover:border-[var(--primary)]",
         outline:
-          "border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:bg-[var(--muted)] hover:border-[var(--ring)]",
+          "bg-transparent text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--muted)] hover:border-[var(--primary)]",
         ghost:
-          "bg-transparent text-[var(--foreground)] hover:bg-[var(--muted)]",
+          "bg-transparent text-[var(--foreground)] hover:bg-[var(--muted)] hover:translate-y-0",
         destructive:
-          "bg-[var(--destructive)] text-[var(--destructive-foreground)] hover:opacity-90",
-        link: "text-[var(--primary)] underline-offset-4 hover:underline p-0 h-auto",
+          "bg-transparent text-[var(--destructive)] border border-[var(--destructive)] hover:bg-[var(--destructive)] hover:text-white",
+        link: "text-[var(--primary)] underline-offset-4 hover:underline p-0 h-auto hover:translate-y-0",
       },
       size: {
-        default: "h-9 px-4 py-2 text-sm rounded-[var(--radius-md)]",
-        sm: "h-7 px-3 text-xs rounded-[var(--radius-sm)]",
-        lg: "h-10 px-6 text-sm rounded-[var(--radius-md)]",
-        icon: "h-9 w-9 rounded-[var(--radius-md)]",
+        default: "h-[38px] px-4 text-sm rounded-[6px] max-w-[240px]",
+        sm: "h-8 px-3 text-xs rounded-[6px]",
+        lg: "h-11 px-6 text-sm rounded-[6px] max-w-[280px]",
+        icon: "h-[38px] w-[38px] rounded-[6px]",
       },
     },
     defaultVariants: {

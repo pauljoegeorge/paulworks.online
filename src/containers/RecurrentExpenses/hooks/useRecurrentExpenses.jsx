@@ -18,10 +18,7 @@ function useRecurrentExpenses() {
       setLoading(true);
       const data = {
         from: month,
-        recurrent_expenses: values.recurrentExpenseCategories.map((item) => ({
-          ...item,
-          update_future: true,
-        })),
+        recurrent_expenses: values.recurrentExpenseCategories.map((item) => ({ ...item })),
       };
       const response = await put("recurrent_expenses", data);
       setRecurrentExpenseCategories(response);

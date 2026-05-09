@@ -1,90 +1,44 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Chart from "react-apexcharts";
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from "recharts";
 import { Typography } from "@mui/material";
 import { formattedCurrency } from "../../../utils/currency";
-import { colors } from "../../../utils/colors";
-import { MainWrapper } from "./Div";
+import { dataColors } from "../../../utils/colors";
+import { useThemeMode } from "../../../contexts/ThemeContext";
 
 function DailyExpenseReport(props) {
   const { dailyReport } = props;
-  const days = Object.keys(dailyReport);
-  const totalExpensePerDay = Object.values(dailyReport);
-  const options = {
-    series: [
-      {
-        name: "Total Expense",
-        data: totalExpensePerDay,
-        color: colors.yellow,
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "area",
-      zoom: {
-        enabled: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-      offsetY: 10,
-      offsetX: -10,
-      formatter(val) {
-        return `${formattedCurrency(val)}`;
-      },
-    },
-    stroke: {
-      curve: "smooth",
-      width: 3,
-    },
-    grid: {
-      row: {
-        opacity: 0.5,
-      },
-    },
-    xaxis: {
-      categories: days,
-      labels: {
-        show: false,
-        rotate: -45,
-        style: {
-          fontSize: "12px",
-        },
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter(val) {
-          return `${formattedCurrency(val)}`;
-        },
-      },
-    },
-    tooltip: {
-      y: {
-        formatter(val) {
-          return `${formattedCurrency(val)}`;
-        },
-      },
-    },
-  };
+  const { mode } = useThemeMode();
+  const axisColor = mode === "dark" ? "#94a3b8" : "#6b6b6b";
+  const gridColor = mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+
+  const data = Object.entries(dailyReport).map(([day, value]) => ({ day, value }));
 
   return (
     <div style={{ width: "100%" }}>
-      <Typography
-        component="h2"
-        variant="h6"
-        color={colors.primary}
-        gutterBottom
-      >
+      <Typography component="h2" variant="h6" sx={{ color: "var(--primary)" }} gutterBottom>
         Daily Expense Report
       </Typography>
-      <Chart
-        options={options}
-        series={options.series}
-        type="area"
-        height={350}
-        width="100%"
-      />
+      <ResponsiveContainer width="100%" height={350}>
+        <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+          <defs>
+            <linearGradient id="dailyGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={dataColors.yellow} stopOpacity={0.3} />
+              <stop offset="95%" stopColor={dataColors.yellow} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid stroke={gridColor} vertical={false} />
+          <XAxis dataKey="day" tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} hide />
+          <YAxis tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formattedCurrency(v)} width={80} />
+          <Tooltip
+            contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--foreground)" }}
+            formatter={(v) => [formattedCurrency(v), "Total Expense"]}
+          />
+          <Area type="monotone" dataKey="value" stroke={dataColors.yellow} strokeWidth={2.5} fill="url(#dailyGradient)" dot={false} activeDot={{ r: 4 }} />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }

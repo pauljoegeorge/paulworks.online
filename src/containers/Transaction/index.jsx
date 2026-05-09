@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Form, Field } from "react-final-form";
-import { Col } from "react-bootstrap";
-import { CustomRow as Row } from "../../components/Table";
 import { PrimaryButton } from "../../components/Button";
 import { H1 } from "../../components/Text";
 import { CentralDiv } from "../../components/Div";
@@ -27,12 +25,10 @@ function TransactionsContainer() {
       transaction_date: currentDate(),
     },
   };
-  const fixedExpenseOptions = Object.keys(fixedExpenseCategories).map(
-    (ind) => ({
-      value: fixedExpenseCategories[ind].uid,
-      label: fixedExpenseCategories[ind].name,
-    })
-  );
+  const fixedExpenseOptions = Object.keys(fixedExpenseCategories).map((ind) => ({
+    value: fixedExpenseCategories[ind].uid,
+    label: fixedExpenseCategories[ind].name,
+  }));
 
   useEffect(() => {
     budgetActions.getExpenseCategories(currentMonth);
@@ -45,15 +41,7 @@ function TransactionsContainer() {
   }, []);
 
   const handleSubmit = (values) => {
-    const valuesWithLocation = {
-      ...values,
-      expenses: {
-        ...values.expenses,
-        latitude,
-        longitude,
-      },
-    };
-    actions.createExpense(valuesWithLocation);
+    actions.createExpense({ ...values, expenses: { ...values.expenses, latitude, longitude } });
   };
 
   return (
@@ -64,63 +52,24 @@ function TransactionsContainer() {
         const { pristine, valid } = form.getState();
         formRef.current = form;
         return (
-          <>
-            <form onSubmit={formHandleSubmit}>
-              <CentralDiv className="justify-content-center text-center">
-                <Row className="w-100 mb-5">
-                  <Col sm={12}>
-                    <H1>New Transaction</H1>
-                  </Col>
-                </Row>
-                <>
-                  <Row className="mt-3 w-100 justify-content-center">
-                    <Col xs={12} md={3} lg={3}>
-                      <Field
-                        name="expenses.category_uid"
-                        component={InputSelect}
-                        options={fixedExpenseOptions}
-                        label="Category"
-                      />
-                    </Col>
-                    <Col xs={12} md={3} lg={3}>
-                      <Field
-                        name="expenses.amount"
-                        label="Amount"
-                        component={Input}
-                        validate={number}
-                      />
-                    </Col>
-                    <Col xs={12} md={3} lg={3}>
-                      <Field
-                        name="expenses.transaction_date"
-                        label="Date"
-                        type="date"
-                        component={Input}
-                      />
-                    </Col>
-                    <Col xs={12} md={3} lg={3}>
-                      <Field
-                        name="expenses.notes"
-                        label="Notes"
-                        component={Input}
-                      />
-                    </Col>
-                  </Row>
-                </>
-                <Row className="mt-3 w-100 justify-content-center text-center">
-                  <PrimaryButton
-                    variant="primary"
-                    size="lg"
-                    className="w-50"
-                    type="submit"
-                    disabled={pristine || !valid}
-                  >
-                    Save
-                  </PrimaryButton>
-                </Row>
-              </CentralDiv>
-            </form>
-          </>
+          <form onSubmit={formHandleSubmit}>
+            <CentralDiv className="text-center">
+              <div className="w-full mb-12 text-center">
+                <H1>New Transaction</H1>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 w-full">
+                <Field name="expenses.category_uid" component={InputSelect} options={fixedExpenseOptions} label="Category" />
+                <Field name="expenses.amount" label="Amount" component={Input} validate={number} />
+                <Field name="expenses.transaction_date" label="Date" type="date" component={Input} />
+                <Field name="expenses.notes" label="Notes" component={Input} />
+              </div>
+              <div className="flex justify-center mt-4 w-full">
+                <PrimaryButton size="lg" className="w-50" type="submit" disabled={pristine || !valid}>
+                  Save
+                </PrimaryButton>
+              </div>
+            </CentralDiv>
+          </form>
         );
       }}
     />

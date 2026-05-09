@@ -1,7 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Row } from "react-bootstrap";
-
 import { PrimaryButton } from "./Button";
 
 function Camera({ onCapture }) {
@@ -34,9 +32,7 @@ function Camera({ onCapture }) {
 
   useEffect(() => {
     startCamera();
-    return () => {
-      stopCamera();
-    };
+    return () => { stopCamera(); };
   }, []);
 
   const capturePhoto = () => {
@@ -50,56 +46,28 @@ function Camera({ onCapture }) {
   return (
     <>
       {!cameraOn && (
-        <Row className="mt-3 w-100 justify-content-center text-center">
-          <PrimaryButton
-            type="button"
-            variant="primary"
-            size="lg"
-            className="w-50"
-            onClick={startCamera}
-          >
+        <div className="flex justify-center mt-4 w-full">
+          <PrimaryButton type="button" size="lg" onClick={startCamera}>
             Turn On Camera
           </PrimaryButton>
-        </Row>
+        </div>
       )}
       {cameraOn && (
         <>
-          <video
-            ref={videoRef}
-            controls={false}
-            autoPlay
-            loop
-            playsInline
-            muted
-          >
+          <video ref={videoRef} controls={false} autoPlay loop playsInline muted>
             <track kind="captions" />
           </video>
-          <div className="mt-3 d-flex gap-2 mb-2 justify-content-center text-center">
-            <PrimaryButton
-              type="button"
-              variant="primary"
-              size="lg"
-              onClick={capturePhoto}
-            >
+          <div className="flex gap-2 justify-center mt-4 mb-2">
+            <PrimaryButton type="button" size="lg" onClick={capturePhoto}>
               Take Photo
             </PrimaryButton>
-            <PrimaryButton
-              type="button"
-              variant="secondary"
-              size="lg"
-              onClick={stopCamera}
-            >
+            <PrimaryButton type="button" variant="secondary" size="lg" onClick={stopCamera}>
               Turn Off Camera
             </PrimaryButton>
           </div>
         </>
       )}
-      <canvas
-        ref={canvasRef}
-        width="640"
-        height="480"
-        style={{ display: "none" }}
-      />
+      <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />
     </>
   );
 }

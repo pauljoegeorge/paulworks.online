@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { Container, Row, Col, Spinner } from "react-bootstrap";
 import styled, { keyframes } from "styled-components";
 import { InsertEmoticonSharp } from "@mui/icons-material";
 import GoogleAuth from "./GoogleAuth";
@@ -15,14 +14,15 @@ const wave = keyframes`
   100% { transform: rotate(0deg); }
 `;
 
-const LoginWrapper = styled(Col)`
+const LoginWrapper = styled.div`
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   background: var(--card);
   border: 1px solid var(--border);
-  padding: 48px 40px !important;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
-    background-color 0.2s ease;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 480px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -66,27 +66,25 @@ function LoginContainer(props) {
 
   return (
     <CentralDiv
-      className="justify-content-center text-center"
-      style={{
-        minHeight: "100vh",
-        background: "var(--background)",
-      }}
+      className="text-center"
+      style={{ minHeight: "100vh", background: "var(--background)" }}
     >
-      <Container>
-        <Row>
-          <LoginWrapper className="py-5" xs={12} md={{ span: 6, offset: 3 }}>
-            {isLoading ? (
-              <Spinner animation="border" />
-            ) : (
-              <>
-                <AnimatedWavingHand />
-                <H2Purple>Hola!</H2Purple>
-                <GoogleAuth oauthUrl={oauthUrl} />
-              </>
-            )}
-          </LoginWrapper>
-        </Row>
-      </Container>
+      <LoginWrapper>
+        {isLoading ? (
+          <div
+            className="inline-block w-8 h-8 rounded-full animate-spin"
+            style={{ border: "4px solid var(--border)", borderTopColor: "var(--primary)" }}
+            role="status"
+            aria-label="Loading"
+          />
+        ) : (
+          <>
+            <AnimatedWavingHand />
+            <H2Purple>Hola!</H2Purple>
+            <GoogleAuth oauthUrl={oauthUrl} />
+          </>
+        )}
+      </LoginWrapper>
     </CentralDiv>
   );
 }

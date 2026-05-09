@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
 import { CentralDiv } from "../../components/Div";
-import { CustomRow as Row } from "../../components/Table";
 import { H1 } from "../../components/Text";
 import Camera from "../../components/Camera";
 import { useExpenses } from "../Expenses/hooks/useExpenses";
@@ -32,16 +30,19 @@ function AutoVisionTransactionContainer() {
   };
 
   return (
-    <CentralDiv className="justify-content-center text-center">
-      <Row className="mt-5 w-100">
+    <CentralDiv className="text-center">
+      <div className="mt-12 w-full">
         <H1>Read Receipt</H1>
         {isLoading && (
-          <div className="justify-content-center">
-            <Spinner animation="border" />
+          <div className="flex justify-center mt-4">
+            <div
+              className="inline-block w-8 h-8 rounded-full animate-spin"
+              style={{ border: "4px solid var(--border)", borderTopColor: "var(--primary)" }}
+            />
           </div>
         )}
         <Camera onCapture={handleCapture} />
-      </Row>
+      </div>
     </CentralDiv>
   );
 }

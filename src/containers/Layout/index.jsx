@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 
 const Wrapper = styled.div`
-  background-color: ${(props) => (props.landingPage ? "#fff" : "#fff")};
+  background-color: var(--background);
   min-height: 100vh;
   overflow-y: auto;
 `;
@@ -21,28 +20,20 @@ const ChildWrapper = styled.div`
 function LayoutContainer(props) {
   const { children } = props;
   const handlePrivacy = () => {
-    pushEvent({
-      ...events.onClickPrivacy(),
-    });
+    pushEvent({ ...events.onClickPrivacy() });
     return window.open(`${import.meta.env.BASE_URL}/privacy.html`, "_blank");
   };
 
   return (
-    <Wrapper landingPage={window.location.pathname === "/"}>
-      <Container fluid style={{ paddingLeft: "0px" }}>
-        <Row>
-          <Col>
-            <ChildWrapper>{children}</ChildWrapper>
-          </Col>
-        </Row>
-      </Container>
-      <footer className="mt-5 py-3">
-        <Container>
+    <Wrapper>
+      <ChildWrapper>{children}</ChildWrapper>
+      <footer className="mt-12 py-4">
+        <div className="max-w-5xl mx-auto px-4">
           <div className="text-center">
             <Link onClick={() => handlePrivacy()}>| Privacy Policy |</Link>
             <p>&copy; 2022 Paul Joe George. All rights reserved.</p>
           </div>
-        </Container>
+        </div>
       </footer>
     </Wrapper>
   );
@@ -50,9 +41,7 @@ function LayoutContainer(props) {
 
 LayoutContainer.propTypes = {
   match: PropTypes.shape({
-    params: PropTypes.shape({
-      userId: PropTypes.string.isRequired,
-    }).isRequired,
+    params: PropTypes.shape({ userId: PropTypes.string.isRequired }).isRequired,
   }).isRequired,
   children: PropTypes.node.isRequired,
 };

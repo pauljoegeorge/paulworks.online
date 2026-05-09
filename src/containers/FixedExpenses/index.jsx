@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 import { PrimaryButton } from "../../components/Button";
 import { H1, H2Purple } from "../../components/Text";
@@ -60,12 +59,10 @@ function FixedExpensesContainer() {
         const { pristine, valid } = getState();
         return (
           <form onSubmit={formHandleSubmit}>
-            <CentralDiv className="justify-content-center text-center">
-              <Row className="w-100 mb-5">
-                <Col sm={12}>
-                  <H1>Planned Expense</H1>
-                </Col>
-              </Row>
+            <CentralDiv className="text-center">
+              <div className="w-full mb-12 text-center">
+                <H1>Planned Expense</H1>
+              </div>
               <FlexContainer alignItems="baseline">
                 <LeftArrow
                   disabled={prevWeekDisabled}
@@ -74,18 +71,20 @@ function FixedExpensesContainer() {
                 <H2Purple>{date}</H2Purple>
                 <RightArrow onClick={() => handleMonthChange("next")} />
               </FlexContainer>
-              <Row className="mt-3 w-100 justify-content-center">
+              <div className="flex flex-wrap justify-center gap-4 mt-4 w-full">
                 {(initialValues.fixedExpenses || []).map((_, index) => (
-                  <Field
-                    name={`fixedExpenses[${index}].amount`}
-                    component={Input}
-                    validate={number}
-                  />
+                  // eslint-disable-next-line react/no-array-index-key
+                  <div key={index} className="w-full md:w-64">
+                    <Field
+                      name={`fixedExpenses[${index}].amount`}
+                      component={Input}
+                      validate={number}
+                    />
+                  </div>
                 ))}
-              </Row>
-              <Row className="mt-3 w-100 justify-content-center text-center">
+              </div>
+              <div className="flex justify-center mt-4 w-full">
                 <PrimaryButton
-                  variant="primary"
                   size="lg"
                   className="w-50"
                   type="submit"
@@ -93,7 +92,7 @@ function FixedExpensesContainer() {
                 >
                   Update Expense
                 </PrimaryButton>
-              </Row>
+              </div>
             </CentralDiv>
           </form>
         );

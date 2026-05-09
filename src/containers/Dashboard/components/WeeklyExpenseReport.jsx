@@ -1,91 +1,38 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Chart from "react-apexcharts";
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from "recharts";
 import { Typography } from "@mui/material";
 import { formattedCurrency } from "../../../utils/currency";
-import { colors } from "../../../utils/colors";
-import { MainWrapper } from "./Div";
+import { dataColors } from "../../../utils/colors";
+import { useThemeMode } from "../../../contexts/ThemeContext";
 
 function WeeklyExpenseReport(props) {
   const { weeklyReport } = props;
-  const days = Object.keys(weeklyReport);
-  const totalExpensePerWeek = Object.values(weeklyReport);
-  const options = {
-    series: [
-      {
-        name: "Total Expense",
-        data: totalExpensePerWeek,
-        color: colors.yellow,
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "line",
-      zoom: {
-        enabled: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-      offsetY: 10,
-      offsetX: -10,
-      formatter(val) {
-        return `${formattedCurrency(val)}`;
-      },
-    },
-    stroke: {
-      curve: "straight",
-      width: 2,
-    },
-    grid: {
-      row: {
-        colors: [colors.lightGrey, "transparent"],
-        opacity: 0.5,
-      },
-    },
-    xaxis: {
-      categories: days,
-      labels: {
-        show: true,
-        rotate: -45,
-        style: {
-          fontSize: "12px",
-        },
-      },
-    },
-    yaxis: {
-      labels: {
-        show: true,
-        formatter(val) {
-          return `${formattedCurrency(val)}`;
-        },
-      },
-    },
-    tooltip: {
-      y: {
-        formatter(val) {
-          return `${formattedCurrency(val)}`;
-        },
-      },
-    },
-  };
+  const { mode } = useThemeMode();
+  const axisColor = mode === "dark" ? "#94a3b8" : "#6b6b6b";
+  const gridColor = mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+
+  const data = Object.entries(weeklyReport).map(([week, value]) => ({ week, value }));
 
   return (
     <div style={{ width: "100%" }}>
-      <Typography
-        component="h2"
-        variant="h6"
-        color={colors.primary}
-        gutterBottom
-      >
+      <Typography component="h2" variant="h6" sx={{ color: "var(--primary)" }} gutterBottom>
         Weekly Expense Report
       </Typography>
-      <Chart
-        options={options}
-        series={options.series}
-        type="line"
-        height={350}
-      />
+      <ResponsiveContainer width="100%" height={350}>
+        <LineChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+          <CartesianGrid stroke={gridColor} vertical={false} />
+          <XAxis dataKey="week" tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} />
+          <YAxis tick={{ fill: axisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formattedCurrency(v)} width={80} />
+          <Tooltip
+            contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--foreground)" }}
+            formatter={(v) => [formattedCurrency(v), "Total Expense"]}
+          />
+          <Line type="monotone" dataKey="value" stroke={dataColors.yellow} strokeWidth={2.5} dot={{ r: 3, fill: dataColors.yellow }} activeDot={{ r: 5 }} />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }

@@ -2,17 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import { Container } from "react-bootstrap";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link } from "../../components/Link";
 import { pushEvent, events } from "../../utils/gtm";
 import { DrawerHeader } from "./utils/drawer";
 import NavigationBar from "./components/NaviBar";
+import { useThemeMode } from "../../contexts/ThemeContext";
 
 const ChildWrapper = styled.div`
   width: 100%;
-  max-width: 85%;
+  max-width: 1280px;
+  margin: 0 auto;
   flex: 1 0 auto;
   padding: 8px 24px 24px;
 
@@ -24,6 +26,8 @@ const ChildWrapper = styled.div`
 
 function AppLayout(props) {
   const { children, window } = props;
+  const { mode } = useThemeMode();
+  const muiTheme = createTheme({ palette: { mode } });
 
   const handlePrivacy = () => {
     pushEvent({
@@ -33,6 +37,7 @@ function AppLayout(props) {
   };
 
   return (
+    <ThemeProvider theme={muiTheme}>
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <NavigationBar />
@@ -61,7 +66,7 @@ function AppLayout(props) {
           <ToastContainer
             toastStyle={{
               borderRadius: "8px",
-              fontFamily: '"IBM Plex Sans", sans-serif',
+              fontFamily: "var(--font-body), sans-serif",
               fontSize: "14px",
             }}
           />
@@ -77,16 +82,17 @@ function AppLayout(props) {
               transition: "background-color 0.2s ease",
             }}
           >
-            <Container>
+            <div className="max-w-5xl mx-auto px-4">
               <div className="text-center">
                 <Link onClick={() => handlePrivacy()}>| Privacy Policy |</Link>
                 <p>&copy; 2022 Paul Joe George. All rights reserved.</p>
               </div>
-            </Container>
+            </div>
           </footer>
         </Box>
       </Box>
     </Box>
+    </ThemeProvider>
   );
 }
 

@@ -25,9 +25,12 @@ function ProfileMenu() {
         aria-controls="menu-appbar"
         aria-haspopup="true"
         onClick={handleMenu}
-        color="inherit"
         sx={{
           marginLeft: "auto",
+          borderRadius: "8px",
+          padding: "8px",
+          color: "var(--foreground)",
+          "&:hover": { backgroundColor: "var(--muted)" },
         }}
       >
         <AccountCircle />

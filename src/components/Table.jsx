@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Row } from "react-bootstrap";
 
 export const THead = styled.thead`
   background-color: var(--muted);
@@ -11,9 +10,13 @@ export const THead = styled.thead`
   line-height: 1;
 `;
 
-export const CustomRow = styled(Row)`
+export const CustomRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
   @media (max-width: 767px) {
-    > [class*="col-"] {
+    > * {
       margin-bottom: 20px;
     }
   }

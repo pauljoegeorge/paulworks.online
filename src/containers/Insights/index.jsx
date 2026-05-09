@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
 import Toolbar from "@mui/material/Toolbar";
-import { Container, Row, Col, Table } from "react-bootstrap";
 import { useInsights } from "./hooks/useInsights";
 import CentralLoader from "../../components/CentralLoader";
 import { MainWrapper } from "../Dashboard/components/Div";
 import { H2Purple, P } from "../../components/Text";
 
-// ─── Lightweight token-aware card ────────────────────────────────────────
 function Card({ children, className = "" }) {
   return (
     <div
@@ -42,11 +40,10 @@ function CardBody({ children }) {
   return <div style={{ padding: "16px" }}>{children}</div>;
 }
 
-// ─── Badge ────────────────────────────────────────────────────────────────
 const BADGE = {
   danger:    { bg: "var(--destructive)",         text: "var(--destructive-foreground)" },
   warning:   { bg: "rgba(245,158,11,0.15)",      text: "#92400e" },
-  success:   { bg: "rgba(16,185,129,0.15)",      text: "#065f46" },
+  success:   { bg: "rgba(16,185,129,0.15)",      text: "var(--success)" },
   info:      { bg: "rgba(14,165,233,0.15)",      text: "#0c4a6e" },
   secondary: { bg: "var(--muted)",               text: "var(--muted-foreground)" },
 };
@@ -60,7 +57,6 @@ function Badge({ variant = "secondary", children }) {
   );
 }
 
-// ─── Alert ────────────────────────────────────────────────────────────────
 const ALERT = {
   danger:  { bg: "rgba(239,68,68,0.08)",  border: "rgba(239,68,68,0.25)" },
   warning: { bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.25)" },
@@ -76,7 +72,6 @@ function Alert({ variant = "info", children }) {
   );
 }
 
-// ─── InsightsContainer ────────────────────────────────────────────────────
 export default function InsightsContainer() {
   const { isLoading, insights, error, actions } = useInsights();
 
@@ -84,9 +79,9 @@ export default function InsightsContainer() {
 
   if (isLoading) return <CentralLoader />;
   if (error)
-    return <MainWrapper><Toolbar /><Container fluid><Alert variant="danger">{error}</Alert></Container></MainWrapper>;
+    return <MainWrapper><Toolbar /><div className="p-4"><Alert variant="danger">{error}</Alert></div></MainWrapper>;
   if (!insights || Object.keys(insights).length === 0)
-    return <MainWrapper><Toolbar /><Container fluid><Alert variant="info">No insights available.</Alert></Container></MainWrapper>;
+    return <MainWrapper><Toolbar /><div className="p-4"><Alert variant="info">No insights available.</Alert></div></MainWrapper>;
 
   const { summary_by_category, budget_warnings, merchant_insights, time_trends, behavioral_insights, smart_highlights, metrics } = insights;
 
@@ -96,28 +91,24 @@ export default function InsightsContainer() {
   return (
     <MainWrapper>
       <Toolbar />
-      <Container fluid>
+      <div>
         <H2Purple className="mb-4">Financial Insights</H2Purple>
 
-        {/* Smart Highlights */}
         {smart_highlights?.length > 0 && (
-          <Row className="mb-4">
-            <Col>
-              <Card>
-                <CardHeader>Smart Highlights</CardHeader>
-                <CardBody>
-                  <ul style={{ margin: 0, paddingLeft: "20px" }}>
-                    {smart_highlights.map((h) => <li key={h} style={{ marginBottom: "4px", fontSize: "0.875rem" }}>{h}</li>)}
-                  </ul>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+          <div className="mb-4">
+            <Card>
+              <CardHeader>Smart Highlights</CardHeader>
+              <CardBody>
+                <ul style={{ margin: 0, paddingLeft: "20px" }}>
+                  {smart_highlights.map((h) => <li key={h} style={{ marginBottom: "4px", fontSize: "0.875rem" }}>{h}</li>)}
+                </ul>
+              </CardBody>
+            </Card>
+          </div>
         )}
 
-        {/* Budget Warnings & Key Metrics */}
-        <Row className="mb-4">
-          <Col md={6} className="mb-3 mb-md-0">
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex-1 min-w-[280px]">
             <Card>
               <CardHeader variant="danger">Budget Warnings</CardHeader>
               <CardBody>
@@ -130,8 +121,8 @@ export default function InsightsContainer() {
                 }
               </CardBody>
             </Card>
-          </Col>
-          <Col md={6}>
+          </div>
+          <div className="flex-1 min-w-[280px]">
             <Card>
               <CardHeader>Key Metrics</CardHeader>
               <CardBody>
@@ -141,25 +132,24 @@ export default function InsightsContainer() {
                   ["Most Tx Category",     metrics?.category_with_most_transactions || "N/A"],
                   ["Largest Share",        metrics?.category_with_largest_share || "N/A"],
                 ].map(([l, v]) => (
-                  <Row key={l} className="mb-2">
-                    <Col xs={6} style={label}>{l}:</Col>
-                    <Col xs={6} style={{ fontSize: "0.875rem" }}>{v}</Col>
-                  </Row>
+                  <div key={l} className="flex gap-4 mb-2">
+                    <span style={label} className="flex-1">{l}:</span>
+                    <span style={{ fontSize: "0.875rem" }} className="flex-1">{v}</span>
+                  </div>
                 ))}
               </CardBody>
             </Card>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        {/* Summary by Category */}
-        <Row className="mb-4">
-          <Col>
-            <Card>
-              <CardHeader>Summary by Category</CardHeader>
-              <CardBody>
-                <Table responsive>
+        <div className="mb-4">
+          <Card>
+            <CardHeader>Summary by Category</CardHeader>
+            <CardBody>
+              <div className="overflow-x-auto">
+                <table className="w-full">
                   <thead style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)", fontSize: "0.6875rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.6px" }}>
-                    <tr>{["Category","Spent","Budget","Remaining","% Used","Status"].map((h) => <th key={h}>{h}</th>)}</tr>
+                    <tr>{["Category","Spent","Budget","Remaining","% Used","Status"].map((h) => <th key={h} style={{ padding: "8px 12px", textAlign: "left" }}>{h}</th>)}</tr>
                   </thead>
                   <tbody>
                     {summary_by_category?.length > 0
@@ -176,37 +166,36 @@ export default function InsightsContainer() {
                       : <tr><td colSpan="6" style={{ textAlign: "center", ...muted, padding: "24px" }}>No category data available.</td></tr>
                     }
                   </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+                </table>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
 
-        {/* Merchant Insights */}
-        <Row className="mb-4">
-          <Col md={4} className="mb-3 mb-md-0">
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex-1 min-w-[220px]">
             <Card>
               <CardHeader>Top Merchants</CardHeader>
               <CardBody>
                 {!merchant_insights?.top_merchants?.length
                   ? <P align="left" style={muted}>No data.</P>
-                  : <ul className="list-unstyled" style={{ margin: 0 }}>{merchant_insights.top_merchants.map((m) => <li key={m.merchant} className="mb-2 d-flex justify-content-between"><span>{m.merchant}</span><strong>{m.spent}</strong></li>)}</ul>
+                  : <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>{merchant_insights.top_merchants.map((m) => <li key={m.merchant} className="flex justify-between mb-2"><span>{m.merchant}</span><strong>{m.spent}</strong></li>)}</ul>
                 }
               </CardBody>
             </Card>
-          </Col>
-          <Col md={4} className="mb-3 mb-md-0">
+          </div>
+          <div className="flex-1 min-w-[220px]">
             <Card>
               <CardHeader>Frequent Merchants</CardHeader>
               <CardBody>
                 {!merchant_insights?.most_frequent_merchants?.length
                   ? <P align="left" style={muted}>No data.</P>
-                  : <ul className="list-unstyled" style={{ margin: 0 }}>{merchant_insights.most_frequent_merchants.map((m) => <li key={m.merchant} className="mb-2 d-flex justify-content-between"><span>{m.merchant}</span><Badge variant="info">{m.count}</Badge></li>)}</ul>
+                  : <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>{merchant_insights.most_frequent_merchants.map((m) => <li key={m.merchant} className="flex justify-between mb-2"><span>{m.merchant}</span><Badge variant="info">{m.count}</Badge></li>)}</ul>
                 }
               </CardBody>
             </Card>
-          </Col>
-          <Col md={4}>
+          </div>
+          <div className="flex-1 min-w-[220px]">
             <Card>
               <CardHeader>Anomalies</CardHeader>
               <CardBody>
@@ -216,12 +205,11 @@ export default function InsightsContainer() {
                 }
               </CardBody>
             </Card>
-          </Col>
-        </Row>
+          </div>
+        </div>
 
-        {/* Time Trends & Behavioral */}
-        <Row className="mb-4">
-          <Col md={6} className="mb-3 mb-md-0">
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex-1 min-w-[280px]">
             <Card>
               <CardHeader>Time Trends</CardHeader>
               <CardBody>
@@ -233,8 +221,8 @@ export default function InsightsContainer() {
                 ].map(([l, v]) => <p key={l} style={{ fontSize: "0.875rem", marginBottom: "8px" }}><strong>{l}:</strong> {v}</p>)}
               </CardBody>
             </Card>
-          </Col>
-          <Col md={6}>
+          </div>
+          <div className="flex-1 min-w-[280px]">
             <Card>
               <CardHeader>Behavioral Insights</CardHeader>
               <CardBody>
@@ -244,9 +232,9 @@ export default function InsightsContainer() {
                 }
               </CardBody>
             </Card>
-          </Col>
-        </Row>
-      </Container>
+          </div>
+        </div>
+      </div>
     </MainWrapper>
   );
 }

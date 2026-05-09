@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { Col } from "react-bootstrap";
 import moment from "moment";
-import { CustomRow as Row } from "../../components/Table";
 import InputSelect from "../../components/InputSelect";
 import { PrimaryButton } from "../../components/Button";
 import { H1, H2Purple, H1Span } from "../../components/Text";
@@ -97,12 +95,10 @@ function ExpensesContainer() {
         );
         return (
           <form onSubmit={formHandleSubmit}>
-            <CentralDiv className="justify-content-center text-center">
-              <Row className="w-100 mb-5">
-                <Col sm={12}>
-                  <H1>Expenses</H1>
-                </Col>
-              </Row>
+            <CentralDiv className="text-center">
+              <div className="w-full mb-12 text-center">
+                <H1>Expenses</H1>
+              </div>
               <FlexContainer alignItems="baseline">
                 <LeftArrow onClick={() => handleMonthChange("previous")} />
                 <div>
@@ -124,45 +120,37 @@ function ExpensesContainer() {
                   setSortParams={setSortParams}
                 />
               ) : (
-                <div className="mt-3 w-100">
+                <div className="mt-4 w-full">
                   {(initialValues.expenses || []).map((_, index) => (
-                    <Row className="mt-3 w-100 justify-content-center">
-                      <Col xs={6} md={3} lg={3}>
-                        <Field
-                          name={`expenses[${index}].category_uid`}
-                          component={InputSelect}
-                          options={fixedExpenseOptions}
-                          label="Category"
-                        />
-                      </Col>
-                      <Col xs={6} md={3} lg={3}>
-                        <Field
-                          name={`expenses[${index}].amount`}
-                          component={Input}
-                          validate={number}
-                          label="Amount"
-                        />
-                      </Col>
-                      <Col xs={6} md={3} lg={3}>
-                        <Field
-                          name={`expenses[${index}].transaction_date`}
-                          component={Input}
-                          type="date"
-                          label="Date"
-                        />
-                      </Col>
-                      <Col xs={6} md={3} lg={3}>
-                        <Field
-                          name={`expenses[${index}].notes`}
-                          component={Input}
-                          label="Notes"
-                        />
-                      </Col>
-                    </Row>
+                    // eslint-disable-next-line react/no-array-index-key
+                    <div key={index} className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 w-full">
+                      <Field
+                        name={`expenses[${index}].category_uid`}
+                        component={InputSelect}
+                        options={fixedExpenseOptions}
+                        label="Category"
+                      />
+                      <Field
+                        name={`expenses[${index}].amount`}
+                        component={Input}
+                        validate={number}
+                        label="Amount"
+                      />
+                      <Field
+                        name={`expenses[${index}].transaction_date`}
+                        component={Input}
+                        type="date"
+                        label="Date"
+                      />
+                      <Field
+                        name={`expenses[${index}].notes`}
+                        component={Input}
+                        label="Notes"
+                      />
+                    </div>
                   ))}
-                  <Row className="mt-5 w-100 justify-content-center text-center">
+                  <div className="flex justify-center mt-8 w-full">
                     <PrimaryButton
-                      variant="primary"
                       size="lg"
                       className="w-50"
                       type="submit"
@@ -170,7 +158,7 @@ function ExpensesContainer() {
                     >
                       Save
                     </PrimaryButton>
-                  </Row>
+                  </div>
                 </div>
               )}
             </CentralDiv>

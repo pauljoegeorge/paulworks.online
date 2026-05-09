@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Row, Table } from "react-bootstrap";
-import styled from "styled-components";
 import { ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
 import { H3Bold } from "./Text";
 import { THead } from "./Table";
@@ -12,14 +10,14 @@ function InteractiveTable(props) {
   const activeSortParam = sortParams.find((s) => s.active);
 
   return (
-    <FlexContainer width="90vw" className="mt-5">
+    <FlexContainer width="90vw" className="mt-12">
       {title && (
-        <Row>
-          <H3Bold className="font-weight-bold">{title}</H3Bold>
-        </Row>
+        <div>
+          <H3Bold>{title}</H3Bold>
+        </div>
       )}
-      <Row className="w-100">
-        <Table bordered responsive>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full">
           <THead>
             <tr>
               {(heads || []).map((head) => {
@@ -27,29 +25,19 @@ function InteractiveTable(props) {
                 const value = Object.values(head)[0];
                 let icon = null;
                 if (activeSortParam.field === value) {
-                  icon =
-                    activeSortParam.order === "asc" ? (
-                      <ArrowDropDown />
-                    ) : (
-                      <ArrowDropUp />
-                    );
+                  icon = activeSortParam.order === "asc" ? <ArrowDropDown /> : <ArrowDropUp />;
                 }
                 return (
-                  <th
-                    key={key}
-                    onClick={() => handleClick(value)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {key}
-                    {icon}
+                  <th key={key} onClick={() => handleClick(value)} style={{ cursor: "pointer" }}>
+                    {key}{icon}
                   </th>
                 );
               })}
             </tr>
           </THead>
           <tbody>{children}</tbody>
-        </Table>
-      </Row>
+        </table>
+      </div>
     </FlexContainer>
   );
 }
