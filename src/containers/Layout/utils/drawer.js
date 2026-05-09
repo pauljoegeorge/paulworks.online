@@ -78,8 +78,7 @@ export const Drawer = mStyled(MuiDrawer, {
       "& .MuiDrawer-paper": closedMixin(theme),
     }),
   },
-  [theme.breakpoints.down("md")]: {
-    display: open ? "block" : "none",
+  [theme.breakpoints.down("lg")]: {
     "& .MuiDrawer-paper": {
       ...openedMixin(theme),
     },

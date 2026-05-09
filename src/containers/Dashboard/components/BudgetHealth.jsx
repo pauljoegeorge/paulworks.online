@@ -87,52 +87,62 @@ function BudgetHealth({ expenseInsights }) {
   );
   const diff = totalExpense - totalBudget;
 
+  const color = statusColor(overallPct);
+
   return (
     <div
       style={{
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: "16px",
+        gap: "20px",
       }}
     >
+      {/* overall utilization */}
       <div>
         <div style={sectionLabel}>Budget Health</div>
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            marginBottom: "8px",
+            alignItems: "flex-end",
+            gap: "10px",
+            marginBottom: "10px",
           }}
         >
           <span
             style={{
-              fontSize: "1.5rem",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-              color:
-                overallPct > 100 ? "var(--destructive)" : "var(--foreground)",
+              fontSize: "2.2rem",
+              fontWeight: 800,
+              letterSpacing: "-0.04em",
+              lineHeight: 1,
+              color,
             }}
           >
             {Math.round(overallPct)}%
           </span>
-          <span style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>
-            {formattedCurrency(totalExpense)} / {formattedCurrency(totalBudget)}
+          <span
+            style={{
+              fontSize: "12px",
+              color: diff > 0 ? "var(--destructive)" : "#10B981",
+              fontWeight: 600,
+              paddingBottom: "3px",
+            }}
+          >
+            {diff > 0
+              ? `▲ ${formattedCurrency(diff)} over`
+              : `▼ ${formattedCurrency(Math.abs(diff))} left`}
           </span>
         </div>
-        <ProgressBar pct={overallPct} color={statusColor(overallPct)} />
+        <ProgressBar pct={overallPct} color={color} />
         <div
           style={{
-            marginTop: "8px",
-            fontSize: "12px",
-            fontWeight: 600,
-            color: diff > 0 ? "var(--destructive)" : "#10B981",
+            marginTop: "6px",
+            fontSize: "11px",
+            color: "var(--muted-foreground)",
           }}
         >
-          {diff > 0
-            ? `▲ ${formattedCurrency(diff)} over budget`
-            : `▼ ${formattedCurrency(Math.abs(diff))} remaining`}
+          {formattedCurrency(totalExpense)} spent of{" "}
+          {formattedCurrency(totalBudget)}
         </div>
       </div>
 
@@ -145,47 +155,51 @@ function BudgetHealth({ expenseInsights }) {
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               color: "var(--destructive)",
-              marginBottom: "8px",
+              marginBottom: "10px",
             }}
           >
             Over Budget
           </div>
-          {overBudgetCats.map((c) => (
-            <div key={c.uid} style={{ marginBottom: "10px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
-                  marginBottom: "4px",
-                }}
-              >
-                <span
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            {overBudgetCats.map((c) => (
+              <div key={c.uid}>
+                <div
                   style={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "var(--foreground)",
-                    textTransform: "capitalize",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    marginBottom: "5px",
                   }}
                 >
-                  {c.name}
-                </span>
-                <span
-                  style={{
-                    fontSize: "12px",
-                    color: "var(--destructive)",
-                    fontWeight: 600,
-                  }}
-                >
-                  +{formattedCurrency(c.total_expense - c.budget)}
-                </span>
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: "var(--foreground)",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {c.name}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--destructive)",
+                      fontWeight: 700,
+                    }}
+                  >
+                    +{formattedCurrency(c.total_expense - c.budget)}
+                  </span>
+                </div>
+                <ProgressBar
+                  pct={(c.total_expense / c.budget) * 100}
+                  color="var(--destructive)"
+                />
               </div>
-              <ProgressBar
-                pct={(c.total_expense / c.budget) * 100}
-                color="var(--destructive)"
-              />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
@@ -198,47 +212,51 @@ function BudgetHealth({ expenseInsights }) {
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               color: "#F59E0B",
-              marginBottom: "8px",
+              marginBottom: "10px",
             }}
           >
             Near Limit
           </div>
-          {nearLimitCats.map((c) => (
-            <div key={c.uid} style={{ marginBottom: "10px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
-                  marginBottom: "4px",
-                }}
-              >
-                <span
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            {nearLimitCats.map((c) => (
+              <div key={c.uid}>
+                <div
                   style={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "var(--foreground)",
-                    textTransform: "capitalize",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    marginBottom: "5px",
                   }}
                 >
-                  {c.name}
-                </span>
-                <span
-                  style={{
-                    fontSize: "12px",
-                    color: "#F59E0B",
-                    fontWeight: 600,
-                  }}
-                >
-                  {Math.round((c.total_expense / c.budget) * 100)}%
-                </span>
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: "var(--foreground)",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {c.name}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "#F59E0B",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {Math.round((c.total_expense / c.budget) * 100)}%
+                  </span>
+                </div>
+                <ProgressBar
+                  pct={(c.total_expense / c.budget) * 100}
+                  color="#F59E0B"
+                />
               </div>
-              <ProgressBar
-                pct={(c.total_expense / c.budget) * 100}
-                color="#F59E0B"
-              />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>

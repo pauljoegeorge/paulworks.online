@@ -13,6 +13,7 @@ import {
   formattedDate,
   getExpenseVisibility,
   setExpenseVisibility,
+  isMobile,
 } from "../../utils/utils";
 import CentralLoader from "../../components/CentralLoader";
 import { LeftArrow, RightArrow } from "../../components/Icon";
@@ -45,47 +46,53 @@ function StatCard({ head, value, visible, onToggle }) {
     <div
       style={{
         ...card,
-        padding: "16px 18px",
-        borderTop: "3px solid var(--primary)",
+        padding: "20px 22px",
         display: "flex",
         flexDirection: "column",
-        gap: "4px",
+        gap: "6px",
+        flex: 1,
       }}
     >
-      <span style={sectionLabel}>{head}</span>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <span style={sectionLabel}>{head}</span>
+        <button
+          type="button"
+          aria-label={visible ? `Hide ${head}` : `Show ${head}`}
+          onClick={onToggle}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "var(--muted-foreground)",
+            padding: 0,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {visible ? (
+            <Visibility style={{ fontSize: "0.85rem" }} />
+          ) : (
+            <VisibilityOff style={{ fontSize: "0.85rem" }} />
+          )}
+        </button>
+      </div>
       <span
         style={{
-          fontSize: "1.4rem",
+          fontSize: "1.7rem",
           fontWeight: 700,
-          color: "var(--foreground)",
-          letterSpacing: "-0.02em",
+          color: visible ? "var(--foreground)" : "var(--muted-foreground)",
+          letterSpacing: "-0.03em",
           lineHeight: 1.1,
         }}
       >
         {visible ? value : "———"}
       </span>
-      <button
-        type="button"
-        aria-label={visible ? `Hide ${head}` : `Show ${head}`}
-        onClick={onToggle}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          color: "var(--muted-foreground)",
-          padding: 0,
-          display: "flex",
-          alignItems: "center",
-          width: "fit-content",
-          marginTop: "2px",
-        }}
-      >
-        {visible ? (
-          <Visibility style={{ fontSize: "0.95rem" }} />
-        ) : (
-          <VisibilityOff style={{ fontSize: "0.95rem" }} />
-        )}
-      </button>
     </div>
   );
 }
@@ -168,6 +175,8 @@ function DashboardContent() {
 
   if (isLoading || pageLoading) return <CentralLoader />;
 
+  const mobile = isMobile() || window.innerWidth < 768;
+
   return (
     <div style={{ width: "100%", paddingBottom: "40px" }}>
       <Toolbar />
@@ -176,9 +185,9 @@ function DashboardContent() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "2fr 1fr 1.5fr",
+          gridTemplateColumns: mobile ? "1fr" : "2fr 1fr 1.5fr",
           gridTemplateRows: "auto",
-          gap: "14px",
+          gap: "16px",
         }}
       >
         {/* hero — total + month nav */}
@@ -235,57 +244,77 @@ function DashboardContent() {
           <div
             style={{
               display: "flex",
-              gap: "20px",
-              margin: "20px 0 4px",
+              gap: "0",
+              margin: "24px 0 6px",
               borderTop: "1px solid var(--border)",
-              paddingTop: "16px",
+              paddingTop: "18px",
             }}
           >
-            <div>
+            <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontSize: "10px",
+                  fontSize: "11px",
                   fontWeight: 600,
                   letterSpacing: "0.07em",
                   textTransform: "uppercase",
                   color: "var(--muted-foreground)",
-                  marginBottom: "2px",
+                  marginBottom: "4px",
                 }}
               >
-                Avg / day
+                Daily avg
               </div>
               <div
                 style={{
-                  fontSize: "1rem",
+                  fontSize: "1.15rem",
                   fontWeight: 700,
                   color: "var(--foreground)",
+                  letterSpacing: "-0.02em",
                 }}
               >
                 {formattedCurrency(Math.round(dailyAvg))}
               </div>
             </div>
 
-            <div>
+            <div
+              style={{
+                width: "1px",
+                backgroundColor: "var(--border)",
+                margin: "0 20px",
+              }}
+            />
+
+            <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontSize: "10px",
+                  fontSize: "11px",
                   fontWeight: 600,
                   letterSpacing: "0.07em",
                   textTransform: "uppercase",
                   color: "var(--muted-foreground)",
-                  marginBottom: "2px",
+                  marginBottom: "4px",
                 }}
               >
                 Day
               </div>
               <div
                 style={{
-                  fontSize: "1rem",
+                  fontSize: "1.15rem",
                   fontWeight: 700,
                   color: "var(--foreground)",
+                  letterSpacing: "-0.02em",
                 }}
               >
-                {daysElapsed} / {daysInMonth}
+                {daysElapsed}
+                <span
+                  style={{
+                    fontWeight: 400,
+                    color: "var(--muted-foreground)",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  {" "}
+                  / {daysInMonth}
+                </span>
               </div>
             </div>
           </div>
@@ -315,8 +344,9 @@ function DashboardContent() {
         {/* stat stack */}
         <div
           style={{
-            gridColumn: "2",
-            display: "flex",
+            gridColumn: mobile ? "1" : "2",
+            display: mobile ? "grid" : "flex",
+            gridTemplateColumns: mobile ? "repeat(3, 1fr)" : undefined,
             flexDirection: "column",
             gap: "14px",
           }}
@@ -342,7 +372,7 @@ function DashboardContent() {
         </div>
 
         {/* budget health */}
-        <div style={{ ...card, gridColumn: "3" }}>
+        <div style={{ ...card, gridColumn: mobile ? "1" : "3" }}>
           <BudgetHealth expenseInsights={expenseInsights} />
         </div>
 
@@ -357,12 +387,12 @@ function DashboardContent() {
         </div>
 
         {/* daily chart */}
-        <div style={{ ...card, gridColumn: "1 / 3" }}>
+        <div style={{ ...card, gridColumn: mobile ? "1" : "1 / 3" }}>
           <DailyExpenseReport dailyReport={daily_report} />
         </div>
 
         {/* weekly chart */}
-        <div style={{ ...card, gridColumn: "3" }}>
+        <div style={{ ...card, gridColumn: mobile ? "1" : "3" }}>
           <WeeklyExpenseReport weeklyReport={weekly_report} />
         </div>
 
@@ -387,9 +417,6 @@ function DashboardContent() {
     </div>
   );
 }
-
-StatCard.defaultProps = {};
-StatCard.propTypes = {};
 
 export default function DashboardContainer() {
   return <DashboardContent />;

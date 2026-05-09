@@ -33,8 +33,8 @@ export default function CategoryProgress({ expenseInsights }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: "16px",
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+          gap: "12px",
         }}
       >
         {active.map((c) => {
@@ -43,90 +43,118 @@ export default function CategoryProgress({ expenseInsights }) {
               ? Math.round((c.total_expense / c.budget) * 100)
               : null;
           const color = pct !== null ? bar(pct) : "var(--muted-foreground)";
+          const isOver = pct !== null && pct > 100;
           return (
-            <div key={c.uid}>
+            <div
+              key={c.uid}
+              style={{
+                backgroundColor: "var(--muted)",
+                borderRadius: "var(--radius-lg)",
+                padding: "14px 16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                borderLeft: `3px solid ${color}`,
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "baseline",
-                  marginBottom: "5px",
+                  alignItems: "flex-start",
+                  gap: "8px",
                 }}
               >
                 <span
                   style={{
                     fontSize: "13px",
-                    fontWeight: 500,
+                    fontWeight: 600,
                     color: "var(--foreground)",
                     textTransform: "capitalize",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    maxWidth: "55%",
+                    lineHeight: 1.3,
                   }}
                 >
                   {c.name}
                 </span>
-                <span
-                  style={{
-                    fontSize: "12px",
-                    color: "var(--muted-foreground)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {formattedCurrency(c.total_expense)}
-                  {c.budget > 0 && (
-                    <span style={{ color: "var(--muted-foreground)" }}>
-                      {" "}
-                      / {formattedCurrency(c.budget)}
-                    </span>
-                  )}
-                </span>
-              </div>
-              <div
-                style={{
-                  height: "5px",
-                  borderRadius: "99px",
-                  backgroundColor: "var(--muted)",
-                  overflow: "hidden",
-                }}
-              >
-                {c.budget > 0 ? (
-                  <div
+                {pct !== null && (
+                  <span
                     style={{
-                      height: "100%",
-                      width: `${Math.min(pct, 100)}%`,
-                      backgroundColor: color,
-                      borderRadius: "99px",
-                      transition: "width 0.4s ease",
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color,
+                      flexShrink: 0,
                     }}
-                  />
-                ) : (
-                  <div
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      backgroundColor: "var(--muted-foreground)",
-                      opacity: 0.3,
-                      borderRadius: "99px",
-                    }}
-                  />
+                  >
+                    {pct}%
+                  </span>
                 )}
               </div>
-              {pct !== null && (
+
+              <div>
                 <div
                   style={{
-                    fontSize: "11px",
-                    color,
-                    marginTop: "3px",
-                    fontWeight: 600,
+                    height: "7px",
+                    borderRadius: "99px",
+                    backgroundColor: "var(--border)",
+                    overflow: "hidden",
+                    marginBottom: "6px",
                   }}
                 >
-                  {pct > 100
-                    ? `${pct}% — over by ${formattedCurrency(c.total_expense - c.budget)}`
-                    : `${pct}%`}
+                  {c.budget > 0 ? (
+                    <div
+                      style={{
+                        height: "100%",
+                        width: `${Math.min(pct, 100)}%`,
+                        backgroundColor: color,
+                        borderRadius: "99px",
+                        transition: "width 0.4s ease",
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        backgroundColor: "var(--muted-foreground)",
+                        opacity: 0.3,
+                        borderRadius: "99px",
+                      }}
+                    />
+                  )}
                 </div>
-              )}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "11px",
+                    color: "var(--muted-foreground)",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: 600,
+                      color: isOver
+                        ? "var(--destructive)"
+                        : "var(--foreground)",
+                    }}
+                  >
+                    {formattedCurrency(c.total_expense)}
+                  </span>
+                  {c.budget > 0 && <span>{formattedCurrency(c.budget)}</span>}
+                </div>
+                {isOver && (
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      color: "var(--destructive)",
+                      fontWeight: 600,
+                      marginTop: "2px",
+                    }}
+                  >
+                    +{formattedCurrency(c.total_expense - c.budget)} over
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}

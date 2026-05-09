@@ -20,7 +20,7 @@ const iconBtnSx = {
 };
 
 function NavigationBar() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(() => window.innerWidth >= 1200);
   const { mode, toggleMode } = useThemeMode();
   const isMapPage = window.location.pathname.includes("/map") && !open;
 
@@ -52,7 +52,7 @@ function NavigationBar() {
               edge="start"
               sx={{
                 marginRight: 3,
-                ...(open && { display: "none" }),
+                ...(open && window.innerWidth >= 1200 && { display: "none" }),
                 ...iconBtnSx,
               }}
             >
@@ -88,7 +88,9 @@ function NavigationBar() {
             <AddAPhoto sx={{ fontSize: "1.25rem" }} />
           </IconButton>
           <IconButton
-            aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              mode === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
             onClick={toggleMode}
             sx={iconBtnSx}
           >

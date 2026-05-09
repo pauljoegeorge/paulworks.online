@@ -23,6 +23,8 @@ import NavDrawerSection from "./NaviDrawerSection";
 function NavDrawer(props) {
   const { open, handleDrawer } = props;
   const theme = useTheme();
+  const isDesktop = window.innerWidth >= 1200;
+  const drawerVariant = isDesktop ? "permanent" : "temporary";
   const overViewItems = [
     { name: "Dashboard", icon: DashboardIcon, href: "/dashboard" },
     { name: "Expenses", icon: ReceiptLong, href: "/expenses" },
@@ -40,7 +42,11 @@ function NavDrawer(props) {
   const OtherItems = [{ name: "Settings", icon: Settings, href: "/settings" }];
 
   return (
-    <Drawer variant="permanent" open={open}>
+    <Drawer
+      variant={drawerVariant}
+      open={open}
+      onClose={() => handleDrawer(false)}
+    >
       <DrawerHeader>
         <IconButton onClick={() => handleDrawer(false)}>
           {theme.direction === "rtl" ? (

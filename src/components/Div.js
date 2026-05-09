@@ -7,6 +7,14 @@ export const CentralDiv = styled.div`
   align-items: center;
   margin-top: ${(props) => (props.mt ? props.mt : "50px")};
   width: 100%;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 4px;
+  }
 `;
 
 export const SwitchingDiv = styled.div`
@@ -75,7 +83,9 @@ export const BoxWithShadow = styled.div`
   padding: ${(props) => (props.padding ? props.padding : "24px")};
   text-align: center;
   height: auto;
-  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 
   &:hover {
     box-shadow: var(--shadow-md);
