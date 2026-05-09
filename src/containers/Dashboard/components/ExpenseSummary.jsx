@@ -1,109 +1,94 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-import { Typography } from "@mui/material";
-import { colors } from "../../../utils/colors";
-import { Flex, FlexChild, BoxWithShadow, Divider } from "../../../components/Div";
-import { P, PBold, PText } from "../../../components/Text";
 import { formattedCurrency } from "../../../utils/currency";
 
-const DateBox = styled.div`
-  padding: 6px 10px;
-  background-color: var(--muted);
-  border-radius: var(--radius-md);
-  max-width: fit-content;
-`;
+function SectionCard({ title, children }) {
+  return (
+    <div style={{
+      flex: "1 1 280px",
+      backgroundColor: "var(--card)",
+      borderRadius: "var(--radius-lg)",
+      border: "1px solid var(--border)",
+      padding: "20px 20px 12px",
+      transition: "box-shadow 0.2s ease",
+    }}>
+      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>
+        {title}
+      </div>
+      {children}
+    </div>
+  );
+}
 
-const FirstFlexChild = styled.div`
-  padding-top: 3px;
-  flex: 0 0 15%;
-`;
+SectionCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
 
-const Item = styled.div`
-  cursor: auto;
-  border-radius: var(--radius-sm);
-  transition: background-color 0.15s ease;
-  &:hover { background-color: var(--muted); }
-`;
+function Row({ left, right, sub }) {
+  return (
+    <div style={{ padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "12px" }}>
+        <span style={{ fontSize: "14px", fontWeight: 500, color: "var(--foreground)", textTransform: "capitalize", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {left}
+        </span>
+        <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", backgroundColor: "var(--muted)", padding: "4px 10px", borderRadius: "var(--radius-sm)" }}>
+          {right}
+        </span>
+      </div>
+      {sub && <div style={{ fontSize: "12px", color: "var(--muted-foreground)", marginTop: "3px" }}>{sub}</div>}
+    </div>
+  );
+}
+
+Row.defaultProps = { sub: null };
+Row.propTypes = {
+  left: PropTypes.string.isRequired,
+  right: PropTypes.string.isRequired,
+  sub: PropTypes.string,
+};
 
 function ExpenseSummary({ filteredExpenseCategories, topTransactions, popularTransactions, isCurrentMonth }) {
   return (
-    <div className="flex flex-wrap gap-5 mt-12">
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", marginTop: "32px" }}>
       {isCurrentMonth && filteredExpenseCategories.length > 0 && (
-        <div className="flex-1 min-w-[280px]">
-          <BoxWithShadow>
-            <Typography component="h1" variant="h6" style={{ color: "var(--primary)" }} gutterBottom align="left" fontSize="1.5rem" fontWeight="600">
-              This Week 📈
-            </Typography>
-            {(filteredExpenseCategories || []).map((category) => (
-              <Item key={category.name}>
-                <Flex justify="space-between">
-                  <FlexChild><PBold tt="capitalize" size="1rem">{category.name}</PBold></FlexChild>
-                  <FlexChild><PText bg={colors.lightOrange} padding="8px" br="10px">{formattedCurrency(category.total_expense_of_week)}</PText></FlexChild>
-                </Flex>
-                <Divider />
-              </Item>
-            ))}
-          </BoxWithShadow>
-        </div>
+        <SectionCard title="This Week">
+          {filteredExpenseCategories.map((category) => (
+            <Row
+              key={category.name}
+              left={category.name}
+              right={formattedCurrency(category.total_expense_of_week)}
+            />
+          ))}
+        </SectionCard>
       )}
       {topTransactions.length > 0 && (
-        <div className="flex-1 min-w-[280px]">
-          <BoxWithShadow>
-            <Typography component="h1" variant="h6" style={{ color: "var(--primary)" }} gutterBottom align="left" fontSize="1.5rem" fontWeight="600">
-              Peak Transactions 🤑
-            </Typography>
-            {(topTransactions || []).map((transaction) => {
-              const dateObject = new Date(transaction.transaction_date);
-              const monthOfTransaction = dateObject.toLocaleString("default", { month: "short" });
-              const dayOfTransaction = `0${dateObject.getDate()}`.slice(-2);
-              return (
-                <Item key={transaction.transaction_date}>
-                  <Flex>
-                    <FirstFlexChild>
-                      <DateBox>
-                        <P height="0" padding="5px 0px" tt="uppercase">{monthOfTransaction}</P>
-                        <PBold height="0" size="16px">{dayOfTransaction}</PBold>
-                      </DateBox>
-                    </FirstFlexChild>
-                    <Flex justify="space-between">
-                      <FlexChild>
-                        <PBold tt="capitalize" size="1rem" mb="0px" align="left">{transaction.category_name}</PBold>
-                        <P align="left" wordBreak="break-all">{transaction.notes || ""}</P>
-                      </FlexChild>
-                      <FlexChild>
-                        <PText bg={colors.lightOrange} padding="10px" br="10px">{formattedCurrency(transaction.amount)}</PText>
-                      </FlexChild>
-                    </Flex>
-                  </Flex>
-                  <Divider />
-                </Item>
-              );
-            })}
-          </BoxWithShadow>
-        </div>
+        <SectionCard title="Peak Transactions">
+          {topTransactions.map((transaction) => {
+            const dateObject = new Date(transaction.transaction_date);
+            const month = dateObject.toLocaleString("default", { month: "short" });
+            const day = `0${dateObject.getDate()}`.slice(-2);
+            return (
+              <Row
+                key={transaction.transaction_date}
+                left={transaction.category_name}
+                right={formattedCurrency(transaction.amount)}
+                sub={`${day} ${month}${transaction.notes ? `  ·  ${transaction.notes}` : ""}`}
+              />
+            );
+          })}
+        </SectionCard>
       )}
       {Object.keys(popularTransactions).length > 0 && (
-        <div className="flex-1 min-w-[280px]">
-          <BoxWithShadow>
-            <Typography component="h1" variant="h6" style={{ color: "var(--primary)" }} gutterBottom align="left" fontSize="1.5rem" fontWeight="600">
-              Popular Transactions 🔥
-            </Typography>
-            {Object.entries(popularTransactions || []).map(([notes, transaction]) => (
-              <Item key={notes}>
-                <Flex justify="space-between">
-                  <FlexChild>
-                    <PBold tt="capitalize" size="1rem" wordBreak="break-all" align="left">{`${notes}(${transaction.count})`}</PBold>
-                  </FlexChild>
-                  <FlexChild>
-                    <PText bg={colors.lightOrange} padding="10px" br="10px">{formattedCurrency(transaction.total_spent)}</PText>
-                  </FlexChild>
-                </Flex>
-                <Divider />
-              </Item>
-            ))}
-          </BoxWithShadow>
-        </div>
+        <SectionCard title="Popular Transactions">
+          {Object.entries(popularTransactions).map(([notes, transaction]) => (
+            <Row
+              key={notes}
+              left={`${notes} (${transaction.count}x)`}
+              right={formattedCurrency(transaction.total_spent)}
+            />
+          ))}
+        </SectionCard>
       )}
     </div>
   );

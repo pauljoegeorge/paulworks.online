@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
-import { Typography } from "@mui/material";
 import { formattedCurrency } from "../../../utils/currency";
 import { dataColors } from "../../../utils/colors";
 import { useThemeMode } from "../../../contexts/ThemeContext";
@@ -27,9 +26,7 @@ export default function OverallExpenseInsight(props) {
 
   return (
     <div>
-      <Typography component="h2" variant="h6" sx={{ color: "var(--primary)" }} gutterBottom>
-        Overall Expense
-      </Typography>
+      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>Overall Expense</div>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
           <CartesianGrid stroke={gridColor} horizontal={false} />

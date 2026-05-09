@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { Typography } from "@mui/material";
 import { formattedCurrency } from "../../../utils/currency";
 import { dataColors } from "../../../utils/colors";
 import { useThemeMode } from "../../../contexts/ThemeContext";
@@ -18,9 +17,7 @@ function DailyExpenseReport(props) {
 
   return (
     <div style={{ width: "100%" }}>
-      <Typography component="h2" variant="h6" sx={{ color: "var(--primary)" }} gutterBottom>
-        Daily Expense Report
-      </Typography>
+      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>Daily Expense Report</div>
       <ResponsiveContainer width="100%" height={350}>
         <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
           <defs>

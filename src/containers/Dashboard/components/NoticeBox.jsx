@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { H1, PBold } from "../../../components/Text";
-import { Flex, FlexChild } from "../../../components/Div";
-import {
-  getExpenseVisibility,
-  setExpenseVisibility,
-} from "../../../utils/utils";
+import { getExpenseVisibility, setExpenseVisibility } from "../../../utils/utils";
 
 function NoticeBox(props) {
   const { data } = props;
@@ -20,55 +15,39 @@ function NoticeBox(props) {
   };
 
   return (
-    <Flex justify="space-evenly" gap="12px" style={{ padding: "8px 0" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px" }}>
       {(data || []).map((item) => (
-        <FlexChild
+        <div
           key={item.key}
-          direction="column"
-          bg="var(--card)"
-          align="center"
-          width="100%"
-          padding="20px 16px"
           style={{
+            backgroundColor: "var(--card)",
             borderRadius: "var(--radius-lg)",
             border: "1px solid var(--border)",
-            boxShadow: "var(--shadow-sm)",
-            transition: "box-shadow 0.2s ease, background-color 0.2s ease",
-            textAlign: "center",
+            borderTop: "3px solid var(--primary)",
+            padding: "20px 18px 16px",
+            transition: "box-shadow 0.2s ease",
+            display: "flex",
+            flexDirection: "column",
+            gap: "6px",
           }}
         >
-          <PBold mb="8px">{item?.head}</PBold>
-          <H1 color="var(--foreground)" style={{ margin: "4px 0" }}>
-            {visibilities[item?.key] ? item?.value : "— — —"}
-          </H1>
+          <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--muted-foreground)" }}>
+            {item.head}
+          </span>
+          <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "var(--foreground)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+            {visibilities[item.key] ? item.value : "———"}
+          </span>
           <button
             type="button"
-            aria-label={
-              visibilities[item?.key]
-                ? `Hide ${item?.head}`
-                : `Show ${item?.head}`
-            }
-            onClick={() => switchVisibility(item?.key)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--muted-foreground)",
-              padding: "4px",
-              marginTop: "4px",
-              display: "flex",
-              alignItems: "center",
-            }}
+            aria-label={visibilities[item.key] ? `Hide ${item.head}` : `Show ${item.head}`}
+            onClick={() => switchVisibility(item.key)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--muted-foreground)", padding: 0, display: "flex", alignItems: "center", width: "fit-content", marginTop: "2px" }}
           >
-            {visibilities[item?.key] ? (
-              <Visibility style={{ fontSize: "1.1rem" }} />
-            ) : (
-              <VisibilityOff style={{ fontSize: "1.1rem" }} />
-            )}
+            {visibilities[item.key] ? <Visibility style={{ fontSize: "1rem" }} /> : <VisibilityOff style={{ fontSize: "1rem" }} />}
           </button>
-        </FlexChild>
+        </div>
       ))}
-    </Flex>
+    </div>
   );
 }
 
