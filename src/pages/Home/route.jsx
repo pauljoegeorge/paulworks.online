@@ -5,7 +5,7 @@ const HomeRoutes = [
     component: Home,
     path: "/",
     exact: true,
-    type: "public",
+    type: "bare",
   },
 ];
 

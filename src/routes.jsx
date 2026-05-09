@@ -55,6 +55,15 @@ const renderRoute = (route, props) => (
   />
 );
 
+const renderBareRoute = (route, props) => (
+  <Route
+    key={route.path}
+    path={route.path}
+    exact={route.exact}
+    render={(restProps) => <route.component {...restProps} {...props} />}
+  />
+);
+
 const renderPrivateRoute = (route, props) => (
   <Route
     key={route.path}
@@ -74,8 +83,8 @@ const renderPrivateRoute = (route, props) => (
 );
 
 export const routeGenerator = ({ ...props }) =>
-  routes.map((route) =>
-    route.type === "public"
-      ? renderRoute(route, { ...props })
-      : renderPrivateRoute(route, { ...props })
-  );
+  routes.map((route) => {
+    if (route.type === "bare") return renderBareRoute(route, { ...props });
+    if (route.type === "public") return renderRoute(route, { ...props });
+    return renderPrivateRoute(route, { ...props });
+  });
