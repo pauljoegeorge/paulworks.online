@@ -10,7 +10,11 @@ function InteractiveTable(props) {
   const activeSortParam = sortParams.find((s) => s.active);
 
   return (
-    <FlexContainer width="90vw" className="mt-12">
+    <FlexContainer
+      width="100%"
+      className="mt-12"
+      style={{ flexDirection: "column" }}
+    >
       {title && (
         <div>
           <H3Bold>{title}</H3Bold>
@@ -25,11 +29,21 @@ function InteractiveTable(props) {
                 const value = Object.values(head)[0];
                 let icon = null;
                 if (activeSortParam.field === value) {
-                  icon = activeSortParam.order === "asc" ? <ArrowDropDown /> : <ArrowDropUp />;
+                  icon =
+                    activeSortParam.order === "asc" ? (
+                      <ArrowDropDown />
+                    ) : (
+                      <ArrowDropUp />
+                    );
                 }
                 return (
-                  <th key={key} onClick={() => handleClick(value)} style={{ cursor: "pointer" }}>
-                    {key}{icon}
+                  <th
+                    key={key}
+                    onClick={() => handleClick(value)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {key}
+                    {icon}
                   </th>
                 );
               })}

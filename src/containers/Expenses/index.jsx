@@ -99,31 +99,54 @@ function ExpensesContainer() {
               <div className="w-full mb-12 text-center">
                 <H1>Expenses</H1>
               </div>
-              <FlexContainer alignItems="baseline">
-                <LeftArrow onClick={() => handleMonthChange("previous")} />
-                <div>
-                  <H2Purple>{date}</H2Purple>
-                  <H1Span color="var(--primary)">Total: {totalExpense}</H1Span>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "10px",
+                  width: "100%",
+                }}
+              >
+                <FlexContainer alignItems="center">
+                  <LeftArrow onClick={() => handleMonthChange("previous")} />
+                  <div style={{ textAlign: "center" }}>
+                    <H2Purple>{date}</H2Purple>
+                    <H1Span color="var(--primary)">
+                      Total: {totalExpense}
+                    </H1Span>
+                  </div>
+                  <RightArrow onClick={() => handleMonthChange("next")} />
+                </FlexContainer>
+                <div
+                  style={{ display: "flex", gap: "8px", alignItems: "center" }}
+                >
+                  {!viewMode && (
+                    <TableViewMode onClick={() => setViewMode(true)} />
+                  )}
+                  {viewMode && <EditMode onClick={() => setViewMode(false)} />}
+                  <DownloadIcon onClick={() => handleExportReport()} />
                 </div>
-                <RightArrow onClick={() => handleMonthChange("next")} />
-                {!viewMode && (
-                  <TableViewMode onClick={() => setViewMode(true)} />
-                )}
-                {viewMode && <EditMode onClick={() => setViewMode(false)} />}
-                <DownloadIcon onClick={() => handleExportReport()} />
-              </FlexContainer>
-              {viewMode ? (
+              </div>
+            </CentralDiv>
+            {viewMode ? (
+              <div style={{ width: "100%", padding: "0 16px" }}>
                 <ExpensesViewMode
                   expenses={initialValues.expenses}
                   handleSortExpenses={handleSortExpenses}
                   sortParams={sortParams}
                   setSortParams={setSortParams}
                 />
-              ) : (
+              </div>
+            ) : (
+              <CentralDiv>
                 <div className="mt-4 w-full">
+                  {/* eslint-disable react/no-array-index-key */}
                   {(initialValues.expenses || []).map((_, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <div key={index} className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 w-full">
+                    <div
+                      key={index}
+                      className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 w-full"
+                    >
                       <Field
                         name={`expenses[${index}].category_uid`}
                         component={InputSelect}
@@ -160,8 +183,8 @@ function ExpensesContainer() {
                     </PrimaryButton>
                   </div>
                 </div>
-              )}
-            </CentralDiv>
+              </CentralDiv>
+            )}
           </form>
         );
       }}
