@@ -198,8 +198,6 @@ function DashboardContent() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            background:
-              "linear-gradient(135deg, var(--card) 60%, rgba(99,102,241,0.06))",
             borderTop: "3px solid var(--primary)",
           }}
         >

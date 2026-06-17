@@ -29,7 +29,7 @@ export default function ExpenseInsight(props) {
 
   return (
     <div>
-      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>Expense By Category</div>
+      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "16px" }}>Expense By Category</div>
       <ScrollableChild>
         <div style={{ minWidth }}>
           <ResponsiveContainer width="100%" height={500}>

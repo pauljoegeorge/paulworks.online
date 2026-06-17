@@ -372,7 +372,7 @@ const PROJECTS = [
     desc: "AI-powered personal finance app. Budget tracking, expense forecasting, and spending insights. Built end-to-end — Rails backend, React frontend, and ML pipeline.",
     stack: ["ruby on rails", "react", "mysql", "google ai"],
     href: "/dashboard",
-    external: false,
+    external: true,
   },
   {
     num: "02",
@@ -390,6 +390,15 @@ const PROJECTS = [
     desc: "News content for JLPT learners under 200 words. Real Japanese news, simplified and annotated for language learners.",
     stack: ["react", "firebase", "google ai"],
     href: "https://jnews.site",
+    external: true,
+  },
+  {
+    num: "04",
+    name: "Doca",
+    domain: "career · side project",
+    desc: "Build a professional, ATS-friendly resume in minutes.",
+    stack: ["typescript", "firebase"],
+    href: "https://doca.paulworks.net",
     external: true,
   },
 ];

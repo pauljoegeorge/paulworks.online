@@ -12,7 +12,7 @@ function SectionCard({ title, children }) {
       padding: "20px 20px 12px",
       transition: "box-shadow 0.2s ease",
     }}>
-      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>
+      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "16px" }}>
         {title}
       </div>
       {children}
@@ -32,7 +32,7 @@ function Row({ left, right, sub }) {
         <span style={{ fontSize: "14px", fontWeight: 500, color: "var(--foreground)", textTransform: "capitalize", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {left}
         </span>
-        <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", backgroundColor: "var(--muted)", padding: "4px 10px", borderRadius: "var(--radius-sm)" }}>
+        <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap" }}>
           {right}
         </span>
       </div>

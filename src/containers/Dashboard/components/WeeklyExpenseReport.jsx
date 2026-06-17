@@ -17,7 +17,7 @@ function WeeklyExpenseReport(props) {
 
   return (
     <div style={{ width: "100%" }}>
-      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>Weekly Expense Report</div>
+      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "16px" }}>Weekly Expense Report</div>
       <ResponsiveContainer width="100%" height={350}>
         <LineChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
           <CartesianGrid stroke={gridColor} vertical={false} />
@@ -27,7 +27,7 @@ function WeeklyExpenseReport(props) {
             contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--foreground)" }}
             formatter={(v) => [formattedCurrency(v), "Total Expense"]}
           />
-          <Line type="monotone" dataKey="value" stroke={dataColors.yellow} strokeWidth={2.5} dot={{ r: 3, fill: dataColors.yellow }} activeDot={{ r: 5 }} />
+          <Line type="monotone" dataKey="value" stroke={dataColors.primaryLight} strokeWidth={2} dot={{ r: 3, fill: dataColors.primaryLight, strokeWidth: 0 }} activeDot={{ r: 5 }} />
         </LineChart>
       </ResponsiveContainer>
     </div>

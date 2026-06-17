@@ -17,13 +17,13 @@ function DailyExpenseReport(props) {
 
   return (
     <div style={{ width: "100%" }}>
-      <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: "16px" }}>Daily Expense Report</div>
+      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "16px" }}>Daily Expense Report</div>
       <ResponsiveContainer width="100%" height={350}>
         <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
           <defs>
             <linearGradient id="dailyGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={dataColors.yellow} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={dataColors.yellow} stopOpacity={0} />
+              <stop offset="5%" stopColor={dataColors.primaryLight} stopOpacity={0.25} />
+              <stop offset="95%" stopColor={dataColors.primaryLight} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid stroke={gridColor} vertical={false} />
@@ -33,7 +33,7 @@ function DailyExpenseReport(props) {
             contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--foreground)" }}
             formatter={(v) => [formattedCurrency(v), "Total Expense"]}
           />
-          <Area type="monotone" dataKey="value" stroke={dataColors.yellow} strokeWidth={2.5} fill="url(#dailyGradient)" dot={false} activeDot={{ r: 4 }} />
+          <Area type="monotone" dataKey="value" stroke={dataColors.primaryLight} strokeWidth={2} fill="url(#dailyGradient)" dot={false} activeDot={{ r: 4, fill: dataColors.primaryLight }} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
