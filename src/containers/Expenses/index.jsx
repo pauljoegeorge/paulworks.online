@@ -21,6 +21,7 @@ import { formattedCurrency } from "../../utils/currency";
 
 import { getDefaultExpenseSortParams } from "./utils/utils";
 import ExpensesViewMode from "./ExpenseViewMode";
+import PrivateTotal from "../../components/PrivateTotal";
 
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
@@ -116,7 +117,7 @@ function ExpensesContainer() {
               <div className="workspace-plan-summary">
                 <div>
                   <span>Total spent</span>
-                  <strong>{totalExpense}</strong>
+                  <PrivateTotal value={totalExpense} label="Total spent" storageKey="mp-expenses-total-private" />
                   <p>
                     {expenses.length}{" "}
                     {expenses.length === 1 ? "expense" : "expenses"} this month

@@ -7,6 +7,7 @@ import WorkspacePage, { MonthNavigation } from "./WorkspacePage";
 import Input from "./Input";
 import CategoryIcon from "./CategoryIcon";
 import CategoryIconPicker from "./CategoryIconPicker";
+import PrivateTotal from "./PrivateTotal";
 import { PrimaryButton } from "./Button";
 import { useValidations } from "../utils/validation";
 import { addDateToUrl, appendUrlToDate, formattedDate } from "../utils/utils";
@@ -88,7 +89,12 @@ export default function CategoryPlanPage({
                         ? "Monthly budget"
                         : "Monthly fixed bills"}
                     </span>
-                    <strong>{formattedCurrency(total)}</strong>
+                    <PrivateTotal
+                      key={amountKey}
+                      value={formattedCurrency(total)}
+                      label={amountKey === "budget" ? "Monthly budget" : "Monthly fixed bills"}
+                      storageKey={`mp-plan-${amountKey}-total-private`}
+                    />
                     <p>
                       {rows.length}{" "}
                       {rows.length === 1 ? "category" : "categories"} ·{" "}

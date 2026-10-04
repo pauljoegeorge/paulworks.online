@@ -212,6 +212,16 @@ body:has(.money-workspace) {
 .workspace-icon-button:hover {
   background: var(--muted);
 }
+.workspace-private-total {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.workspace-private-total .workspace-icon-button {
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
 .workspace-menu,
 .workspace-close {
   display: none;

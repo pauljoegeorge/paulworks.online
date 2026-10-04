@@ -91,7 +91,11 @@ export default function DashboardContainer() {
     0,
   );
   const totalExpense = Number(insights?.total_monthly_expense || 0);
-  const remaining = totalBudget - totalExpense;
+  const categoryExpense = cats.reduce(
+    (sum, cat) => sum + Number(cat.total_expense || 0),
+    0,
+  );
+  const remaining = totalBudget - categoryExpense;
   const { daysElapsed, daysInMonth } = getReportingPeriod(month);
   const current = moment(month).isSame(moment(), "month");
   const dailyAverage = daysElapsed ? totalExpense / daysElapsed : null;
@@ -212,11 +216,12 @@ export default function DashboardContainer() {
             <section className="workspace-card workspace-stat">
               <div className="workspace-stat-label">Spent this month</div>
               <div className="workspace-value">{money(totalExpense)}</div>
+              <div className="workspace-note">Includes fixed bills</div>
               {totalBudget > 0 ? (
                 <span className="workspace-badge">
                   {hidden
                     ? "••••"
-                    : `${Math.round((totalExpense / totalBudget) * 100)}% of your budget`}
+                    : `${Math.round((categoryExpense / totalBudget) * 100)}% of category budget used`}
                 </span>
               ) : (
                 <span className="workspace-note">
@@ -404,6 +409,9 @@ export default function DashboardContainer() {
                             100,
                         )
                       : 0;
+                  let progressColor = "var(--primary)";
+                  if (pct >= 80) progressColor = "var(--warning)";
+                  if (pct > 100) progressColor = "var(--destructive)";
                   return (
                     <Link
                       key={cat.uid || cat.name}
@@ -425,10 +433,7 @@ export default function DashboardContainer() {
                           <span
                             style={{
                               width: `${Math.min(pct, 100)}%`,
-                              background:
-                                pct > 100
-                                  ? "var(--destructive)"
-                                  : "var(--primary)",
+                              background: progressColor,
                             }}
                           />
                         </div>
