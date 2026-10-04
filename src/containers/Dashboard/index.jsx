@@ -1,421 +1,525 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import Toolbar from "@mui/material/Toolbar";
+import { Link } from "react-router-dom";
 import moment from "moment";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import ExpenseInsight from "./components/ExpenseInsight";
-import BudgetHealth from "./components/BudgetHealth";
-import CategoryProgress from "./components/CategoryProgress";
-import { useInsights } from "./hooks/useInsights";
 import {
-  appendUrlToDate,
-  addDateToUrl,
-  formattedDate,
-  getExpenseVisibility,
-  setExpenseVisibility,
-  isMobile,
-} from "../../utils/utils";
-import CentralLoader from "../../components/CentralLoader";
-import { LeftArrow, RightArrow } from "../../components/Icon";
+  Plus,
+  Eye,
+  EyeOff,
+  ChevronLeft,
+  ChevronRight,
+  TrendingUp,
+} from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import QuickExpense from "./components/QuickExpense";
+import CategoryIcon from "../../components/CategoryIcon";
+import { get } from "../../utils/api";
 import { formattedCurrency } from "../../utils/currency";
-import { getBeginningOfMonth } from "../../utils/date";
-import SpendingRecommendations from "./components/SpendingRecommendations";
+import { addDateToUrl, appendUrlToDate } from "../../utils/utils";
+import { getReportingPeriod } from "./utils/reportingPeriod";
 import DailyExpenseReport from "./components/DailyExpenseReport";
 import WeeklyExpenseReport from "./components/WeeklyExpenseReport";
-import ExpenseSummary from "./components/ExpenseSummary";
+import ExpenseInsight from "./components/ExpenseInsight";
 
-const card = {
-  backgroundColor: "var(--card)",
-  borderRadius: "var(--radius-xl)",
-  border: "1px solid var(--border)",
-  padding: "20px 22px",
-  overflow: "hidden",
-};
-
-const sectionLabel = {
-  fontSize: "11px",
-  fontWeight: 600,
-  letterSpacing: "0.07em",
-  textTransform: "uppercase",
-  color: "var(--muted-foreground)",
-  marginBottom: "10px",
-};
-
-function StatCard({ head, value, visible, onToggle }) {
-  return (
-    <div
-      style={{
-        ...card,
-        padding: "20px 22px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "6px",
-        flex: 1,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span style={sectionLabel}>{head}</span>
-        <button
-          type="button"
-          aria-label={visible ? `Hide ${head}` : `Show ${head}`}
-          onClick={onToggle}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "var(--muted-foreground)",
-            padding: 0,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {visible ? (
-            <Visibility style={{ fontSize: "0.85rem" }} />
-          ) : (
-            <VisibilityOff style={{ fontSize: "0.85rem" }} />
-          )}
-        </button>
-      </div>
-      <span
-        style={{
-          fontSize: "1.7rem",
-          fontWeight: 700,
-          color: visible ? "var(--foreground)" : "var(--muted-foreground)",
-          letterSpacing: "-0.03em",
-          lineHeight: 1.1,
-        }}
-      >
-        {visible ? value : "———"}
-      </span>
-    </div>
+export default function DashboardContainer() {
+  const [month, setMonth] = useState(() => {
+    const selected = addDateToUrl();
+    if (moment(selected, "YYYY-MM-DD", true).isValid()) return selected;
+    const fallback = moment().startOf("month").format("YYYY-MM-DD");
+    appendUrlToDate(fallback);
+    return fallback;
+  });
+  const [insights, setInsights] = useState(null);
+  const [recent, setRecent] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [recentError, setRecentError] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const [hidden, setHidden] = useState(
+    () => localStorage.getItem("mp-dashboard-private") === "true",
   );
-}
-
-StatCard.propTypes = {
-  head: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  visible: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired,
-};
-
-function DashboardContent() {
-  const [selectedMonth, setSelectedMonth] = useState();
-  const [pageLoading, setPageLoading] = useState(true);
-  const [visibilities, setVisibilities] = useState(getExpenseVisibility());
-  const date = moment(selectedMonth).format("MMMM YYYY");
-  const currentMonth = getBeginningOfMonth();
-  const isCurrentMonth = currentMonth === selectedMonth;
-  const { isLoading, expenseInsights, actions } = useInsights();
-  const {
-    expense_by_categories,
-    weekly_expense,
-    todays_expense,
-    total_monthly_expense,
-    allowance_per_day,
-    allowance_per_week,
-    daily_report,
-    weekly_report,
-    top_transactions,
-    popular_transactions,
-  } = expenseInsights || [];
-
-  const { totalBudget, totalExpense } = (expense_by_categories || []).reduce(
-    (totals, category) => ({
-      totalBudget: totals.totalBudget + (category?.budget || 0),
-      totalExpense: totals.totalExpense + (category?.total_expense || 0),
-    }),
-    { totalBudget: 0, totalExpense: 0 }
-  );
-  const totalBalance = formattedCurrency(totalBudget - totalExpense);
-  const filteredExpenseCategories = (expense_by_categories || []).filter(
-    (category) => category.total_expense_of_week !== 0
-  );
-  const showQuota =
-    isCurrentMonth && (allowance_per_day !== 0 || allowance_per_week !== 0);
-
-  // spending pace
-  const monthStart = moment(selectedMonth).startOf("month");
-  const today = moment();
-  const daysElapsed = Math.max(today.diff(monthStart, "days") + 1, 1);
-  const daysInMonth = moment(selectedMonth).daysInMonth();
-  const dailyAvg = total_monthly_expense / daysElapsed;
-
-  const toggleVisibility = (key) => {
-    const next = { ...visibilities, [key]: !visibilities[key] };
-    setExpenseVisibility(next);
-    setVisibilities(next);
-  };
 
   useEffect(() => {
-    const month = addDateToUrl();
-    setSelectedMonth(month);
-  }, []);
+    let active = true;
+    setLoading(true);
+    setError("");
+    setRecentError(false);
+    Promise.allSettled([
+      get(`expenses/insights?from=${month}`),
+      get(`expenses?from=${month}&sort_by=transaction_date&sort_order=desc`),
+    ]).then(([summary, transactions]) => {
+      if (!active) return;
+      if (summary.status === "fulfilled") setInsights(summary.value);
+      else setError("We couldn't load your overview. Please try again.");
+      if (transactions.status === "fulfilled")
+        setRecent(transactions.value.slice(0, 5));
+      else {
+        setRecent([]);
+        setRecentError(true);
+      }
+      setLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [month, retry]);
 
-  useEffect(() => {
-    if (selectedMonth) {
-      actions.getExpenseInsights(selectedMonth);
-      setPageLoading(false);
-    }
-  }, [selectedMonth]);
-
-  const handleMonthChange = (direction) => {
-    const nextMonth =
-      direction === "next"
-        ? formattedDate(moment(selectedMonth).add(1, "months"))
-        : formattedDate(moment(selectedMonth).subtract(1, "months"));
-    appendUrlToDate(nextMonth);
-    return setSelectedMonth(nextMonth);
+  const changeMonth = (next) => {
+    const parsed = moment(next, "YYYY-MM-DD", true);
+    if (!parsed.isValid()) return;
+    const value = parsed.startOf("month").format("YYYY-MM-DD");
+    appendUrlToDate(value);
+    setMonth(value);
   };
+  const togglePrivacy = () => {
+    const next = !hidden;
+    setHidden(next);
+    localStorage.setItem("mp-dashboard-private", String(next));
+  };
+  const money = (value) =>
+    hidden ? "••••" : formattedCurrency(Number(value) || 0);
+  const cats = insights?.expense_by_categories || [];
+  const totalBudget = cats.reduce(
+    (sum, cat) => sum + Number(cat.budget || 0),
+    0,
+  );
+  const totalExpense = Number(insights?.total_monthly_expense || 0);
+  const remaining = totalBudget - totalExpense;
+  const { daysElapsed, daysInMonth } = getReportingPeriod(month);
+  const current = moment(month).isSame(moment(), "month");
+  const dailyAverage = daysElapsed ? totalExpense / daysElapsed : null;
+  const activeCats = cats.filter(
+    (cat) => cat.budget > 0 || cat.total_expense > 0,
+  );
+  let cumulative = 0;
+  const spending = Object.entries(insights?.daily_report || {})
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([day, value]) => {
+      cumulative += Number(value) || 0;
+      return { day, spent: cumulative };
+    });
 
-  if (isLoading || pageLoading) return <CentralLoader />;
-
-  const mobile = isMobile() || window.innerWidth < 768;
+  const averageLabel =
+    dailyAverage === null ? "—" : money(Math.round(dailyAverage));
+  const averageNote = daysElapsed
+    ? `Across ${daysElapsed} days`
+    : "This month hasn't started";
 
   return (
-    <div style={{ width: "100%", paddingBottom: "40px" }}>
-      <Toolbar />
-
-      {/* bento grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: mobile ? "1fr" : "2fr 1fr 1.5fr",
-          gridTemplateRows: "auto",
-          gap: "16px",
-        }}
-      >
-        {/* hero — total + month nav */}
-        <div
-          style={{
-            ...card,
-            gridColumn: "1",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            borderTop: "3px solid var(--primary)",
-          }}
-        >
-          <div>
-            <div style={sectionLabel}>Total Expense</div>
-            <div
-              style={{
-                fontSize: "clamp(2rem, 4vw, 3.2rem)",
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                color: "var(--foreground)",
-                lineHeight: 1,
-              }}
-            >
-              {visibilities.total
-                ? formattedCurrency(total_monthly_expense)
-                : "———"}
-            </div>
+    <div className="workspace-overview">
+      <div className="workspace-heading">
+        <div>
+          <h1>A little clarity, every day.</h1>
+          <p>Your {moment(month).format("MMMM")} spending, all in one place.</p>
+        </div>
+        <div className="workspace-actions">
+          <div className="workspace-month">
             <button
               type="button"
-              onClick={() => toggleVisibility("total")}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--muted-foreground)",
-                padding: 0,
-                marginTop: "6px",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="workspace-icon-button"
+              aria-label="Previous month"
+              onClick={() =>
+                changeMonth(
+                  moment(month).subtract(1, "month").format("YYYY-MM-DD"),
+                )
+              }
             >
-              {visibilities.total ? (
-                <Visibility style={{ fontSize: "1rem" }} />
-              ) : (
-                <VisibilityOff style={{ fontSize: "1rem" }} />
-              )}
+              <ChevronLeft size={16} />
+            </button>
+            <input
+              type="month"
+              aria-label="Reporting month"
+              value={month.slice(0, 7)}
+              onChange={(event) => changeMonth(`${event.target.value}-01`)}
+            />
+            <button
+              type="button"
+              className="workspace-icon-button"
+              aria-label="Next month"
+              onClick={() =>
+                changeMonth(moment(month).add(1, "month").format("YYYY-MM-DD"))
+              }
+            >
+              <ChevronRight size={16} />
             </button>
           </div>
-
-          {/* pace metrics */}
-          <div
-            style={{
-              display: "flex",
-              gap: "0",
-              margin: "24px 0 6px",
-              borderTop: "1px solid var(--border)",
-              paddingTop: "18px",
-            }}
+          <Link className="workspace-button primary" to="/new">
+            <Plus size={16} aria-hidden="true" />
+            Add expense
+          </Link>
+        </div>
+      </div>
+      <div className="workspace-actions" style={{ marginBottom: 18 }}>
+        <button
+          type="button"
+          className="workspace-button"
+          onClick={togglePrivacy}
+          aria-pressed={hidden}
+        >
+          {hidden ? <EyeOff size={16} /> : <Eye size={16} />}
+          {hidden ? "Show amounts" : "Hide amounts"}
+        </button>
+      </div>
+      {loading && (
+        <div className="workspace-card workspace-empty" role="status">
+          Loading your overview…
+        </div>
+      )}
+      {!loading && error && (
+        <div className="workspace-card" role="alert">
+          <p>{error}</p>
+          <button
+            className="workspace-button"
+            type="button"
+            onClick={() => setRetry((value) => value + 1)}
           >
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
-                  color: "var(--muted-foreground)",
-                  marginBottom: "4px",
-                }}
-              >
-                Daily avg
+            Retry
+          </button>
+        </div>
+      )}
+      {!loading && !error && insights && (
+        <>
+          <div className="workspace-stats">
+            <section className="workspace-card workspace-stat hero">
+              <div className="workspace-stat-label">
+                Remaining monthly budget
               </div>
-              <div
-                style={{
-                  fontSize: "1.15rem",
-                  fontWeight: 700,
-                  color: "var(--foreground)",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                {formattedCurrency(Math.round(dailyAvg))}
+              <div className="workspace-value">
+                {totalBudget > 0 ? money(remaining) : "No budget set"}
               </div>
-            </div>
-
-            <div
-              style={{
-                width: "1px",
-                backgroundColor: "var(--border)",
-                margin: "0 20px",
-              }}
-            />
-
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
-                  color: "var(--muted-foreground)",
-                  marginBottom: "4px",
-                }}
-              >
-                Day
+              <div className="workspace-note">
+                {totalBudget > 0
+                  ? `of ${money(totalBudget)}${current ? ` · ${daysInMonth - daysElapsed} days after today` : ""}`
+                  : "Create a budget to give your spending a plan."}
               </div>
-              <div
-                style={{
-                  fontSize: "1.15rem",
-                  fontWeight: 700,
-                  color: "var(--foreground)",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                {daysElapsed}
-                <span
-                  style={{
-                    fontWeight: 400,
-                    color: "var(--muted-foreground)",
-                    fontSize: "0.9rem",
-                  }}
+              {totalBudget <= 0 && (
+                <Link
+                  className="workspace-button"
+                  to="/budget"
+                  style={{ marginTop: 12 }}
                 >
-                  {" "}
-                  / {daysInMonth}
+                  Set up budget
+                </Link>
+              )}
+            </section>
+            <section className="workspace-card workspace-stat">
+              <div className="workspace-stat-label">Spent this month</div>
+              <div className="workspace-value">{money(totalExpense)}</div>
+              {totalBudget > 0 ? (
+                <span className="workspace-badge">
+                  {hidden
+                    ? "••••"
+                    : `${Math.round((totalExpense / totalBudget) * 100)}% of your budget`}
+                </span>
+              ) : (
+                <span className="workspace-note">
+                  {moment(month).format("MMMM YYYY")}
+                </span>
+              )}
+            </section>
+            <section className="workspace-card workspace-stat">
+              <div className="workspace-stat-label">Daily average</div>
+              <div className="workspace-value">{averageLabel}</div>
+              <div className="workspace-note">{averageNote}</div>
+            </section>
+          </div>
+          {current && (
+            <section
+              aria-label="Current spending and quotas"
+              className="workspace-current-stats"
+            >
+              <div className="workspace-card workspace-period-stat">
+                <div className="workspace-stat-label">Spent today</div>
+                <div className="workspace-value">
+                  {money(insights.todays_expense)}
+                </div>
+                <div className="workspace-note">{moment().format("MMM D")}</div>
+              </div>
+              <div className="workspace-card workspace-period-stat">
+                <div className="workspace-stat-label">Spent this week</div>
+                <div className="workspace-value">
+                  {money(insights.weekly_expense)}
+                </div>
+                <div className="workspace-note">This calendar week</div>
+              </div>
+              <div className="workspace-card workspace-period-stat">
+                <div className="workspace-stat-label">Daily quota left</div>
+                <div className="workspace-value">
+                  {totalBudget > 0 ? money(insights.allowance_per_day) : "—"}
+                </div>
+                <div className="workspace-note">
+                  {totalBudget > 0
+                    ? "Based on your remaining monthly budget"
+                    : "Set a budget to see your quota"}
+                </div>
+              </div>
+              <div className="workspace-card workspace-period-stat">
+                <div className="workspace-stat-label">Weekly quota left</div>
+                <div className="workspace-value">
+                  {totalBudget > 0 ? money(insights.allowance_per_week) : "—"}
+                </div>
+                <div className="workspace-note">
+                  {totalBudget > 0
+                    ? "Based on your remaining monthly budget"
+                    : "Set a budget to see your quota"}
+                </div>
+              </div>
+            </section>
+          )}
+          <div className="workspace-panels">
+            <section className="workspace-card">
+              <div className="workspace-card-header">
+                <h2>Spending pace</h2>
+                <span className="workspace-note">
+                  {moment(month).format("MMMM")}
                 </span>
               </div>
+              {hidden && (
+                <div className="workspace-empty">Chart hidden for privacy.</div>
+              )}
+              {!hidden &&
+                (spending.length === 0 ? (
+                  <div className="workspace-empty">
+                    Add your first expense to see your spending over time.
+                  </div>
+                ) : (
+                  <div
+                    role="img"
+                    aria-label="Cumulative spending for the selected month"
+                  >
+                    <ResponsiveContainer width="100%" height={230}>
+                      <AreaChart
+                        data={spending}
+                        margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
+                      >
+                        <defs>
+                          <linearGradient
+                            id="workspace-spending"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor="var(--primary)"
+                              stopOpacity={0.2}
+                            />
+                            <stop
+                              offset="100%"
+                              stopColor="var(--primary)"
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid
+                          vertical={false}
+                          stroke="var(--border)"
+                        />
+                        <XAxis
+                          dataKey="day"
+                          tickFormatter={(day) => moment(day).format("MMM D")}
+                          tick={{
+                            fontSize: 11,
+                            fill: "var(--muted-foreground)",
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                          minTickGap={35}
+                        />
+                        <YAxis
+                          tickFormatter={(value) => formattedCurrency(value)}
+                          width={75}
+                          tick={{
+                            fontSize: 11,
+                            fill: "var(--muted-foreground)",
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <Tooltip
+                          formatter={(value) => [
+                            formattedCurrency(value),
+                            "Spent so far",
+                          ]}
+                          contentStyle={{
+                            background: "var(--card)",
+                            color: "var(--foreground)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 10,
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="spent"
+                          stroke="var(--primary)"
+                          fill="url(#workspace-spending)"
+                          strokeWidth={2}
+                          isAnimationActive={false}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                ))}
+              <div className="workspace-callout">
+                <TrendingUp size={18} aria-hidden="true" />
+                <div>
+                  <div className="workspace-transaction-name">
+                    {remaining < 0 && totalBudget > 0
+                      ? "Spending is over budget"
+                      : "A clearer view of your month"}
+                  </div>
+                  <div className="workspace-note">
+                    {totalBudget > 0
+                      ? `Daily average: ${dailyAverage === null ? "—" : money(Math.round(dailyAverage))}${current ? ` · Weekly allowance: ${money(insights.allowance_per_week)}` : ""}`
+                      : "Set category budgets to start tracking your remaining allowance."}
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section className="workspace-card">
+              <div className="workspace-card-header">
+                <h2>Category budgets</h2>
+                <Link to={`/budget?date=${month}`}>Manage budgets</Link>
+              </div>
+              {activeCats.length === 0 ? (
+                <div className="workspace-empty">
+                  No categories to show yet. Start with a budget or your first
+                  expense.
+                </div>
+              ) : (
+                activeCats.slice(0, 5).map((cat) => {
+                  const pct =
+                    cat.budget > 0
+                      ? Math.max(
+                          0,
+                          (Number(cat.total_expense) / Number(cat.budget)) *
+                            100,
+                        )
+                      : 0;
+                  return (
+                    <Link
+                      key={cat.uid || cat.name}
+                      className="workspace-budget-row"
+                      to={`/expenses?date=${month}&category=${encodeURIComponent(cat.name)}`}
+                    >
+                      <div className="workspace-budget-label">
+                        <span className="category-with-icon">
+                          <CategoryIcon name={cat.icon} />
+                          {cat.name}
+                        </span>
+                        <span>
+                          {money(cat.total_expense)} /{" "}
+                          {cat.budget > 0 ? money(cat.budget) : "No budget"}
+                        </span>
+                      </div>
+                      {!hidden && (
+                        <div className="workspace-track">
+                          <span
+                            style={{
+                              width: `${Math.min(pct, 100)}%`,
+                              background:
+                                pct > 100
+                                  ? "var(--destructive)"
+                                  : "var(--primary)",
+                            }}
+                          />
+                        </div>
+                      )}
+                      {pct > 100 && !hidden && (
+                        <div
+                          className="workspace-note"
+                          style={{ color: "var(--destructive)", marginTop: 5 }}
+                        >
+                          {money(cat.total_expense - cat.budget)} over budget
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })
+              )}
+            </section>
+          </div>
+          <section className="workspace-card">
+            <div className="workspace-card-header">
+              <h2>Recent expenses</h2>
+              <Link to={`/expenses?date=${month}`}>View all expenses ↗</Link>
             </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginTop: "16px",
-            }}
-          >
-            <LeftArrow onClick={() => handleMonthChange("previous")} />
-            <span
-              style={{
-                fontSize: "1rem",
-                fontWeight: 600,
-                color: "var(--foreground)",
-              }}
-            >
-              {date}
-            </span>
-            <RightArrow onClick={() => handleMonthChange("next")} />
-          </div>
-        </div>
-
-        {/* stat stack */}
-        <div
-          style={{
-            gridColumn: mobile ? "1" : "2",
-            display: mobile ? "grid" : "flex",
-            gridTemplateColumns: mobile ? "repeat(3, 1fr)" : undefined,
-            flexDirection: "column",
-            gap: "14px",
-          }}
-        >
-          <StatCard
-            head="Today's Expense"
-            value={formattedCurrency(todays_expense)}
-            visible={visibilities.todays}
-            onToggle={() => toggleVisibility("todays")}
-          />
-          <StatCard
-            head="Weekly Expense"
-            value={formattedCurrency(weekly_expense)}
-            visible={visibilities.weekly}
-            onToggle={() => toggleVisibility("weekly")}
-          />
-          <StatCard
-            head="Balance"
-            value={totalBalance}
-            visible={visibilities.balance}
-            onToggle={() => toggleVisibility("balance")}
-          />
-        </div>
-
-        {/* budget health */}
-        <div style={{ ...card, gridColumn: mobile ? "1" : "3" }}>
-          <BudgetHealth expenseInsights={expenseInsights} />
-        </div>
-
-        {/* category progress — full width */}
-        <div style={{ ...card, gridColumn: "1 / -1" }}>
-          <CategoryProgress expenseInsights={expenseInsights} />
-        </div>
-
-        {/* expense by category chart — full width */}
-        <div style={{ ...card, gridColumn: "1 / -1" }}>
-          <ExpenseInsight expenseInsights={expenseInsights} />
-        </div>
-
-        {/* daily chart */}
-        <div style={{ ...card, gridColumn: mobile ? "1" : "1 / 3" }}>
-          <DailyExpenseReport dailyReport={daily_report} />
-        </div>
-
-        {/* weekly chart */}
-        <div style={{ ...card, gridColumn: mobile ? "1" : "3" }}>
-          <WeeklyExpenseReport weeklyReport={weekly_report} />
-        </div>
-
-        {/* quota — full width, conditional */}
-        {showQuota && (
-          <div style={{ gridColumn: "1 / -1" }}>
-            <SpendingRecommendations
-              allowancePerDay={allowance_per_day}
-              allowancePerWeek={allowance_per_week}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* summary cards below grid */}
-      <ExpenseSummary
-        isCurrentMonth={isCurrentMonth}
-        filteredExpenseCategories={filteredExpenseCategories}
-        topTransactions={top_transactions}
-        popularTransactions={popular_transactions}
+            {recentError && (
+              <div className="workspace-empty">
+                We couldn&apos;t load your recent expenses.{" "}
+                <button
+                  type="button"
+                  className="workspace-button"
+                  onClick={() => setRetry((value) => value + 1)}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+            {!recentError &&
+              (recent.length === 0 ? (
+                <div className="workspace-empty">
+                  No expenses recorded this month.{" "}
+                  <Link to="/new">Add an expense</Link> to get started.
+                </div>
+              ) : (
+                recent.map((expense) => (
+                  <div className="workspace-transaction" key={expense.uid}>
+                    <span className="workspace-transaction-icon">
+                      <CategoryIcon name={expense.category_icon} />
+                    </span>
+                    <div>
+                      <div className="workspace-transaction-name">
+                        {expense.notes || expense.category_name}
+                      </div>
+                      <div className="workspace-note">
+                        {expense.category_name} ·{" "}
+                        {moment(expense.transaction_date).format("MMM D")}
+                      </div>
+                    </div>
+                    <span className="workspace-transaction-amount">
+                      {money(expense.amount)}
+                    </span>
+                  </div>
+                ))
+              ))}
+          </section>
+          {!hidden && (
+            <details className="workspace-reports" open>
+              <summary>Detailed spending reports</summary>
+              <div className="workspace-panels">
+                <section className="workspace-card">
+                  <DailyExpenseReport
+                    dailyReport={insights.daily_report || {}}
+                  />
+                </section>
+                <section className="workspace-card">
+                  <WeeklyExpenseReport
+                    weeklyReport={insights.weekly_report || {}}
+                  />
+                </section>
+              </div>
+              <section className="workspace-card">
+                <ExpenseInsight expenseInsights={insights} />
+              </section>
+            </details>
+          )}
+        </>
+      )}
+      <QuickExpense
+        onSaved={() => {
+          changeMonth(moment().startOf("month").format("YYYY-MM-DD"));
+          setRetry((value) => value + 1);
+        }}
       />
     </div>
   );
-}
-
-export default function DashboardContainer() {
-  return <DashboardContent />;
 }

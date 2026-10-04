@@ -53,11 +53,11 @@ function NavDrawerSection(props) {
                 px: 1.5,
                 borderRadius: "8px",
                 backgroundColor: isActive
-                  ? "rgba(99, 102, 241, 0.10)"
+                  ? "var(--accent)"
                   : "transparent",
                 "&:hover": {
                   backgroundColor: isActive
-                    ? "rgba(99, 102, 241, 0.14)"
+                    ? "var(--muted)"
                     : "var(--muted)",
                 },
               }}

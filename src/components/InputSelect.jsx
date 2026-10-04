@@ -5,6 +5,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FlexContainer, FlexChild } from "./Div";
+import CategoryIcon from "./CategoryIcon";
 
 const selectSx = {
   borderRadius: "var(--radius-md)",
@@ -57,6 +58,11 @@ function InputSelect({ input, label, options, isMultiLabeled }) {
       <FormControl fullWidth>
         <Select
           id={input.name}
+          inputProps={{ "aria-label": label || input.name }}
+          MenuProps={{
+            container: () =>
+              document.querySelector(".money-workspace") || document.body,
+          }}
           value={input.value}
           onChange={input.onChange}
           sx={{
@@ -64,27 +70,35 @@ function InputSelect({ input, label, options, isMultiLabeled }) {
             height: "2.25rem", // Matches h-9 (36px) of Input component
           }}
         >
-        {isMultiLabeled
-          ? options.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                <FlexContainer align="flex-start" width="100%">
-                  <FlexChild align="left" width="100%">
-                    {option.label[0]}
-                  </FlexChild>
-                  <FlexChild>{option.label[1]}</FlexChild>
-                </FlexContainer>
-              </MenuItem>
-            ))
-          : options.map((option) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                sx={{ fontSize: "0.875rem", fontFamily: '"IBM Plex Sans", sans-serif' }}
-              >
-                {option.label}
-              </MenuItem>
-            ))}
-      </Select>
+          {isMultiLabeled
+            ? options.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <FlexContainer align="flex-start" width="100%">
+                    <FlexChild align="left" width="100%">
+                      {option.label[0]}
+                    </FlexChild>
+                    <FlexChild>{option.label[1]}</FlexChild>
+                  </FlexContainer>
+                </MenuItem>
+              ))
+            : options.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  sx={{
+                    fontSize: "0.875rem",
+                    fontFamily: '"IBM Plex Sans", sans-serif',
+                  }}
+                >
+                  <span className="category-with-icon">
+                    {Object.prototype.hasOwnProperty.call(option, "icon") && (
+                      <CategoryIcon name={option.icon} />
+                    )}
+                    {option.label}
+                  </span>
+                </MenuItem>
+              ))}
+        </Select>
       </FormControl>
     </div>
   );
@@ -101,8 +115,10 @@ InputSelect.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string.isRequired,
-      label: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
-    })
+      icon: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+        .isRequired,
+    }),
   ).isRequired,
 };
 

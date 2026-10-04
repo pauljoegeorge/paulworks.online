@@ -42,9 +42,9 @@ function CardBody({ children }) {
 
 const BADGE = {
   danger:    { bg: "var(--destructive)",         text: "var(--destructive-foreground)" },
-  warning:   { bg: "rgba(245,158,11,0.15)",      text: "#92400e" },
-  success:   { bg: "rgba(16,185,129,0.15)",      text: "var(--success)" },
-  info:      { bg: "rgba(14,165,233,0.15)",      text: "#0c4a6e" },
+  warning:   { bg: "rgba(245,158,11,0.15)",      text: "var(--warning)" },
+  success:   { bg: "var(--accent)",      text: "var(--success)" },
+  info:      { bg: "var(--accent)",      text: "var(--primary)" },
   secondary: { bg: "var(--muted)",               text: "var(--muted-foreground)" },
 };
 
@@ -60,7 +60,7 @@ function Badge({ variant = "secondary", children }) {
 const ALERT = {
   danger:  { bg: "rgba(239,68,68,0.08)",  border: "rgba(239,68,68,0.25)" },
   warning: { bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.25)" },
-  info:    { bg: "rgba(14,165,233,0.08)", border: "rgba(14,165,233,0.25)" },
+  info:    { bg: "var(--accent)", border: "var(--border)" },
 };
 
 function Alert({ variant = "info", children }) {

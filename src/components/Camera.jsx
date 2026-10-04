@@ -1,79 +1,208 @@
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { Camera as CameraIcon, Upload } from "lucide-react";
 import { PrimaryButton } from "./Button";
 
-function Camera({ onCapture }) {
+export default function Camera({ onCapture, disabled }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const uploadRef = useRef(null);
   const streamRef = useRef(null);
-  const [cameraOn, setCameraOn] = useState(true);
-
+  const mounted = useRef(true);
+  const requestVersion = useRef(0);
+  const [cameraOn, setCameraOn] = useState(false);
+  const [error, setError] = useState("");
+  const [ready, setReady] = useState(false);
+  const [photo, setPhoto] = useState(null);
   const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-    }
+    requestVersion.current += 1;
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
     setCameraOn(false);
+    setReady(false);
   };
-
-  const startCamera = () => {
-    setCameraOn(true);
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const facingMode = isMobile ? "environment" : "user";
-    navigator.mediaDevices
-      .getUserMedia({ video: { facingMode } })
-      .then((stream) => {
-        streamRef.current = stream;
-        videoRef.current.srcObject = stream;
-      })
-      .catch((err) => {
-        console.error("Error accessing camera: ", err);
-      });
-  };
-
   useEffect(() => {
-    startCamera();
-    return () => { stopCamera(); };
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      requestVersion.current += 1;
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+    };
   }, []);
-
+  const startCamera = async () => {
+    setError("");
+    setPhoto(null);
+    setReady(false);
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError("Camera unavailable. You can upload a receipt instead.");
+      return;
+    }
+    setCameraOn(true);
+    requestVersion.current += 1;
+    const version = requestVersion.current;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+      });
+      if (
+        !mounted.current ||
+        version !== requestVersion.current ||
+        !videoRef.current
+      ) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      streamRef.current = stream;
+      videoRef.current.srcObject = stream;
+    } catch {
+      if (mounted.current && version === requestVersion.current) {
+        setError(
+          "Camera unavailable. Allow camera access or upload a receipt instead.",
+        );
+        setCameraOn(false);
+      }
+    }
+  };
   const capturePhoto = () => {
-    const context = canvasRef.current.getContext("2d");
-    context.drawImage(videoRef.current, 0, 0, 640, 480);
-    const imageDataUrl = canvasRef.current.toDataURL("image/jpeg");
-    onCapture(imageDataUrl);
+    const video = videoRef.current;
+    canvasRef.current.width = video.videoWidth;
+    canvasRef.current.height = video.videoHeight;
+    canvasRef.current
+      .getContext("2d")
+      .drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+    setPhoto(canvasRef.current.toDataURL("image/jpeg"));
     stopCamera();
   };
-
+  const uploadPhoto = (event) => {
+    const file = event.target.files[0];
+    uploadRef.current.value = "";
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setError("Choose a JPG, PNG, or WebP receipt image.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Choose an image smaller than 10 MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (mounted.current) {
+        stopCamera();
+        setError("");
+        setPhoto(reader.result);
+      }
+    };
+    reader.onerror = () =>
+      setError("Couldn’t read the image. Try another file.");
+    reader.readAsDataURL(file);
+  };
   return (
-    <>
-      {!cameraOn && (
-        <div className="flex justify-center mt-4 w-full">
-          <PrimaryButton type="button" size="lg" onClick={startCamera}>
-            Turn On Camera
-          </PrimaryButton>
-        </div>
+    <div className="workspace-receipt-capture">
+      {error && (
+        <p className="workspace-field-error" role="alert">
+          {error}
+        </p>
       )}
-      {cameraOn && (
+      {photo ? (
         <>
-          <video ref={videoRef} controls={false} autoPlay loop playsInline muted>
-            <track kind="captions" />
-          </video>
-          <div className="flex gap-2 justify-center mt-4 mb-2">
-            <PrimaryButton type="button" size="lg" onClick={capturePhoto}>
-              Take Photo
+          <img
+            className="workspace-receipt-preview"
+            src={photo}
+            alt="Receipt preview"
+          />
+          <p className="workspace-note">
+            Check that the store name and total are readable before saving.
+          </p>
+          <div className="workspace-page-actions">
+            <PrimaryButton
+              type="button"
+              disabled={disabled}
+              onClick={() => onCapture(photo)}
+            >
+              {disabled ? "Reading receipt…" : "Use this receipt"}
             </PrimaryButton>
-            <PrimaryButton type="button" variant="secondary" size="lg" onClick={stopCamera}>
-              Turn Off Camera
-            </PrimaryButton>
+            <button
+              className="workspace-button"
+              type="button"
+              disabled={disabled}
+              onClick={() => setPhoto(null)}
+            >
+              Choose another
+            </button>
           </div>
         </>
+      ) : (
+        <>
+          {!cameraOn && (
+            <div className="workspace-receipt-options">
+              <button
+                type="button"
+                className="workspace-receipt-option"
+                disabled={disabled}
+                onClick={startCamera}
+              >
+                <CameraIcon size={28} />
+                <strong>Take a photo</strong>
+                <span>Use your camera</span>
+              </button>
+              <button
+                type="button"
+                className="workspace-receipt-option"
+                disabled={disabled}
+                onClick={() => uploadRef.current.click()}
+              >
+                <Upload size={28} />
+                <strong>Upload receipt</strong>
+                <span>JPG, PNG, or WebP · up to 10 MB</span>
+              </button>
+            </div>
+          )}
+          {cameraOn && (
+            <>
+              <video
+                ref={videoRef}
+                onLoadedData={() => setReady(true)}
+                autoPlay
+                playsInline
+                muted
+              >
+                <track kind="captions" />
+              </video>
+              <div className="workspace-page-actions">
+                <PrimaryButton
+                  type="button"
+                  disabled={!ready || disabled}
+                  onClick={capturePhoto}
+                >
+                  Take photo
+                </PrimaryButton>
+                <button
+                  type="button"
+                  className="workspace-button"
+                  onClick={stopCamera}
+                >
+                  Cancel camera
+                </button>
+              </div>
+            </>
+          )}
+        </>
       )}
-      <canvas ref={canvasRef} width="640" height="480" style={{ display: "none" }} />
-    </>
+      <input
+        ref={uploadRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        aria-label="Upload receipt image"
+        onChange={uploadPhoto}
+        hidden
+      />
+      <canvas ref={canvasRef} hidden />
+    </div>
   );
 }
-
 Camera.propTypes = {
   onCapture: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
-
-export default Camera;
+Camera.defaultProps = { disabled: false };

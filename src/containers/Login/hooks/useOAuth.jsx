@@ -37,7 +37,7 @@ function useOAuth() {
   const updateCurrentUser = async (body) => {
     setLoading(true);
     try {
-      const response = await put("users", body);
+      const response = await put("users/update", { user: body });
       saveCurrentUser(response);
       setCurrentUser(response);
       Notify.success();

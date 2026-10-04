@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { formattedCurrency } from "../../../utils/currency";
 
@@ -72,18 +73,33 @@ function BudgetHealth({ expenseInsights }) {
       totalBudget: acc.totalBudget + (c.budget || 0),
       totalExpense: acc.totalExpense + (c.total_expense || 0),
     }),
-    { totalBudget: 0, totalExpense: 0 }
+    { totalBudget: 0, totalExpense: 0 },
   );
+
+  if (totalBudget <= 0) {
+    return (
+      <div>
+        <div style={sectionLabel}>Budget Health</div>
+        <p style={{ fontSize: "1.25rem", fontWeight: 700 }}>No budget set</p>
+        <p style={{ color: "var(--muted-foreground)", margin: "12px 0" }}>
+          Set category budgets to track your remaining allowance.
+        </p>
+        <Link to="/budget" style={{ color: "var(--primary)", fontWeight: 600 }}>
+          Set up budget
+        </Link>
+      </div>
+    );
+  }
 
   const overallPct = totalBudget > 0 ? (totalExpense / totalBudget) * 100 : 0;
   const overBudgetCats = (cats || []).filter(
-    (c) => c.budget > 0 && c.total_expense > c.budget
+    (c) => c.budget > 0 && c.total_expense > c.budget,
   );
   const nearLimitCats = (cats || []).filter(
     (c) =>
       c.budget > 0 &&
       c.total_expense <= c.budget &&
-      c.total_expense / c.budget >= 0.8
+      c.total_expense / c.budget >= 0.8,
   );
   const diff = totalExpense - totalBudget;
 

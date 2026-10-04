@@ -10,7 +10,7 @@ import { THead } from "../../components/Table";
 
 const STATUS_COLORS = {
   ok: "var(--success)",
-  warning: "#f59e0b",
+  warning: "var(--warning)",
   over_budget: "var(--destructive)",
   no_budget: "var(--muted-foreground)",
 };

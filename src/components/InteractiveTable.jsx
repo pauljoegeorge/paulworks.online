@@ -12,7 +12,7 @@ function InteractiveTable(props) {
   return (
     <FlexContainer
       width="100%"
-      className="mt-12"
+      className="mt-4"
       style={{ flexDirection: "column" }}
     >
       {title && (
@@ -37,13 +37,15 @@ function InteractiveTable(props) {
                     );
                 }
                 return (
-                  <th
-                    key={key}
-                    onClick={() => handleClick(value)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {key}
-                    {icon}
+                  <th key={key} style={{ cursor: "pointer" }}>
+                    <button
+                      type="button"
+                      className="workspace-table-sort"
+                      onClick={() => handleClick(value)}
+                    >
+                      {key}
+                      {icon}
+                    </button>
                   </th>
                 );
               })}

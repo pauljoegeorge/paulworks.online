@@ -1,69 +1,73 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { Flex, FlexChild, BoxWithShadow } from "../../components/Div";
-import { MainWrapper } from "../Dashboard/components/Div";
-import { H1, PText } from "../../components/Text";
+import { UserRound, Globe } from "lucide-react";
+import WorkspacePage from "../../components/WorkspacePage";
 import { PrimaryButton } from "../../components/Button";
 import InputSelect from "../../components/InputSelect";
 import { currencies } from "../../utils/currency";
 import { useOAuth } from "../Login/hooks/useOAuth";
 import { constants } from "../../utils/constants";
 
-function SettingsContainer() {
-  const { actions, currentUser } = useOAuth();
-  const initialValues = {
-    currency_unit: currentUser?.currency_unit || constants.defaultCurrency,
-  };
-
-  const currencyOptions = currencies.map((currency) => ({
+export default function SettingsContainer() {
+  const { actions, currentUser, isLoading } = useOAuth();
+  const options = currencies.map((currency) => ({
     value: currency.code,
-    label: [currency.symbol, currency.name],
+    label: `${currency.code} · ${currency.name} (${currency.symbol})`,
   }));
-
-  const handleSubmit = (values) => {
-    actions.updateCurrentUser(values);
-  };
-
   return (
-    <Form
-      onSubmit={handleSubmit}
-      initialValues={initialValues}
-      render={({ handleSubmit: formHandleSubmit, form: { getState } }) => {
-        const { pristine, valid } = getState();
-        return (
-          <form onSubmit={formHandleSubmit}>
-            <MainWrapper align="center" className="mt-5">
-              <H1>Settings</H1>
-              <BoxWithShadow direction="column" className="mt-5" padding="30px">
-                <Flex align="baseline" className="mt-5">
-                  <FlexChild padding="10px 20px">
-                    <PText tt="normal">Currency Unit</PText>
-                  </FlexChild>
-                  <FlexChild>
-                    <Field
-                      name="currency_unit"
-                      component={InputSelect}
-                      options={currencyOptions}
-                      isMultiLabeled
-                    />
-                  </FlexChild>
-                </Flex>
+    <WorkspacePage
+      focused
+      title="Settings"
+      description="Make this workspace feel like yours."
+    >
+      <div className="workspace-settings-grid">
+        <div className="workspace-card workspace-form-card">
+          <div className="workspace-settings-icon">
+            <UserRound size={22} />
+          </div>
+          <h2>Your account</h2>
+          <strong>{currentUser?.name || "Personal workspace"}</strong>
+          {currentUser?.email && (
+            <p className="workspace-note">{currentUser.email}</p>
+          )}
+        </div>
+        <Form
+          initialValues={{
+            currency_unit:
+              currentUser?.currency_unit || constants.defaultCurrency,
+          }}
+          onSubmit={(values) => actions.updateCurrentUser(values)}
+          render={({ handleSubmit, pristine, valid }) => (
+            <form
+              className="workspace-card workspace-form-card"
+              onSubmit={handleSubmit}
+            >
+              <div className="workspace-settings-icon">
+                <Globe size={22} />
+              </div>
+              <h2>Currency preferences</h2>
+              <p className="workspace-note">
+                Choose the currency used to display amounts across your
+                workspace.
+              </p>
+              <Field
+                name="currency_unit"
+                component={InputSelect}
+                label="Currency"
+                options={options}
+              />
+              <div className="workspace-form-footer">
                 <PrimaryButton
-                  variant="primary"
-                  size="lg"
-                  className="mt-5 w-50"
                   type="submit"
-                  disabled={pristine || !valid}
+                  disabled={pristine || !valid || isLoading}
                 >
-                  Save
+                  {isLoading ? "Saving…" : "Save preferences"}
                 </PrimaryButton>
-              </BoxWithShadow>
-            </MainWrapper>
-          </form>
-        );
-      }}
-    />
+              </div>
+            </form>
+          )}
+        />
+      </div>
+    </WorkspacePage>
   );
 }
-
-export default SettingsContainer;

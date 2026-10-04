@@ -40,7 +40,7 @@ const CSS = `
   .cine[data-accent="pine"]   { --accent: oklch(0.6 0.11 165); }
 
   .cine * { box-sizing: border-box; }
-  html.cine-scroll { background: #000; scroll-snap-type: y proximity; scroll-behavior: smooth; }
+  html.cine-scroll { background: #000; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
   .cine ::selection { background: var(--accent); color: #000; }
   .cine a { color: inherit; text-decoration: none; }
 
@@ -453,20 +453,28 @@ export default function HomeContainer() {
       setTc(`00:${mm}:${ss}`);
     };
 
-    const activateUpTo = (i) => {
-      const list = scenes();
-      for (let k = 0; k <= i; k += 1) {
-        if (list[k]) list[k].classList.add("is-active");
-      }
-    };
-
     const onScroll = () => {
       updateUI();
-      activateUpTo(activeIndex());
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", updateUI, { passive: true });
+
+    // Animate each scene's content in as it scrolls into view — and replay the
+    // entrance animation whenever it re-enters, so scrolling always feels alive.
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-active");
+          } else {
+            entry.target.classList.remove("is-active");
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+    scenes().forEach((s) => io.observe(s));
 
     const onKey = (e) => {
       if (e.key === "ArrowDown" || e.key === "PageDown") {
@@ -478,11 +486,54 @@ export default function HomeContainer() {
         goTo(idxRef.current - 1);
       }
     };
+    // One gesture = exactly one section. While a snap is animating we hold a lock
+    // so an intense flick can't skip past several scenes.
+    let locked = false;
+    let lockTimer = null;
     const goTo = (i) => {
-      idxRef.current = Math.max(0, Math.min(SCENES.length - 1, i));
-      window.scrollTo({ top: idxRef.current * window.innerHeight, behavior: "smooth" });
+      const next = Math.max(0, Math.min(SCENES.length - 1, i));
+      if (next === idxRef.current && locked) return;
+      idxRef.current = next;
+      window.scrollTo({ top: next * window.innerHeight, behavior: "smooth" });
+    };
+    const step = (dir) => {
+      if (locked) return;
+      const target = idxRef.current + dir;
+      if (target < 0 || target > SCENES.length - 1) return;
+      locked = true;
+      goTo(target);
+      lockTimer = setTimeout(() => {
+        locked = false;
+      }, 900);
     };
     window.addEventListener("keydown", onKey);
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (Math.abs(e.deltaY) < 4) return;
+      step(e.deltaY > 0 ? 1 : -1);
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
+
+    // touch: translate a swipe into a single step
+    let touchStartY = null;
+    const onTouchStart = (e) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e) => {
+      // block native momentum so a hard swipe can't overshoot
+      e.preventDefault();
+    };
+    const onTouchEnd = (e) => {
+      if (touchStartY == null) return;
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      touchStartY = null;
+      if (Math.abs(dy) < 40) return;
+      step(dy > 0 ? 1 : -1);
+    };
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
 
     // Initial paint shows the hidden state; activate scene 0 on a later tick so its
     // entrance animation starts from a committed frame.
@@ -496,7 +547,13 @@ export default function HomeContainer() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", updateUI);
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
       clearTimeout(first);
+      clearTimeout(lockTimer);
+      io.disconnect();
       document.documentElement.classList.remove("cine-scroll");
     };
   }, []);

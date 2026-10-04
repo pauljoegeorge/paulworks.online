@@ -13,9 +13,6 @@ import {
   Settings,
   AccountBalance,
   AutoAwesome,
-  Insights,
-  TrendingUp,
-  Savings,
 } from "@mui/icons-material";
 import { DrawerHeader, Drawer } from "../utils/drawer";
 import NavDrawerSection from "./NaviDrawerSection";
@@ -33,9 +30,6 @@ function NavDrawer(props) {
   ];
   const managementItems = [
     { name: "Chat", icon: AutoAwesome, href: "/chat" },
-    { name: "Insights", icon: Insights, href: "/insights" },
-    { name: "Forecasts", icon: TrendingUp, href: "/forecasts" },
-    { name: "Budget Suggestions", icon: Savings, href: "/budget-suggestions" },
     { name: "New", icon: PostAdd, href: "/new" },
     { name: "Budget", icon: BalanceOutlined, href: "/budget" },
   ];

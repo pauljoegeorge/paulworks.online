@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Input as InputPrimitive } from "./ui/input";
 
-function Input({ input, meta, placeholder, label }) {
+function Input({ input, meta, placeholder, label, inputMode, step, min }) {
   const showError = meta.touched && meta.error;
 
   return (
@@ -29,10 +29,17 @@ function Input({ input, meta, placeholder, label }) {
         id={input.name}
         placeholder={placeholder}
         {...input}
+        inputMode={inputMode}
+        step={step}
+        min={min}
+        aria-invalid={Boolean(showError)}
+        aria-describedby={showError ? `${input.name}-error` : undefined}
         style={showError ? { borderColor: "var(--destructive)" } : undefined}
       />
       {showError && (
         <p
+          id={`${input.name}-error`}
+          role="alert"
           style={{
             marginTop: "4px",
             fontSize: "0.75rem",
@@ -60,11 +67,17 @@ Input.propTypes = {
   }).isRequired,
   placeholder: PropTypes.string,
   label: PropTypes.string,
+  inputMode: PropTypes.string,
+  step: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  min: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 Input.defaultProps = {
   placeholder: "",
   label: "",
+  inputMode: undefined,
+  step: undefined,
+  min: undefined,
 };
 
 export default Input;

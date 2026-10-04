@@ -144,7 +144,7 @@ export default function BudgetSuggestionsContainer() {
               <div style={{
                 padding: "10px 20px",
                 borderBottom: "1px solid var(--border)",
-                backgroundColor: isOverBudget ? "rgba(239,68,68,0.1)" : "rgba(16,185,129,0.1)",
+                backgroundColor: isOverBudget ? "rgba(239,68,68,0.1)" : "var(--accent)",
                 color: isOverBudget ? "var(--destructive)" : "var(--success)",
                 fontSize: "0.8125rem", fontWeight: 600, letterSpacing: "0.3px",
               }}>

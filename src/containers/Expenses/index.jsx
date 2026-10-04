@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import moment from "moment";
+import { Link } from "react-router-dom";
+import { Download, Plus } from "lucide-react";
 import InputSelect from "../../components/InputSelect";
 import { PrimaryButton } from "../../components/Button";
-import { H1, H2Purple, H1Span } from "../../components/Text";
-import { CentralDiv } from "../../components/Div";
+import WorkspacePage, { MonthNavigation } from "../../components/WorkspacePage";
+
 import { useExpenses } from "./hooks/useExpenses";
 import { useBudget } from "../ExpenseCategories/hooks/useBudget";
 import Input from "../../components/Input";
@@ -16,31 +18,37 @@ import {
   formattedDate,
 } from "../../utils/utils";
 import { formattedCurrency } from "../../utils/currency";
-import { FlexContainer } from "../../components/Container";
-import {
-  LeftArrow,
-  RightArrow,
-  DownloadIcon,
-  TableViewMode,
-  EditMode,
-} from "../../components/Icon";
+
 import { getDefaultExpenseSortParams } from "./utils/utils";
 import ExpensesViewMode from "./ExpenseViewMode";
 
 function ExpensesContainer() {
   const [selectedMonth, setSelectedMonth] = useState();
-  const [viewMode, setViewMode] = useState(false);
+  const [search, setSearch] = useState("");
+  const [viewMode, setViewMode] = useState(true);
   const [sortParams, setSortParams] = useState(getDefaultExpenseSortParams());
   const { number } = useValidations();
-  const { actions, expenses } = useExpenses([]);
+  const { actions, expenses, isLoading } = useExpenses([]);
   const { actions: budgetActions, fixedExpenseCategories } = useBudget([]);
-  const date = moment(selectedMonth).format("MMMM YYYY");
   const initialValues = { expenses };
+  const visibleExpenses = expenses.filter((expense) =>
+    [
+      expense.category_name,
+      expense.notes,
+      expense.amount,
+      expense.transaction_date,
+    ].some((value) =>
+      String(value || "")
+        .toLowerCase()
+        .includes(search.trim().toLowerCase()),
+    ),
+  );
   const fixedExpenseOptions = Object.keys(fixedExpenseCategories).map(
     (ind) => ({
       value: fixedExpenseCategories[ind].uid,
       label: fixedExpenseCategories[ind].name,
-    })
+      icon: fixedExpenseCategories[ind].icon,
+    }),
   );
 
   useEffect(() => {
@@ -78,7 +86,7 @@ function ExpensesContainer() {
   };
 
   const handleSubmit = (values) => {
-    actions.updateExpenses(values, selectedMonth);
+    return actions.updateExpenses(values, selectedMonth);
   };
 
   return (
@@ -90,101 +98,163 @@ function ExpensesContainer() {
         const totalExpense = formattedCurrency(
           values.expenses.reduce(
             (total, expense) => total + parseInt(expense.amount || 0, 10),
-            0
-          )
+            0,
+          ),
         );
         return (
           <form onSubmit={formHandleSubmit}>
-            <CentralDiv className="text-center">
-              <div className="w-full mb-12 text-center">
-                <H1>Expenses</H1>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "10px",
-                  width: "100%",
-                }}
-              >
-                <FlexContainer alignItems="center">
-                  <LeftArrow onClick={() => handleMonthChange("previous")} />
-                  <div style={{ textAlign: "center" }}>
-                    <H2Purple>{date}</H2Purple>
-                    <H1Span color="var(--primary)">
-                      Total: {totalExpense}
-                    </H1Span>
-                  </div>
-                  <RightArrow onClick={() => handleMonthChange("next")} />
-                </FlexContainer>
-                <div
-                  style={{ display: "flex", gap: "8px", alignItems: "center" }}
-                >
-                  {!viewMode && (
-                    <TableViewMode onClick={() => setViewMode(true)} />
-                  )}
-                  {viewMode && <EditMode onClick={() => setViewMode(false)} />}
-                  <DownloadIcon onClick={() => handleExportReport()} />
+            <WorkspacePage
+              title="Expenses"
+              description="Your spending, with room to see the details."
+              actions={
+                <Link className="workspace-button primary" to="/new">
+                  <Plus size={16} />
+                  Add expense
+                </Link>
+              }
+            >
+              <div className="workspace-plan-summary">
+                <div>
+                  <span>Total spent</span>
+                  <strong>{totalExpense}</strong>
+                  <p>
+                    {expenses.length}{" "}
+                    {expenses.length === 1 ? "expense" : "expenses"} this month
+                  </p>
                 </div>
-              </div>
-            </CentralDiv>
-            {viewMode ? (
-              <div style={{ width: "100%", padding: "0 16px" }}>
-                <ExpensesViewMode
-                  expenses={initialValues.expenses}
-                  handleSortExpenses={handleSortExpenses}
-                  sortParams={sortParams}
-                  setSortParams={setSortParams}
+                <MonthNavigation
+                  month={selectedMonth}
+                  onChange={handleMonthChange}
                 />
               </div>
-            ) : (
-              <CentralDiv>
-                <div className="mt-4 w-full">
-                  {/* eslint-disable react/no-array-index-key */}
-                  {(initialValues.expenses || []).map((_, index) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 w-full"
-                    >
-                      <Field
-                        name={`expenses[${index}].category_uid`}
-                        component={InputSelect}
-                        options={fixedExpenseOptions}
-                        label="Category"
-                      />
-                      <Field
-                        name={`expenses[${index}].amount`}
-                        component={Input}
-                        validate={number}
-                        label="Amount"
-                      />
-                      <Field
-                        name={`expenses[${index}].transaction_date`}
-                        component={Input}
-                        type="date"
-                        label="Date"
-                      />
-                      <Field
-                        name={`expenses[${index}].notes`}
-                        component={Input}
-                        label="Notes"
-                      />
+              <div className="workspace-card workspace-form-card">
+                <div className="workspace-card-header">
+                  <div>
+                    <h2>Spending history</h2>
+                    <p className="workspace-note">
+                      Review transactions or edit the details below.
+                    </p>
+                  </div>
+                  <div className="workspace-page-actions">
+                    <div className="workspace-segmented">
+                      <button
+                        type="button"
+                        aria-pressed={viewMode}
+                        onClick={() => setViewMode(true)}
+                      >
+                        Browse
+                      </button>
+                      <button
+                        type="button"
+                        aria-pressed={!viewMode}
+                        onClick={() => setViewMode(false)}
+                      >
+                        Edit
+                      </button>
                     </div>
-                  ))}
-                  <div className="flex justify-center mt-8 w-full">
-                    <PrimaryButton
-                      size="lg"
-                      className="w-50"
-                      type="submit"
-                      disabled={pristine || !valid}
+                    <button
+                      type="button"
+                      className="workspace-button"
+                      disabled={isLoading}
+                      onClick={handleExportReport}
                     >
-                      Save
-                    </PrimaryButton>
+                      <Download size={16} />
+                      Export CSV
+                    </button>
                   </div>
                 </div>
-              </CentralDiv>
-            )}
+                {expenses.length === 0 && (
+                  <div className="workspace-empty">
+                    <p>No expenses for this month yet.</p>
+                    <Link className="workspace-button" to="/new">
+                      Add your first expense
+                    </Link>
+                  </div>
+                )}
+                {viewMode && expenses.length > 0 && (
+                  <div className="workspace-list-search">
+                    <input
+                      className="workspace-search"
+                      type="search"
+                      aria-label="Search expenses"
+                      placeholder="Search category, note, amount, or date…"
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                    />
+                    <span className="workspace-note">
+                      {visibleExpenses.length} of {expenses.length} expenses
+                    </span>
+                  </div>
+                )}
+                {viewMode &&
+                  visibleExpenses.length === 0 &&
+                  expenses.length > 0 && (
+                    <div className="workspace-empty">
+                      <p>No expenses match your search.</p>
+                      <button
+                        className="workspace-button"
+                        type="button"
+                        onClick={() => setSearch("")}
+                      >
+                        Clear search
+                      </button>
+                    </div>
+                  )}
+                {viewMode ? (
+                  <div style={{ width: "100%", padding: "0 16px" }}>
+                    <ExpensesViewMode
+                      expenses={visibleExpenses}
+                      handleSortExpenses={handleSortExpenses}
+                      sortParams={sortParams}
+                      setSortParams={setSortParams}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <div className="mt-4 w-full">
+                      {/* eslint-disable react/no-array-index-key */}
+                      {(initialValues.expenses || []).map((_, index) => (
+                        <div key={index} className="workspace-expense-edit-row">
+                          <Field
+                            name={`expenses[${index}].category_uid`}
+                            component={InputSelect}
+                            options={fixedExpenseOptions}
+                            label="Category"
+                          />
+                          <Field
+                            name={`expenses[${index}].amount`}
+                            component={Input}
+                            validate={number}
+                            label="Amount"
+                          />
+                          <Field
+                            name={`expenses[${index}].transaction_date`}
+                            component={Input}
+                            type="date"
+                            label="Date"
+                          />
+                          <Field
+                            name={`expenses[${index}].notes`}
+                            component={Input}
+                            label="Notes"
+                          />
+                        </div>
+                      ))}
+                      <div className="flex justify-center mt-8 w-full">
+                        <PrimaryButton
+                          size="lg"
+                          className="w-50"
+                          type="submit"
+                          disabled={pristine || !valid || isLoading}
+                        >
+                          {isLoading ? "Saving…" : "Save changes"}
+                        </PrimaryButton>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </WorkspacePage>
           </form>
         );
       }}

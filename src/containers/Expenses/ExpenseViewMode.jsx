@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
 import { FlexContainer } from "../../components/Container";
 import InteractiveTable from "../../components/InteractiveTable";
+import CategoryIcon from "../../components/CategoryIcon";
 import { formattedCurrency } from "../../utils/currency";
 import { P, PBold } from "../../components/Text";
 import { setExpenseSortParams } from "./utils/utils";
@@ -30,7 +31,11 @@ function ExpensesViewMode(props) {
   const activeSort = sortParams.find((s) => s.active);
 
   return (
-    <FlexContainer width="100%" style={{ flexDirection: "column" }}>
+    <FlexContainer
+      className="workspace-expense-table"
+      width="100%"
+      style={{ flexDirection: "column" }}
+    >
       {/* mobile sort bar */}
       <div
         style={{
@@ -54,9 +59,7 @@ function ExpensesViewMode(props) {
                 padding: "5px 12px",
                 borderRadius: "99px",
                 border: `1px solid ${isActive ? "var(--primary)" : "var(--border)"}`,
-                backgroundColor: isActive
-                  ? "rgba(99,102,241,0.08)"
-                  : "var(--card)",
+                backgroundColor: isActive ? "var(--accent)" : "var(--card)",
                 color: isActive ? "var(--primary)" : "var(--muted-foreground)",
                 fontSize: "12px",
                 fontWeight: isActive ? 600 : 400,
@@ -92,16 +95,19 @@ function ExpensesViewMode(props) {
       >
         {(expenses || []).map((expense) => (
           <tr key={expense.uid || expense.transaction_date + expense.amount}>
-            <td>
-              <PBold tt="none">{expense.category_name}</PBold>
+            <td data-label="Category">
+              <span className="category-with-icon">
+                <CategoryIcon name={expense.category_icon} />
+                <PBold tt="none" size="14px" align="left">{expense.category_name}</PBold>
+              </span>
             </td>
-            <td>
+            <td data-label="Amount">
               <P>{formattedCurrency(expense.amount)}</P>
             </td>
-            <td>
+            <td data-label="Notes">
               <P tt="none">{expense.notes}</P>
             </td>
-            <td>
+            <td data-label="Date">
               <P>{expense.transaction_date}</P>
             </td>
           </tr>
