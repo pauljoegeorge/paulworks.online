@@ -7,36 +7,13 @@
     "node": ">=24.15.0"
   },
   "dependencies": {
-    "@emotion/react": "11.11.1",
-    "@emotion/styled": "11.11.0",
-    "@mui/icons-material": "^9.0.0",
-    "@mui/material": "^9.0.0",
-    "@mui/x-charts": "^9.0.4",
-    "@radix-ui/react-slot": "^1.2.4",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "axios": "^1.7.2",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "env-cmd": "^10.1.0",
-    "final-form": "^5.0.0",
-    "leaflet": "^1.9.4",
-    "lucide-react": "^1.14.0",
-    "moment": "2.29.4",
     "prop-types": "^15.7.2",
     "react": "19.2.5",
     "react-dom": "19.2.5",
-    "react-final-form": "^7.0.0",
     "react-gtm-module": "2.0.11",
     "react-icons": "4.3.1",
-    "react-leaflet": "^5.0.0",
-    "react-leaflet-google-layer": "^2.2.0",
     "react-router-dom": "^5.2.0",
-    "react-toastify": "^11.1.0",
-    "recharts": "^3.8.1",
-    "styled-components": "5.3.1",
-    "tailwind-merge": "^3.5.0"
+    "styled-components": "5.3.1"
   },
   "scripts": {
     "lint": "eslint 'src/**/*.{js,jsx}'",
@@ -49,7 +26,7 @@
     "test": "vitest",
     "clean": "prettier --write src --ext .js --ext .jsx",
     "prepare": "husky install",
-    "deploy:prod": "rm -rf build/ && npm run build:prod && aws s3 sync build/ s3://paulworks.online --acl public-read --profile personal"
+    "deploy:prod": "bash scripts/deploy.sh"
   },
   "browserslist": [
     ">0.2%",

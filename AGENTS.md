@@ -1,14 +1,11 @@
-# Project instructions
+# Portfolio instructions
 
-This is the web app. Sibling folders in `/Users/pj/Documents/projects/`:
+This repository contains the portfolio and blog. Money Prophet is a separate app in `../money_prophet_web`; do not add its screens, API clients, or dependencies here. Former app URLs only forward to `VITE_MONEY_PROPHET_URL`.
 
-- `money_prophet`: API server.
-- `money_prophet_ios`: iOS app; its current folder is `money_prophet_mobile`.
+Preserve existing portfolio design and user changes. Read `README.md` for setup. Keep changes focused, use existing React/Vite conventions, and verify affected routes, responsive layout, keyboard controls, and build output. Use placeholders for private deployment identifiers; never commit secrets.
 
-Read `CLAUDE.md` for this folder's existing codebase guidance. Check the API server when changing client/server contracts. Read sibling folders' local instructions before editing them.
+Read sibling repository instructions before editing another project.
 
-Keep changes focused and follow existing conventions. Run relevant checks and report results. Keep this file concise; link separate guidance only when needed.
+## graphify
 
-For Money Prophet UX, prefer visible icon choices and direct actions for common tasks. Keep feedback, validation, and recovery clear; check mobile, keyboard navigation, and dark mode.
-
-Center page containers and align headers with content. Use the shared focused layout (880px) for entry, planning, and settings; use the wider workspace layout for reports and maps.
+After changing code, run `graphify update .`. For architecture questions, read the graph report/wiki if available. Report tooling failures without treating stale graph output as current evidence.

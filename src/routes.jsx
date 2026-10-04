@@ -1,90 +1,57 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route } from "react-router-dom";
 import ErrorRoutes from "./pages/Error/route";
 import HomeRoutes from "./pages/Home/route";
 import BlogRoutes from "./pages/Blogs/route";
-import LoginRoutes from "./pages/Login/routes";
-import DashboardRoutes from "./pages/Dashboard/routes";
-import FixedExpensesRoutes from "./pages/FixedExpenses/routes";
-import UnexpectedExpensesRoutes from "./pages/UnexpectedExpenses/routes";
-import IncomeRoutes from "./pages/Income/routes";
-import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
-import Expenses from "./pages/Expenses/routes";
-import RecurrentExpensesRoutes from "./pages/RecurrentExpenses/routes";
-import TransactionsRoutes from "./pages/Transaction/routes";
-import MapRoutes from "./pages/Map/routes";
-import SettingsRoutes from "./pages/Settings/routes";
-import InsightsRoutes from "./pages/Insights/routes";
-import ForecastsRoutes from "./pages/Forecasts/routes";
-import BudgetSuggestionsRoutes from "./pages/BudgetSuggestions/routes";
 import LayoutContainer from "./containers/Layout";
-import AppLayout from "./containers/Layout/AppLayout";
-import { getAuthToken } from "./utils/auth";
 
-const routes = [
-  ...HomeRoutes,
-  ...BlogRoutes,
-  ...LoginRoutes,
-  ...DashboardRoutes,
-  ...FixedExpensesRoutes,
-  ...UnexpectedExpensesRoutes,
-  ...IncomeRoutes,
-  ...ExpenseCategoriesRoutes,
-  ...TransactionsRoutes,
-  ...Expenses,
-  ...RecurrentExpensesRoutes,
-  ...MapRoutes,
-  ...SettingsRoutes,
-
-  ...InsightsRoutes,
-  ...ForecastsRoutes,
-  ...BudgetSuggestionsRoutes,
-  ...ErrorRoutes,
+const moneyProphetPaths = [
+  "/sign_in",
+  "/dashboard",
+  "/expenses",
+  "/new",
+  "/chat",
+  "/new/bill",
+  "/budget",
+  "/r_expenses",
+  "/map",
+  "/settings",
+  "/insights",
+  "/forecasts",
+  "/budget-suggestions",
+  "/income",
+  "/fixed_expenses",
+  "/unexpected_expenses",
 ];
+const moneyProphetOrigin =
+  import.meta.env.VITE_MONEY_PROPHET_URL || "https://moneyprophet.paulworks.online";
 
-const renderRoute = (route, props) => (
+export const routeGenerator = (props) => [
   <Route
-    key={route.path}
-    path={route.path}
-    exact={route.exact}
-    render={(restProps) => (
-      <LayoutContainer {...props}>
-        <route.component {...restProps} {...props} />
-      </LayoutContainer>
-    )}
-  />
-);
-
-const renderBareRoute = (route, props) => (
-  <Route
-    key={route.path}
-    path={route.path}
-    exact={route.exact}
-    render={(restProps) => <route.component {...restProps} {...props} />}
-  />
-);
-
-const renderPrivateRoute = (route, props) => (
-  <Route
-    key={route.path}
-    path={route.path}
-    exact={route.exact}
-    render={(restProps) => {
-      const authenticated = getAuthToken();
-      if (authenticated)
-        return (
-          <AppLayout {...props}>
-            <route.component {...restProps} {...props} />
-          </AppLayout>
-        );
-      return <Redirect to={{ pathname: "/sign_in" }} />;
+    key="money-prophet"
+    exact
+    path={moneyProphetPaths}
+    render={({ location }) => {
+      window.location.replace(
+        `${moneyProphetOrigin.replace(/\/$/, "")}${location.pathname}${location.search}${location.hash}`,
+      );
+      return <p>Opening Money Prophet…</p>;
     }}
-  />
-);
-
-export const routeGenerator = ({ ...props }) =>
-  routes.map((route) => {
-    if (route.type === "bare") return renderBareRoute(route, { ...props });
-    if (route.type === "public") return renderRoute(route, { ...props });
-    return renderPrivateRoute(route, { ...props });
-  });
+  />,
+  ...[...HomeRoutes, ...BlogRoutes, ...ErrorRoutes].map((route) => (
+    <Route
+      key={route.path}
+      path={route.path}
+      exact={route.exact}
+      render={(routeProps) =>
+        route.type === "bare" ? (
+          <route.component {...routeProps} {...props} />
+        ) : (
+          <LayoutContainer {...props}>
+            <route.component {...routeProps} {...props} />
+          </LayoutContainer>
+        )
+      }
+    />
+  )),
+];

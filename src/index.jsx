@@ -7,7 +7,8 @@ import App from "./App";
 const tagManagerArgs = {
   gtmId: `${import.meta.env.VITE_GTM_CONTAINER_ID}`,
 };
-TagManager.initialize(tagManagerArgs);
+if (import.meta.env.VITE_GTM_CONTAINER_ID)
+  TagManager.initialize(tagManagerArgs);
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -15,7 +16,5 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
-
-

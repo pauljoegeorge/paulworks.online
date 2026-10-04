@@ -371,7 +371,7 @@ const PROJECTS = [
     domain: "fintech · side project",
     desc: "AI-powered personal finance app. Budget tracking, expense forecasting, and spending insights. Built end-to-end — Rails backend, React frontend, and ML pipeline.",
     stack: ["ruby on rails", "react", "mysql", "google ai"],
-    href: "/dashboard",
+    href: "https://expense.paulworks.net/",
     external: true,
   },
   {
