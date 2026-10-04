@@ -5,28 +5,26 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import AutoAwesome from "@mui/icons-material/AutoAwesome";
-import { AddAPhoto } from "@mui/icons-material";
+import { AddAPhoto, DarkMode, LightMode } from "@mui/icons-material";
 import { AppBar } from "../utils/drawer";
 import { FlexContainer } from "../../../components/Div";
-import { colors } from "../../../utils/colors";
+import { useThemeMode } from "../../../contexts/ThemeContext";
 import ProfileMenu from "./ProfileMenu";
 import NavDrawer from "./NavDrawer";
 
-const darkTheme = createTheme({
-  palette: {
-    type: "dark",
-    primary: {
-      main: colors.primary,
-    },
-    text: {
-      primary: colors.purpleGrey,
-    },
-  },
-});
+const iconBtnSx = {
+  borderRadius: "8px",
+  padding: "8px",
+  color: "var(--foreground)",
+  "&:hover": { backgroundColor: "var(--muted)" },
+};
 
 function NavigationBar() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => window.innerWidth >= 1200);
+  const { mode, toggleMode } = useThemeMode();
   const isMapPage = window.location.pathname.includes("/map") && !open;
+
+  const muiTheme = createTheme({ palette: { mode } });
 
   const handleDrawer = (state) => {
     setOpen(state);
@@ -37,46 +35,70 @@ function NavigationBar() {
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={muiTheme}>
       <AppBar position="fixed" open={open}>
         <Toolbar
           sx={{
             justifyContent: "space-between",
-            paddingRight: "8px",
+            paddingRight: "16px",
+            paddingLeft: "16px",
+            minHeight: "56px",
           }}
         >
           <FlexContainer justify="flex-start">
             <IconButton
-              color="inherit"
-              aria-label="open drawer"
+              aria-label="open navigation menu"
               onClick={() => handleDrawer(true)}
               edge="start"
               sx={{
-                marginRight: 5,
-                ...(open && { display: "none" }),
+                marginRight: 3,
+                ...(open && window.innerWidth >= 1200 && { display: "none" }),
+                ...iconBtnSx,
               }}
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                fontFamily: "var(--font-display), sans-serif",
+                fontWeight: 700,
+                fontSize: "1rem",
+                letterSpacing: "-0.03em",
+                color: "var(--foreground)",
+              }}
+            >
               MoneyProphet
             </Typography>
           </FlexContainer>
-          <IconButton size="large" onClick={() => navigateTo("/chat")}>
-            <AutoAwesome
-              sx={{
-                color: colors.white,
-                fontSize: "2rem",
-              }}
-            />
+          <IconButton
+            aria-label="Open AI chat"
+            onClick={() => navigateTo("/chat")}
+            sx={iconBtnSx}
+          >
+            <AutoAwesome sx={{ fontSize: "1.25rem" }} />
           </IconButton>
-          <IconButton size="large" onClick={() => navigateTo("/new/bill")}>
-            <AddAPhoto
-              sx={{
-                color: colors.white,
-                fontSize: "2rem",
-              }}
-            />
+          <IconButton
+            aria-label="Add transaction from photo"
+            onClick={() => navigateTo("/new/bill")}
+            sx={iconBtnSx}
+          >
+            <AddAPhoto sx={{ fontSize: "1.25rem" }} />
+          </IconButton>
+          <IconButton
+            aria-label={
+              mode === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            onClick={toggleMode}
+            sx={iconBtnSx}
+          >
+            {mode === "dark" ? (
+              <LightMode sx={{ fontSize: "1.25rem" }} />
+            ) : (
+              <DarkMode sx={{ fontSize: "1.25rem" }} />
+            )}
           </IconButton>
           <ProfileMenu />
         </Toolbar>

@@ -1,73 +1,41 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { PieChart } from "@mui/x-charts";
-import { Typography } from "@mui/material";
-import { isMobile } from "../../../utils/utils";
 import { formattedCurrency } from "../../../utils/currency";
-import { colors } from "../../../utils/colors";
-import { MainWrapper } from "./Div";
 
 function SpendingRecommendations(props) {
   const { allowancePerDay, allowancePerWeek } = props;
-  const mobileView = isMobile();
 
-  const data = [
-    {
-      id: 1,
-      value: allowancePerDay,
-      label: "Daily",
-      color: colors.pastelPurple,
-    },
-    {
-      id: 0,
-      value: allowancePerWeek,
-      label: "Weekly",
-      color: colors.yellow,
-    },
+  const items = [
+    { label: "Daily Quota", value: formattedCurrency(allowancePerDay), hint: "remaining today" },
+    { label: "Weekly Quota", value: formattedCurrency(allowancePerWeek), hint: "remaining this week" },
   ];
 
-  const barChartsParams = {
-    series: [
-      {
-        data,
-        highlightScope: { faded: "global", highlighted: "item" },
-        faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
-      },
-    ],
-    slotProps: {
-      legend: {
-        position: { vertical: "bottom", horizontal: "right" },
-        orientation: "vertical",
-        padding: 0,
-      },
-    },
-    height: 200,
-  };
-
-  const tooltipFormatter = (slice) => {
-    return `
-      ${formattedCurrency(slice.value)}
-    `;
-  };
-
   return (
-    <MainWrapper>
-      <Typography
-        component="h2"
-        variant="h6"
-        color={colors.primary}
-        gutterBottom
-      >
-        Recommendation - Spending Quota
-      </Typography>
-      <PieChart
-        {...barChartsParams}
-        series={barChartsParams.series.map((s) => ({
-          ...s,
-          valueFormatter: tooltipFormatter,
-        }))}
-      />
-    </MainWrapper>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
+      {items.map((item) => (
+        <div
+          key={item.label}
+          style={{
+            backgroundColor: "var(--card)",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border)",
+            borderTop: "3px solid var(--primary)",
+            padding: "20px 18px 16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "6px",
+          }}
+        >
+          <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--muted-foreground)" }}>
+            {item.label}
+          </span>
+          <span style={{ fontSize: "1.6rem", fontWeight: 700, color: "var(--foreground)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+            {item.value}
+          </span>
+          <span style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>{item.hint}</span>
+        </div>
+      ))}
+    </div>
   );
 }
 

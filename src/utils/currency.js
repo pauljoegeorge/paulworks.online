@@ -34,3 +34,9 @@ export const currencies = [
   { code: "SGD", name: "Singapore Dollar", symbol: "S$" },
   { code: "MYR", name: "Malaysian Ringgit", symbol: "RM" },
 ];
+
+export const getCurrencySymbol = () => {
+  const code = getCurrency();
+  const match = currencies.find((c) => c.code === code);
+  return match ? match.symbol : code;
+};

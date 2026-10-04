@@ -6,8 +6,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { colors } from "../../../utils/colors";
-import WiseIcon from "../../../assets/wise-icon.svg";
 
 function NavDrawerSection(props) {
   const { open, sectionHead, sectionItems } = props;
@@ -18,55 +16,79 @@ function NavDrawerSection(props) {
       <p
         style={{
           opacity: open ? 1 : 0,
-          marginLeft: `calc(${theme.spacing(3)} + 1px)`,
+          marginLeft: `calc(${theme.spacing(2)} + 1px)`,
+          fontSize: "10px",
+          fontWeight: 700,
+          letterSpacing: "1px",
+          textTransform: "uppercase",
+          color: "var(--muted-foreground)",
+          marginBottom: "2px",
+          marginTop: "16px",
         }}
       >
         {sectionHead}
       </p>
-      {sectionItems.map((item) => (
-        <ListItem
-          key={item.name}
-          disablePadding
-          sx={{
-            display: "block",
-            "&:hover": {
-              backgroundColor: colors.lavender,
-            },
-          }}
-        >
-          <ListItemButton
+      {sectionItems.map((item) => {
+        const isActive =
+          window.location.pathname === item.href ||
+          window.location.pathname.startsWith(`${item.href}/`);
+
+        return (
+          <ListItem
+            key={item.name}
+            disablePadding
             sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
+              display: "block",
+              borderRadius: "8px",
+              mx: "6px",
+              width: "calc(100% - 12px)",
+              mb: "2px",
             }}
-            href={item.href}
           >
-            {item.name === "WISE" ? (
-              <img
-                src={WiseIcon}
-                alt="Wise icon"
-                height="20px"
-                style={{
-                  marginRight: open ? `calc(${theme.spacing(3)} + 1px)` : "0px",
-                  justifyContent: "center",
-                }}
-              />
-            ) : (
+            <ListItemButton
+              aria-current={isActive ? "page" : undefined}
+              sx={{
+                minHeight: 40,
+                justifyContent: open ? "initial" : "center",
+                px: 1.5,
+                borderRadius: "8px",
+                backgroundColor: isActive
+                  ? "var(--accent)"
+                  : "transparent",
+                "&:hover": {
+                  backgroundColor: isActive
+                    ? "var(--muted)"
+                    : "var(--muted)",
+                },
+              }}
+              href={item.href}
+            >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
+                  mr: open ? 2 : "auto",
                   justifyContent: "center",
+                  color: isActive ? "var(--primary)" : "var(--muted-foreground)",
                 }}
               >
-                <item.icon />
+                <item.icon sx={{ fontSize: "1.1rem" }} />
               </ListItemIcon>
-            )}
-            <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
-      ))}
+              <ListItemText
+                primary={item.name}
+                sx={{
+                  opacity: open ? 1 : 0,
+                  "& .MuiListItemText-primary": {
+                    fontSize: "0.8125rem",
+                    fontWeight: isActive ? 600 : 400,
+                    color: isActive ? "var(--primary)" : "var(--foreground)",
+                    fontFamily: '"IBM Plex Sans", sans-serif',
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        );
+      })}
     </List>
   );
 }

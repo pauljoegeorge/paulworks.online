@@ -10,7 +10,7 @@ function useExpenses() {
     month,
     category = "",
     sort_by = "",
-    sortOrder = ""
+    sortOrder = "",
   ) => {
     const params = `from=${month}&category=${category}&sort_by=${sort_by}&sort_order=${sortOrder}`;
     const response = await get(`expenses?${params}`);
@@ -28,10 +28,12 @@ function useExpenses() {
       const data = { expense: values.expenses };
       await post("expenses", data);
       setLoading(false);
-      Notify.success("Saved! Ready to add new one?");
+      Notify.success("Expense saved.");
+      return true;
     } catch {
       setLoading(false);
       Notify.error();
+      return false;
     }
   };
 
@@ -41,10 +43,12 @@ function useExpenses() {
       const data = { expense: values.expenses };
       await post("auto_expenses", data);
       setLoading(false);
-      Notify.success("Saved! Ready to add new one?");
+      Notify.success("Expense saved.");
+      return true;
     } catch {
       setLoading(false);
       Notify.error();
+      return false;
     }
   };
 

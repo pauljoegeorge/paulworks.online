@@ -1,9 +1,8 @@
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const options = {
   autoClose: 2000,
-  position: toast.POSITION.TOP_CENTER,
+  position: "top-center",
 };
 
 export const Notify = {

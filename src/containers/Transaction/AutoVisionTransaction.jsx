@@ -1,48 +1,77 @@
-import React, { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
-import { CentralDiv } from "../../components/Div";
-import { CustomRow as Row } from "../../components/Table";
-import { H1 } from "../../components/Text";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import useExpenseLocation from "../../utils/useExpenseLocation";
+import ExpenseEntryNavigation from "../../components/ExpenseEntryNavigation";
+import WorkspacePage from "../../components/WorkspacePage";
 import Camera from "../../components/Camera";
 import { useExpenses } from "../Expenses/hooks/useExpenses";
 
 function AutoVisionTransactionContainer() {
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const location = useExpenseLocation();
+  const [saved, setSaved] = useState(false);
   const { actions, isLoading } = useExpenses([]);
 
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      });
-    }
-  }, []);
-
-  const handleCapture = (imageSrc) => {
+  const handleCapture = async (imageSrc) => {
     const valuesWithLocation = {
       expenses: {
-        latitude,
-        longitude,
+        ...location,
         bill_image: imageSrc,
       },
     };
-    actions.creatAutoeExpense(valuesWithLocation);
+    const success = await actions.creatAutoeExpense(valuesWithLocation);
+    if (success) setSaved(true);
+    return success;
   };
 
   return (
-    <CentralDiv className="justify-content-center text-center">
-      <Row className="mt-5 w-100">
-        <H1>Read Receipt</H1>
-        {isLoading && (
-          <div className="justify-content-center">
-            <Spinner animation="border" />
-          </div>
-        )}
-        <Camera onCapture={handleCapture} />
-      </Row>
-    </CentralDiv>
+    <WorkspacePage
+      focused
+      title="Read receipt"
+      description="Capture a clear receipt to record your spending."
+      actions={
+        <Link className="workspace-button" to="/expenses">
+          View expenses
+        </Link>
+      }
+    >
+      <div className="workspace-entry-card">
+        <ExpenseEntryNavigation />
+        <div className="workspace-card workspace-form-card">
+          {saved ? (
+            <div className="workspace-saved-state" role="status">
+              <h2>Receipt saved</h2>
+              <p>Your receipt has been recorded as an expense.</p>
+              <button
+                type="button"
+                className="workspace-button primary"
+                onClick={() => setSaved(false)}
+              >
+                Add another receipt
+              </button>
+            </div>
+          ) : (
+            <div className="w-full">
+              <h2>Capture your receipt</h2>
+              <p className="workspace-note">
+                Keep the total and store name visible, with good lighting.
+              </p>
+              {isLoading && (
+                <div className="flex justify-center mt-4">
+                  <div
+                    className="inline-block w-8 h-8 rounded-full animate-spin"
+                    style={{
+                      border: "4px solid var(--border)",
+                      borderTopColor: "var(--primary)",
+                    }}
+                  />
+                </div>
+              )}
+              <Camera onCapture={handleCapture} disabled={isLoading} />
+            </div>
+          )}
+        </div>
+      </div>
+    </WorkspacePage>
   );
 }
 

@@ -1,14 +1,20 @@
 import styled from "styled-components";
-import { Container } from "react-bootstrap";
 
-export const CentralDiv = styled(Container)`
+export const CentralDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // min-height: 100vh;
   margin-top: ${(props) => (props.mt ? props.mt : "50px")};
   width: 100%;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 4px;
+  }
 `;
 
 export const SwitchingDiv = styled.div`
@@ -62,16 +68,26 @@ export const FlexChild = styled.div`
 
 export const Divider = styled.hr`
   border: none;
-  height: 2px;
-  background-color: #000;
-  margin: 2px 0;
+  height: 1px;
+  background-color: var(--border);
+  margin: 4px 0;
 `;
 
+// Modernized card surface — clean 1px full border, no dated 3px top accent.
 export const BoxWithShadow = styled.div`
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
   margin: 20px;
-  padding: ${(props) => (props.padding ? props.padding : "20px")};
+  padding: ${(props) => (props.padding ? props.padding : "24px")};
   text-align: center;
   height: auto;
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
 `;

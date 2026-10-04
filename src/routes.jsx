@@ -12,10 +12,11 @@ import ExpenseCategoriesRoutes from "./pages/ExpenseCategories/routes";
 import Expenses from "./pages/Expenses/routes";
 import RecurrentExpensesRoutes from "./pages/RecurrentExpenses/routes";
 import TransactionsRoutes from "./pages/Transaction/routes";
-import WiseRoutes from "./pages/Wise/routes";
 import MapRoutes from "./pages/Map/routes";
 import SettingsRoutes from "./pages/Settings/routes";
 import InsightsRoutes from "./pages/Insights/routes";
+import ForecastsRoutes from "./pages/Forecasts/routes";
+import BudgetSuggestionsRoutes from "./pages/BudgetSuggestions/routes";
 import LayoutContainer from "./containers/Layout";
 import AppLayout from "./containers/Layout/AppLayout";
 import { getAuthToken } from "./utils/auth";
@@ -34,8 +35,10 @@ const routes = [
   ...RecurrentExpensesRoutes,
   ...MapRoutes,
   ...SettingsRoutes,
-  ...WiseRoutes,
+
   ...InsightsRoutes,
+  ...ForecastsRoutes,
+  ...BudgetSuggestionsRoutes,
   ...ErrorRoutes,
 ];
 
@@ -49,6 +52,15 @@ const renderRoute = (route, props) => (
         <route.component {...restProps} {...props} />
       </LayoutContainer>
     )}
+  />
+);
+
+const renderBareRoute = (route, props) => (
+  <Route
+    key={route.path}
+    path={route.path}
+    exact={route.exact}
+    render={(restProps) => <route.component {...restProps} {...props} />}
   />
 );
 
@@ -71,8 +83,8 @@ const renderPrivateRoute = (route, props) => (
 );
 
 export const routeGenerator = ({ ...props }) =>
-  routes.map((route) =>
-    route.type === "public"
-      ? renderRoute(route, { ...props })
-      : renderPrivateRoute(route, { ...props })
-  );
+  routes.map((route) => {
+    if (route.type === "bare") return renderBareRoute(route, { ...props });
+    if (route.type === "public") return renderRoute(route, { ...props });
+    return renderPrivateRoute(route, { ...props });
+  });
