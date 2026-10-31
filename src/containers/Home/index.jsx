@@ -268,9 +268,12 @@ const CSS = `
   }
   .cine .stack-row .chip.hl { color: var(--accent); border-color: color-mix(in oklab, var(--accent) 45%, var(--line)); }
 
-  /* ---------- SCENE 7 · selected work ---------- */
-  .cine #s7 { background: radial-gradient(120% 100% at 50% 0%, #141019, #08070b 70%); }
-  .cine #s7 .scene-inner { max-width: 820px; }
+  /* ---------- SCENE 7 · philips ---------- */
+  .cine #s7 { background: radial-gradient(130% 110% at 30% 80%, #0a1318, #08070b 65%); }
+
+  /* ---------- SCENE 8 · selected work ---------- */
+  .cine #s8 { background: radial-gradient(120% 100% at 50% 0%, #141019, #08070b 70%); }
+  .cine #s8 .scene-inner { max-width: 820px; }
   .cine .work-list { margin-top: 30px; text-align: left; }
   .cine .work-item {
     display: grid; grid-template-columns: 34px 1fr auto; gap: 18px;
@@ -296,8 +299,8 @@ const CSS = `
     .cine .work-arrow { display: none; }
   }
 
-  /* ---------- SCENE 8 · end credits ---------- */
-  .cine #s8 { background: #050407; }
+  /* ---------- SCENE 9 · end credits ---------- */
+  .cine #s9 { background: #050407; }
   .cine .credits { text-align: center; }
   .cine .credits .fin {
     font-family: 'Instrument Serif', serif; font-style: italic;
@@ -359,9 +362,10 @@ const SCENES = [
   { id: "s3", ch: "CH·01", name: "Arrival" },
   { id: "s4", ch: "CH·02", name: "The Craft" },
   { id: "s5", ch: "CH·03", name: "The Stage" },
-  { id: "s6", ch: "CH·04", name: "Now" },
-  { id: "s7", ch: "CH·05", name: "Selected Work" },
-  { id: "s8", ch: "CH·06", name: "Fin" },
+  { id: "s6", ch: "CH·04", name: "The Build" },
+  { id: "s7", ch: "CH·05", name: "Philips" },
+  { id: "s8", ch: "CH·06", name: "Selected Work" },
+  { id: "s9", ch: "CH·07", name: "Fin" },
 ];
 
 const PROJECTS = [
@@ -802,17 +806,17 @@ export default function HomeContainer() {
           </div>
         </section>
 
-        {/* 6 · NOW */}
-        <section className="scene" id="s6" data-ch="CH·04" data-name="Now">
+        {/* 6 · THE BUILD */}
+        <section className="scene" id="s6" data-ch="CH·04" data-name="The Build">
           <div className="scene-inner">
-            <div className="eyebrow fade">Chapter Four — Tokyo, Now</div>
+            <div className="eyebrow fade">Chapter Four — Tokyo</div>
             <h2 className="display" style={{ fontSize: "clamp(34px,6vw,92px)" }}>
               <span className="kin">
                 <span>Full-stack.</span>
               </span>
               <span className="kin">
                 <span>
-                  <em className="it">Leading</em> products.
+                  <em className="it">Building</em> products.
                 </span>
               </span>
             </h2>
@@ -826,7 +830,7 @@ export default function HomeContainer() {
               >
                 RECEPTIONIST Inc.
               </a>{" "}
-              as a full-stack developer. Today I lead{" "}
+              as a full-stack developer. Led{" "}
               <b style={{ color: "var(--ink)", fontWeight: 500 }}>4 products</b> — 3 of them built
               from{" "}
               <em className="it" style={{ color: "var(--accent)" }}>
@@ -848,10 +852,55 @@ export default function HomeContainer() {
           </div>
         </section>
 
-        {/* 7 · SELECTED WORK */}
-        <section className="scene" id="s7" data-ch="CH·05" data-name="Selected Work">
+        {/* 7 · PHILIPS */}
+        <section className="scene" id="s7" data-ch="CH·05" data-name="Philips">
           <div className="scene-inner">
-            <div className="eyebrow fade">Chapter Five — On the Side</div>
+            <div className="eyebrow fade">
+              Chapter Five — Global Health
+            </div>
+            <h2 className="display" style={{ fontSize: "clamp(34px,5.5vw,80px)" }}>
+              <span className="kin">
+                <span>Product Manager</span>
+              </span>
+              <span className="kin">
+                <span>
+                  at{" "}
+                  <em className="it">
+                    Philips
+                  </em>
+                  .
+                </span>
+              </span>
+            </h2>
+            <p className="caption fade">
+              Joined{" "}
+              <a
+                href="https://www.philips.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--ink)", fontWeight: 500, borderBottom: "1px solid var(--line)" }}
+              >
+                Philips
+              </a>
+              , working within Sleep &amp; Respiratory Care Marketing — driving{" "}
+              <b style={{ color: "var(--ink)", fontWeight: 500 }}>global integration</b>,
+              planning, and operational strategy across markets.
+            </p>
+            <div className="stack-row fade">
+              <span className="chip hl">Product Management</span>
+              <span className="chip">Sleep &amp; Respiratory</span>
+              <span className="chip">Global Integration</span>
+              <span className="chip">Operations</span>
+              <span className="chip">Planning</span>
+              <span className="chip">Tokyo</span>
+            </div>
+          </div>
+        </section>
+
+        {/* 8 · SELECTED WORK */}
+        <section className="scene" id="s8" data-ch="CH·06" data-name="Selected Work">
+          <div className="scene-inner">
+            <div className="eyebrow fade">Chapter Six — On the Side</div>
             <h2 className="display" style={{ fontSize: "clamp(30px,5vw,68px)" }}>
               <span className="kin">
                 <span>
@@ -892,8 +941,8 @@ export default function HomeContainer() {
           </div>
         </section>
 
-        {/* 8 · CREDITS */}
-        <section className="scene" id="s8" data-ch="CH·06" data-name="Fin">
+        {/* 9 · CREDITS */}
+        <section className="scene" id="s9" data-ch="CH·07" data-name="Fin">
           <div className="scene-inner credits">
             <div className="kin fin">
               <span>fin.</span>
@@ -915,10 +964,10 @@ export default function HomeContainer() {
                 <b>Written &amp; engineered by</b> &nbsp;Paul Joe George
               </div>
               <div>
-                <b>On location</b> &nbsp;Kochi · Shimane · Tokyo
+                <b>On location</b> &nbsp;Kochi · Shimane · Tokyo · Philips Global
               </div>
               <div>
-                <b>Featuring</b> &nbsp;Ruby on Rails · React · TypeScript · AWS · Product Management
+                <b>Featuring</b> &nbsp;Ruby on Rails · React · TypeScript · AWS · Product Management · Philips
               </div>
               <div>
                 <b>Runtime</b> &nbsp;2017 — present
