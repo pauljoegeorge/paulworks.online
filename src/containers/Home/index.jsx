@@ -389,11 +389,11 @@ const PROJECTS = [
   },
   {
     num: "03",
-    name: "JNews",
+    name: "JLearn",
     domain: "edtech · side project",
-    desc: "News content for JLPT learners under 200 words. Real Japanese news, simplified and annotated for language learners.",
+    desc: "Learn Japanese through AI-powered stories.",
     stack: ["react", "firebase", "google ai"],
-    href: "https://jnews.site",
+    href: "https://jlearn.paulworks.net/",
     external: true,
   },
   {
