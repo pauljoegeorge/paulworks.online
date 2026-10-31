@@ -1,6 +1,6 @@
 # Portfolio instructions
 
-This repository contains the portfolio and blog. Money Prophet is a separate app in `../money_prophet_web`; do not add its screens, API clients, or dependencies here. Former app URLs only forward to `VITE_MONEY_PROPHET_URL`.
+This repository contains the portfolio and blog. `money_prophet_web` is the new, current Money Prophet web repository in `../money_prophet_web`; do not add its screens, API clients, or dependencies here. Former app URLs only forward to `VITE_MONEY_PROPHET_URL`.
 
 Preserve existing portfolio design and user changes. Read `README.md` for setup. Keep changes focused, use existing React/Vite conventions, and verify affected routes, responsive layout, keyboard controls, and build output. Use placeholders for private deployment identifiers; never commit secrets.
 

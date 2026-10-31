@@ -24,7 +24,7 @@ const moneyProphetPaths = [
   "/unexpected_expenses",
 ];
 const moneyProphetOrigin =
-  import.meta.env.VITE_MONEY_PROPHET_URL || "https://moneyprophet.paulworks.online";
+  import.meta.env.VITE_MONEY_PROPHET_URL || "https://expense.paulworks.net";
 
 export const routeGenerator = (props) => [
   <Route
